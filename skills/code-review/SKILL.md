@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Trigger a strict self-review of MedVentory code changes. Use when the user asks for a code review, to review their branch/PR, or to review code before sharing. The actual review criteria and output format are in docs/ai/code_review_prompt.md — this skill only defines when to run and what to review (scope).
+description: Trigger a strict self-review of current project code changes. Use when the user asks for a code review, to review their branch/PR, or to review code before sharing. The actual review criteria and output format are in docs/ai/code_review_prompt.md — this skill only defines when to run and what to review (scope).
 ---
 
 # Code Review Skill

@@ -1,6 +1,6 @@
 # AI Developer Protocols (AgentCore)
 
-This repository serves as the "Global Brain" and meta-tooling environment for deploying, maintaining, and upgrading AI-assisted workflows across multiple projects (e.g., Kova, MedVentory, and future Python/Go apps).
+This repository serves as the "Global Brain" and meta-tooling environment for deploying, maintaining, and upgrading AI-assisted workflows across multiple projects (e.g., web applications, mobile apps, and backend services).
 
 ## The End Goal
 

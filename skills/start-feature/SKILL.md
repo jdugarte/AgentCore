@@ -6,13 +6,13 @@ description: Initiates the process of building a new feature. Enforces a strict 
 # Start Feature Skill
 
 ## Purpose
-To ensure that all new features in MedVentory are thoughtfully planned rather than hastily coded. This skill enforces a Q&A discovery phase, followed by drafting an `implementation_plan.md`, and finally looping through a Test-Driven Development (TDD) process.
+To ensure that all new features in the current project are thoughtfully planned rather than hastily coded. This skill enforces a Q&A discovery phase, followed by drafting an `implementation_plan.md`, and finally looping through a Test-Driven Development (TDD) process.
 
 ## Instructions / Workflow
 
 1. **Discovery (Q&A Phase)**
    - Do NOT write any code yet.
-   - Ask clarifying questions about the feature's requirements, edge cases, UI/UX (based on Tamagui/iOS concepts in `.cursorrules`), and data model changes (Drizzle SQLite).
+   - Ask clarifying questions about the feature's requirements, edge cases, UI/UX, and data model changes (based on the project's `.cursorrules` or equivalent architecture docs).
    - Wait for the user to answer.
 
 2. **Planning**
