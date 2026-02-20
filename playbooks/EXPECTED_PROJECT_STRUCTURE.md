@@ -37,7 +37,7 @@ This document lists every referenced path, its purpose, and **how to create it**
 
 | Path | Purpose | How to create |
 |------|---------|----------------|
-| `docs/ai/code_review_prompt.md` | Review criteria and output format for code-review skill | Copy from `AgentCore/templates/<stack>/code_review_prompt.md` (e.g. `templates/rails/code_review_prompt.md`) into `docs/ai/`. Adapt to your project. |
+| `docs/ai/code_review_prompt.md` | Review criteria and output format for code-review skill | Copy from `AgentCore/templates/<stack>/code_review_prompt.md` (e.g. `templates/rails/`, `templates/django/`, or `templates/react-native/`) into `docs/ai/`. Adapt to your project. |
 
 ### Core documentation (you create or generate)
 
