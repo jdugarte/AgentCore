@@ -5,6 +5,8 @@
 
 # BEHAVIORAL RULES (Development Standards)
 
+## AI Agent Version Control Rules
+- **CRITICAL:** NEVER commit or push changes to version control on the user's behalf. At most, you may suggest a commit message for their uncommitted changes.
 ## Component Architecture
 - **Component Size:** Max **150 lines** (components and **hooks**). Screens (route components) must also stay under this limit; extract form/state and handlers into a custom hook (e.g. `useNewMaterialForm`, `useEditMaterialForm`) so the route file is predominantly JSX and hook usage.
 - **Logic Extraction:**

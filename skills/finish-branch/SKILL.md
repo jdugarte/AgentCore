@@ -24,8 +24,8 @@ This skill orchestrates the end-of-branch workflow. It handles the local checks,
 
 ### PHASE 2: Remote Async Review & Testing
 3.  **The BugBot Loop**
-    *   **Action:** Instruct the user to explicitly review all changes, commit them, push the branch to GitHub, and WAIT for the BugBot review email. Do NOT push on their behalf.
-    *   **Instruction:** Pause execution. Tell the user to paste BugBot's feedback here. If there are issues, fix them, run `npm run check`, ask the user to commit/push again, and WAIT.
+    *   **Action:** Instruct the user to explicitly review all changes, commit them, push the branch to GitHub, and WAIT for the BugBot review email. **CRITICAL RULE: NEVER commit or push on the user's behalf. At most, you may suggest a commit message for their uncommitted changes.**
+    *   **Instruction:** Pause execution. Tell the user to paste BugBot's feedback here. If there are issues, fix them, run `npm run check` (or equivalent), ask the user to commit/push again, and WAIT.
     *   **Exit Condition:** The user explicitly tells you "BugBot is happy" or that there are no more issues.
 
 4.  **Test Gap Analysis & Edge Cases**

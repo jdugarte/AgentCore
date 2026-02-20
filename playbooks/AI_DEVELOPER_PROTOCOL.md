@@ -65,6 +65,7 @@
 
 1.  **Agent SOP Refactor:**
     - Consolidate AI rules into `.cursorrules` to act as an **IF/THEN routing table**.
+    - **CRITICAL RULE:** All agents and instructions must explicitly forbid auto-committing or auto-pushing code. At most, suggest a commit message.
     - Do not duplicate standard formatting rules. Keep `.cursorrules` as the single source of truth for both standards and workflow routing.
     - Delete legacy directories like `.agent/` so all tools share a single source of truth and avoid "Split Brain" AI instructions.
 2.  **Skill Refinement (Local & Async Loops):**

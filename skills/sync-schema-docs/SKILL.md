@@ -37,4 +37,4 @@ When this skill is triggered, you must perform the following algorithm exactly:
 ```
 
 4. **Confirm Update:**
-   - Explicitly tell the user: *"I have finished updating `docs/core/SCHEMA_REFERENCE.md`. Please review the accuracy of the semantics, and commit the file when you are ready."* Do NOT commit it for them.
+   - Explicitly tell the user: *"I have finished updating `docs/core/SCHEMA_REFERENCE.md`. Please review the accuracy of the semantics, and commit the file when you are ready."* **CRITICAL RULE: NEVER commit or push changes on your own. At most, suggest a commit message for the uncommitted changes.**
