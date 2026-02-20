@@ -36,8 +36,7 @@ Draft a pull request description using the project template (`.github/PULL_REQUE
    - **Follow-ups / PENDING:** Leave placeholder or "None" unless something is known.
 
 4. **Write draft to a file**
-   - Write the filled markdown to `.cursor/pr-draft.md` in the repo (so the user can open it if needed).
-
+   - Write the PR title at the very top of `.cursor/pr-draft.md` (e.g. `Title: <PR Title>`), followed by a blank empty line, and then the rest of the filled markdown description below it. This ensures the user has both the title and the description ready to use.
 5. **Copy to clipboard**
    - Run the appropriate command for the OS so the contents of `.cursor/pr-draft.md` are in the clipboard:
      - **macOS:** `pbcopy < .cursor/pr-draft.md`
