@@ -27,6 +27,7 @@ This directory contains the tech-agnostic Standard Operating Procedures (SOPs) f
 ### 2. Universal Playbooks (`/playbooks/`)
 - `AI_DEVELOPER_PROTOCOL.md`: The 6-phase masterclass playbook to audit and refine documentation and AI rules in any project.
 - `AI_WORKFLOW_PLAYBOOK.md`: The manual explaining exactly how to use the custom skills.
+- `EXPECTED_PROJECT_STRUCTURE.md`: **Required reading for agents and maintainers.** Lists every file and folder the skills assume, how to create them, and what to do when something is missing. Synced projects get a copy at `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`.
 
 ### 3. Synchronization (`sync.sh`)
 While the Go CLI is being built, a starter Bash script `sync.sh` is provided. You can run this in any project to download the universal skills directly from your GitHub repository.

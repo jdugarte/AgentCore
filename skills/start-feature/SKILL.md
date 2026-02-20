@@ -5,6 +5,15 @@ description: Initiates the process of building a new feature. Enforces a strict 
 
 # Start Feature Skill
 
+## Required files / Pre-flight
+
+Before running this skill, check that these exist in the project:
+
+- `docs/core/SPEC.md` (business logic; required for schema mapping and ADR context)
+- `docs/core/ADRs/0000-ADR-TEMPLATE.md` (only if you will draft an ADR; optional for planning)
+
+**If any required file is missing:** Do not assume or invent its contents. Tell the user which path is missing and point them to the Expected Project Structure document (`docs/ai/EXPECTED_PROJECT_STRUCTURE.md` in your project after sync, or `playbooks/EXPECTED_PROJECT_STRUCTURE.md` in AgentCore) for how to create it. **If the user explicitly asks you to create the missing file(s),** you may do so by following the "How to create" instructions in that document (e.g. create `docs/core/SPEC.md` with a minimal structure, or ensure `docs/core/ADRs/0000-ADR-TEMPLATE.md` is present via sync/template). You may still run discovery and draft `docs/implementation_plan.md` if the user confirms; for schema mapping or ADR drafting, pause until the file exists or the user skips that step.
+
 ## Purpose
 To ensure that all new features in the current project are thoughtfully planned rather than hastily coded. This skill enforces a Q&A discovery phase, followed by drafting an `implementation_plan.md`, and finally looping through a Test-Driven Development (TDD) process.
 

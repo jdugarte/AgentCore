@@ -5,6 +5,15 @@ description: Handles the completion of a branch, PR creation, and CI/Bot feedbac
 
 # Finish Branch Skill
 
+## Required files / Pre-flight
+
+Before running this skill, check that these exist:
+
+- `docs/ai/code_review_prompt.md` (for Phase 1 code review)
+- Optionally: `docs/core/SPEC.md`, `docs/core/ADRs/` (for Phase 3 doc sync and ADR mentions)
+
+**If `docs/ai/code_review_prompt.md` is missing:** Tell the user and point them to the Expected Project Structure document (`docs/ai/EXPECTED_PROJECT_STRUCTURE.md` in your project after sync, or `playbooks/EXPECTED_PROJECT_STRUCTURE.md` in AgentCore). Do not invent review criteria. **If the user explicitly asks you to create it,** you may do so by following the "How to create" instructions in that document (e.g. copy from the right stack template into `docs/ai/code_review_prompt.md`). You may still guide the user through manual review and PR drafting; skip steps that depend on the missing file and list what they need to add for full workflow support.
+
 ## Purpose
 This skill orchestrates the end-of-branch workflow. It handles the local checks, creates the PR draft, and most importantly, manages the async loop of waiting for remote CI checks and GitHub bot reviews by explicitly pausing for user feedback.
 

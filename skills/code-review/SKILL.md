@@ -5,6 +5,14 @@ description: Trigger a strict self-review of current project code changes. Use w
 
 # Code Review Skill
 
+## Required files / Pre-flight
+
+Before running this skill, check that this file exists:
+
+- `docs/ai/code_review_prompt.md` (review criteria and output format; required)
+
+**If it is missing:** Do not invent review criteria or output format. Tell the user that the code-review skill requires `docs/ai/code_review_prompt.md` and point them to the Expected Project Structure document (`docs/ai/EXPECTED_PROJECT_STRUCTURE.md` in your project after sync, or `playbooks/EXPECTED_PROJECT_STRUCTURE.md` in AgentCore) for how to create it (copy from `templates/<stack>/code_review_prompt.md`). **If the user explicitly asks you to create it,** you may do so by copying or adapting the appropriate stack template from that document (e.g. `templates/rails/code_review_prompt.md` or `templates/react-native/code_review_prompt.md`) into `docs/ai/code_review_prompt.md`. Do not proceed with the review until the file exists.
+
 ## Purpose
 
 This skill **triggers** a code review. It does not define how to review: **all review criteria, categories, output format, and instructions** come from **`docs/ai/code_review_prompt.md`**. When the user asks for a code review, you must read that document in full and follow it for the actual review.

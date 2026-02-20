@@ -5,6 +5,15 @@ description: Analyzes the current branch's changes to identify new architectural
 
 # Harvest Rules Skill
 
+## Required files / Pre-flight
+
+Before running this skill, check that these exist:
+
+- `.cursorrules` (destination for code standards)
+- `docs/ai/code_review_prompt.md` (destination for new review steps; read for context)
+
+**If either is missing:** Tell the user which path is missing and point them to the Expected Project Structure document (`docs/ai/EXPECTED_PROJECT_STRUCTURE.md` in your project after sync, or `playbooks/EXPECTED_PROJECT_STRUCTURE.md` in AgentCore). **If the user explicitly asks you to create the missing file(s),** you may do so by following the "How to create" instructions in that document (e.g. create a minimal `.cursorrules` or copy `code_review_prompt.md` from the stack template). You may still analyze the diff and output "New Rules Candidates" as recommendations; do not write to missing files unless the user asks. If `docs/ai/AI_WORKFLOW_PLAYBOOK.md` is missing, skip playbook sync and note that in the output.
+
 **Goal:** Identify "Implicit knowledge" generated in this branch and make it "Explicit" in `.cursorrules` or Playbooks.
 
 ## Instructions for the Agent

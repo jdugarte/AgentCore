@@ -5,6 +5,15 @@ description: AI-driven workflow to automatically generate and maintain schema do
 
 # Sync Schema Docs Skill
 
+## Required files / Pre-flight
+
+Before running this skill, check that these exist:
+
+- Your project’s database schema file (e.g. `db/schema.rb`, `db/schema.ts`, `prisma/schema.prisma`)
+- `docs/core/SPEC.md` (business logic and domain glossary; required to map schema to semantics)
+
+**If `docs/core/SPEC.md` is missing:** Do not guess business logic or invent semantics. Tell the user that this skill requires `docs/core/SPEC.md` and point them to the Expected Project Structure document (`docs/ai/EXPECTED_PROJECT_STRUCTURE.md` in your project after sync, or `playbooks/EXPECTED_PROJECT_STRUCTURE.md` in AgentCore) for how to create it. **If the user explicitly asks you to create it,** you may do so by following that document (e.g. create a minimal SPEC with placeholder sections for business logic and domain glossary; the user can fill in details). Do not generate `docs/core/SCHEMA_REFERENCE.md` until SPEC exists.
+
 ## Purpose
 To maintain a bulletproof, auto-generating markdown file (`docs/core/SCHEMA_REFERENCE.md`) that explicitly maps the raw database tables/columns from `db/schema.ts` to their semantic business logic defined in `docs/core/SPEC.md`.
 

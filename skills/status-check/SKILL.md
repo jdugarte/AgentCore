@@ -5,6 +5,12 @@ description: Rehydrates project context regarding the active feature. Use when t
 
 # Status Check Skill
 
+## Required files / Pre-flight
+
+This skill looks for `docs/implementation_plan.md` to rehydrate context.
+
+**If `docs/implementation_plan.md` is missing:** Tell the user there is no active implementation plan to rehydrate. You can still report branch status, test results, and suggest next steps (e.g. "Consider running the start-feature skill to create a plan"). Do not invent or assume the contents of a missing plan. **If the user asks you to create a plan,** use the start-feature skill flow (discovery → draft plan) rather than inventing a plan from scratch without that process.
+
 ## Purpose
 To quickly rehydrate context during a long-running task, especially when picking up after a break or when an async process (like CI/CD or another developer's review) has halted momentum. It pinpoints exactly what has been done and *Who* is blocking progress.
 

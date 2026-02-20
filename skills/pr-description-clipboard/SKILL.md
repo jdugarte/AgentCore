@@ -5,6 +5,13 @@ description: Drafts a PR description from the repo template and branch/diff, the
 
 # PR Description → Clipboard
 
+## Required files / Pre-flight
+
+- `.github/PULL_REQUEST_TEMPLATE.md` is **optional**. If missing, draft a reasonable structure from branch/diff; do not assume a specific template.
+- `.cursor/pr-draft.md` will be **created** by this skill; ensure `.cursor/` exists (e.g. from running `sync.sh`).
+
+**If `.cursor/` does not exist:** Tell the user to run `sync.sh` or create `.cursor/` so the draft can be written. **If the user explicitly asks you to create it,** you may create the `.cursor/` directory (e.g. `mkdir -p .cursor`) so the draft can be written to `.cursor/pr-draft.md`. You may still output the draft in chat for them to copy manually.
+
 ## Purpose
 
 Draft a pull request description using the project template (`.github/PULL_REQUEST_TEMPLATE.md`), fill in what can be inferred (branch name, base, summary of changes), then copy the result to the clipboard so the user can paste it into GitHub/GitLab.
