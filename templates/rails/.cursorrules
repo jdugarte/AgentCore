@@ -1,0 +1,132 @@
+# IDENTITY & CONTEXT
+- **Role:** Senior Mobile Engineer (React Native/Tamagui).
+- **Goal:** Build "MedVentory", an offline-first medication tracker.
+- **Philosophy:** "Clean Code," Strict TypeScript, Offline-First, and Headless UI (Tamagui).
+
+# BEHAVIORAL RULES (Development Standards)
+
+## Architecture (Separation of Concerns)
+- **Hooks own data and business logic;** screens compose UI and handle screen-level state. Pure, stateless logic lives in **`lib/`**; DB access is via **`lib/db`** and schema only.
+- **Where to extract:**
+  - **Pure / stateless logic** (calculations, formatting, validation helpers) → **`lib/`**. Keep it testable and free of React/DB imports where possible.
+  - **Stateful or screen-scoped logic** (form state, modal visibility, section state) → **custom hooks** in **`hooks/`**. Screens call hooks and render JSX.
+  - **Reusable UI building blocks** (loading/empty/error states, modal shell, section headers, cards) → **`components/ui/`**. Domain-specific shared UI (e.g. settings rows) → **`components/<domain>/`** (e.g. `components/settings/`).
+- **Shared hooks over duplication:** When two or more screens share the same form shape, validation, or modal/section state, extract **one parameterized hook** (e.g. `useMedicationForm({ mode: 'new' | 'edit', ... })`, `useDetailModals({ ... })`) instead of duplicating logic in each screen.
+
+## Component Architecture (Sandi Metz)
+- **Component Size:** Max **150 lines**.
+- **Logic Extraction:**
+  - If a component has complex logic (`useEffect`, transformations), extract to a **Custom Hook**.
+  - The `.tsx` file should primarily contain JSX (UI), not logic.
+- **Modals:** Keep the main modal file under 150 lines. Extract the form body and secondary modals (e.g. date picker) into separate components; the modal should compose a hook + these subcomponents.
+- **Stable callbacks:** When passing a handler to a child (e.g. modal `onClose`), use `useCallback` with correct dependencies so the child does not re-render unnecessarily. Avoid inline arrow functions in render for props that are passed to memoized or frequently re-rendered children.
+- **Cyclomatic Complexity:** Max 3 levels of nesting. Break down into sub-components.
+- **Render Functions:** ❌ FORBIDDEN. Do not define `renderRow = () => ...` inside a component. Extract to a standalone component.
+- **Single Responsibility:** One Component per file.
+
+## Naming Conventions
+- **Components:** PascalCase (`MedicationCard.tsx`).
+- **Hooks:** camelCase (`useInventory.ts`).
+- **Booleans:** Must answer a question (`isLoading`, `hasError`).
+- **Types:** PascalCase (`MedicationProps`). ❌ No `I` prefix.
+
+# TECH STACK DECISIONS (Hard Rules)
+
+## 1. Architecture & Navigation
+- **Framework:** **Expo** (Managed Workflow).
+- **Navigation:** **Expo Router** (File-based routing).
+- **Layout Engine:** **Tamagui** (`XStack`, `YStack`).
+- ❌ **FORBIDDEN:** `React Navigation` (manual), `StyleSheet.create` (legacy), `View` (prefer Stacks).
+
+## 2. State & Database (Offline First)
+- **Database:** **SQLite** via `expo-sqlite`.
+- **ORM:** **Drizzle ORM**.
+- **Query Layer:** **React Query (TanStack Query)**.
+- **Global State:** **Zustand**.
+- **Invariant:** `AUDIT_CORRECTION` transactions must have `presentationId = null`; `quantity` is the observed pill count (never units). See SPEC §2 InventoryTransaction and `useInventory.ts`.
+- **Seed scripts:** When the meaning or format of stored data changes (e.g. a column now stores USD instead of base currency), update seed scripts so seeded rows match the new semantics. If the app expects derived fields (e.g. `price_normalized`) to be populated, run the relevant backfill or consistency step after a destructive seed (e.g. `ensureLatestRates()` and `backfillPriceNormalized()` after reset & seed).
+- ❌ **FORBIDDEN:** TypeORM, Redux, Context API (for high-freq updates).
+
+## 3. UI & Styling (Strict iOS System)
+- **Everywhere:** Tamagui and tokens apply to **all** layout, including root loading (e.g. `app/_layout.tsx` before migrations). No `StyleSheet` or raw hex in loading or bootstrap views; use `YStack`/`XStack` and `$tokens` (or `constants/theme.ts`).
+- **Core Philosophy:** Do not style generic components from scratch. Use the standardized **iOS Primitives**.
+- **Component Mapping:**
+  - **Containers:** Use `iOSListGroup` for forms/settings sections.
+  - **Rows/Pickers:** Use `iOSListItem`.
+    - *Example:* A "Country Picker" should be an `iOSListItem` with `title="Country"`, `value={selectedCountry}`, and `onPress={openModal}`.
+  - **Inputs:** Use `iOSInput`.
+  - **Buttons:** Use `iOSButton` for primary actions.
+- **Visual Rules (If custom styling is strictly necessary):**
+  - **Backgrounds:** `$iosBg` (Screen), `white` (Cards/Rows).
+  - **Separators:** Use `Separator` with `borderColor="$iosGray4"`.
+  - **Icons:** Always use `lucide-react-native` (Chevrons, Plus, Settings).
+  - **Typography:** Titles `$4` (SemiBold), Values `$4` (Regular, Gray). - Hardcoded Hex Codes (Always use `$tokens`).
+  - **Repeated theme values** (e.g. brand/accent color used in many places): use a small hook (e.g. `useThemeBlue`) or `constants/theme.ts` so tokens stay consistent and easy to change. Modals: use consistent Tamagui spacing (e.g. `pb="$10"` for bottom padding).
+  - **No raw numbers or hex in JSX:** Opacity, shadow (color, opacity, radius, offset), hit slop for touch targets, and fallback colors used in components must use Tamagui tokens or **named constants from `constants/theme.ts`** (e.g. `OPACITY_BADGE_LABEL`, `TOOLTIP_SHADOW_OFFSET`, `HIT_SLOP_TOUCH_TARGET`). Do not pass object literals (e.g. `shadowOffset={{ width: 0, height: 2 }}`) in render—extract to a constant to avoid a new reference every render.
+
+## 4. Accessibility
+- **Interactive elements** must have `accessibilityLabel` (and `accessibilityRole` where appropriate). Buttons, links, and icon buttons must be understandable by screen readers.
+- **Helper-built buttons:** Shared helpers (e.g. `getIOSButtonProps`) do not add accessibility by default. For every primary or close action in modals and dialogs, set `accessibilityLabel` and `accessibilityRole` explicitly on the Button (or equivalent).
+- **Modals:** Provide `accessibilityLabel` (or equivalent) for close and primary action buttons; use `testID` on modal titles when they are asserted in tests.
+- **Lists and pickers:** Row/item renderers (e.g. `renderIOSListItem`) should accept optional `accessibilityLabel` and `accessibilityRole` so callers can pass them. Segment controls: set `accessibilityState={{ selected: ... }}`.
+- **Forms:** Inputs should have associated labels and, when helpful, `accessibilityHint`.
+
+## 5. Error Boundaries
+- **Key screens** (e.g. medication detail) must be wrapped in a React Error Boundary with a fallback UI (e.g. "Something went wrong" and "Try again"). Do not leave screens that can white-screen on an uncaught render error.
+
+## 6. TypeScript (Strict Mode)
+- **No `any`:** STRICTLY FORBIDDEN. Use `unknown` or specific interfaces.
+- **Props:** Every component must define a `Props` interface.
+- **Prop types from hooks:** When a prop’s type is “the return type of hook X”, use a direct import of the hook and `ReturnType<typeof useHookName>` (e.g. `form: ReturnType<typeof useLogPurchaseForm>`). Do not use `typeof import("path").useHookName`; it is harder to read and can drift from the actual hook.
+- **Naming:** Avoid variable names that shadow imported symbols (e.g. do not use `const t = setTimeout(...)` when `t` is the i18n function from `constants/labels`). Use distinct names (e.g. `timeoutId`).
+
+# SPECIFIC "LIBRARY KILL LIST"
+If I ask for these, **STOP** and suggest the modern replacement:
+- `react-native-paper` -> **Tamagui**.
+- `moment` / `date-fns` -> **Day.js**.
+- `axios` -> **Fetch API**.
+- `async-storage` -> **Expo SecureStore** (sensitive) or **SQLite** (data).
+- `StyleSheet` -> **Tamagui Stacks**.
+
+# CODE QUALITY & TOOLING
+
+## Quality tools (in place)
+- **ESLint** — `npm run lint` (fails on any warning: `--max-warnings 0`). Use `npm run lint:fix` to auto-fix.
+- **Prettier** — `npm run format` to write; `npm run format:check` to verify only.
+- **TypeScript** — `npm run typecheck` (`tsc --noEmit`).
+- **ts-prune** — `npm run prune` (finds unused exports).
+- **Unified check** — `npm run check` runs format:check → lint → typecheck → prune → test:coverage (with auto-fix for format and lint on first failure). **This must pass before every PR.**
+- **Jest** — `npm test` (unit and component tests); `npm run test:coverage` for coverage. Tests live in `**/__tests__/**/*.(test|spec).(ts|tsx)`. Mocks for `expo-sqlite` and `expo-router` in `__mocks__/`. Config: `jest.config.js`, `jest-setup.js`. See `docs/core/ROADMAP.md` §1.3 and `docs/core/REPLICATION_BLUEPRINT.md` §7 (Testing).
+
+## When to run
+- **Before committing / opening a PR:** Run `npm run check`. When adding or changing logic that is (or could be) tested, also run `npm test`. Fix any failure.
+- **While editing:** Run `npm run lint:fix` and `npm run format` as needed, or rely on editor integration (format on save, ESLint).
+- **CI (when configured):** Run `npm run check` on every push/PR to main; add `npm test` when tests exist (test setup is in place).
+
+## Enforcement
+- No `console.log` in committed code (ESLint: allow only `console.warn` and `console.error`).
+- No unused variables or exports; prefix intentionally unused with `_` (e.g. `_emptyMessage`) or remove.
+- No `any`; use strict TypeScript (see "TypeScript" above).
+- **Error handling:** Wrap DB calls in `try/catch`. Never swallow errors. Use React Error Boundaries on key screens (see "Error Boundaries" above).
+- **eslint-disable:** Use sparingly; every disable must have an inline comment explaining why (e.g. RN Modal/View in a Tamagui screen, test matcher limitation).
+
+# INTERNATIONALIZATION (i18n)
+- **Strict Prohibition:** NEVER leave hardcoded strings in JSX.
+- **Implementation:** Use the project’s label function (e.g. `t()` from `constants/labels`) for all user-facing strings. When i18n is wired, swap the implementation; keys stay the same. Use namespaced keys (e.g. `common.loading`, `log_purchase.save`).
+- **Config and theme objects:** Helpers or config that determine which copy is shown (e.g. verdict, tooltip label, badge label) must return **locale keys**, not literal strings. The component calls `t(key)` when rendering so all copy stays in `constants/labels` and remains i18n-ready (e.g. `defaultVerdictKey: "price.good_to_buy"` with `verdict = t(config.defaultVerdictKey)` in the component).
+
+# DOCUMENTATION
+- **Replication Blueprint:** `docs/core/REPLICATION_BLUEPRINT.md` is the single source for replicating this app’s tech stack and architecture in a new project.
+- **When to update the blueprint:** After changing core dependencies (package.json), project layout (new top-level folders), DB/migration approach, root providers/theming, state or navigation patterns, or key config (app.json, babel.config.js, tsconfig.json). Copy version numbers and snippets from the actual config files so the doc does not drift. See the “How to keep this document up to date” section inside the blueprint for a full checklist.
+- **Code review:** When reviewing PRs that touch stack, layout, or config, consider whether `docs/core/REPLICATION_BLUEPRINT.md` needs an update and add it to the review checklist if relevant (see `docs/ai/code_review_prompt.md`).
+
+# AI WORKFLOWS (Cursor Skills)
+Follow this routing table to trigger specific workflow skills:
+
+| IF the user wants to... | THEN the AI should... |
+| :--- | :--- |
+| **Start a new feature or task** | Trigger the **`start-feature`** skill to enforce discovery, planning, and TDD. |
+| **Finish a branch or push changes** | Trigger the **`finish-branch`** skill to handle remote checks and async loops. |
+| **Check project status or unblock** | Trigger the **`status-check`** skill to rehydrate context and pinpoint blockers. |
+| **Conduct a code review** | Trigger the **`code-review`** skill to evaluate against project standards. |
+| **Create a Pull Request draft** | Trigger the **`pr-description-clipboard`** skill to scaffold the PR description. |

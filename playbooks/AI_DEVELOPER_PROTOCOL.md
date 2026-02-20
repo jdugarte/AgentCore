@@ -1,0 +1,79 @@
+# AI Developer Protocol & Refactoring Playbook
+
+**Goal:** Replicate the "Deep Clean" process used across software projects to eliminate fragmentation, redundancy, and drift in documentation, and to optimize AI Agent workflows for the specific tech stack.
+
+**Instruction to AI:** Execute this playbook phase by phase. Do not skip to solutions; perform the analysis first.
+
+---
+
+## Phase 1: Discovery & Inventory
+
+**Goal:** Understand what we have.
+
+1.  **List & Group:** List all files in `docs/` and group them by "Domain" (e.g., UI, Backend, Process, Legacy).
+2.  **Identify "Split Brains":** finding multiple documents that seem to cover the same topic (e.g., `ui_plan.md` and `ui_rebuild.md`, or `auth_flow_v1.md` and `AUTHENTICATION.md`).
+3.  **Identify "Snapshots":** Find documents that look like point-in-time audits or specific task plans (e.g., `CODE_REVIEW_7df209c.md`, `feature_xyz_notes.md`) rather than living documentation.
+
+## Phase 2: Redundancy Analysis (The "Dry" Check)
+
+**Goal:** Find repeated information.
+
+1.  **Cursorrules Check:** Compare `docs/` against `.cursorrules`.
+    - _Question:_ Is `docs/tech_stack.md` just a copy of the "Tech Stack" section in `.cursorrules`?
+    - _Question:_ Does `docs/component_library.md` repeat rules already defined in `.cursorrules`?
+2.  **Cross-Doc Check:** Do disparate docs repeat the same architectural patterns?
+
+## Phase 3: Drift Analysis (Truth vs. Reality)
+
+**Goal:** Ensure docs match the code.
+
+1.  **Spec Audit:** Compare `docs/SPEC.md` against the core data layer (e.g., `app/models/`, `db/schema.ts`, `prisma/schema.prisma`). Are there models missing from the Spec? Are there relationships described in Spec that don't exist?
+2.  **UI Audit:** Compare UI docs (if any) against the frontend components directory (e.g., `app/components/`, `src/views/`).
+
+## Artifact Strategy (The "Wisdom" of Execution)
+
+**Key Lesson:** The analysis phase generates meaningful artifacts (Inventory, Redundancy Analysis, Drift Analysis). These become "stale" the moment you execute fixes, but they are valuable audit logs.
+
+- **Create** these artifacts in a temporary location or root `docs/` during analysis.
+- **Move** them to `docs/audit/` with a descriptive date stamp (e.g., `YYYY-MM-DD_AI_AUDIT_PHASE_1_INVENTORY.md`) upon completion.
+
+## Phase 4: Reconciliation (The Fix)
+
+**Goal:** Resolve the drifts identified in Phase 3 while future-proofing the documentation.
+
+1.  **Code vs. Spec Decision:** For each drift, decide: _Is the Code wrong, or is the Spec wrong?_ (Ask the user).
+2.  **Execute Fix:** Update the code or the spec accordingly.
+3.  **Add a Domain Glossary:** Add a strict terminology glossary to `SPEC.md`. This prevents AI from hallucinating standard industry definitions when the project uses specific internal terminology.
+4.  **Deep-Link Feature Specs from Core:** Explicitly link feature-specific documents from the core `SPEC.md` using markdown links (e.g., `> **Implementation Deep Dive:** See [docs/features/FEATURE_NAME.md]`). This teaches the AI exactly where to look next.
+
+## Phase 5: Consolidation & Cleanup
+
+**Goal:** Execute the proposal from Phase 2 and optimize document storage.
+
+1.  **Organize `docs/` Hierarchy:**
+    - Group documents into logical subdirectories (e.g., `core/`, `features/`, `ai/`, `audit/`) so AI agents can be targeted to specific folders (e.g., `@docs/features/`) without polluting their context window.
+2.  **Merge Split Brains:**
+    - Read the source file (e.g., `obsolete_auth.md`).
+    - Append its relevant content to the target file (e.g., `AUTH_SPEC.md`).
+    - Delete the source file.
+3.  **Archive Snapshots:** Move point-in-time docs to `docs/audit/` with a date prefix.
+4.  **Final Sweep:** Move the analysis artifacts (Inventory, Redundancy, Drift reports) to `docs/audit/` with date prefixes.
+
+## Phase 6: AI Agent & Workflow Optimization
+
+**Goal:** Ensure AI assistants operate seamlessly within the project's specific tech stack, follow interactive, safe workflows, and maintain documentation hygiene.
+
+1.  **Agent SOP Refactor:**
+    - Consolidate AI rules into `.cursorrules` to act as an **IF/THEN routing table**.
+    - Do not duplicate standard formatting rules. Keep `.cursorrules` as the single source of truth for both standards and workflow routing.
+    - Delete legacy directories like `.agent/` so all tools share a single source of truth and avoid "Split Brain" AI instructions.
+2.  **Skill Refinement (Local & Async Loops):**
+    - Update universal workflow skills (e.g., `start-feature`, `finish-branch`, `status-check`) to enforce interactive pauses.
+    - **Start Feature:** Ensure the AI forces a Q&A discovery phase, drafts a hierarchical `implementation_plan.md`, and loops through a strict TDD process step-by-step.
+    - **Finish Branch:** Ensure the AI handles async loops (like waiting for remote bot reviews on GitHub) by pausing and waiting for the user to provide feedback in loops.
+    - **Status Check:** Ensure the skill can rehydrate context by reading the `implementation_plan.md`, codebase, and test suite to pinpoint exactly _Who_ is blocking progress.
+    - **Harvest Rules:** Ensure rule extraction pauses for explicit user approval before writing to `.cursorrules`.
+3.  **Playbook Documentation:**
+    - Ensure `docs/ai/AI_WORKFLOW_PLAYBOOK.md` exists to document the exact purpose and triggers for all Custom Skills in the project, providing a clear reference manual for current and future developers.
+4.  **Prevent Future "Drift" via PR Templates:**
+    - Add required checkboxes to `.github/PULL_REQUEST_TEMPLATE.md` forcing developers to attest they have updated `SPEC.md` (if schema changes) or `REPLICATION_BLUEPRINT.md` (if the stack changes).
