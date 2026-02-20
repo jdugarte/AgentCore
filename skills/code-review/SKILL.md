@@ -1,39 +1,39 @@
 ---
 name: code-review
-description: Conduct strict self-reviews of pull requests using the Kova code review checklist. Use when the user asks for a code review, mentions reviewing their branch, or wants to review code changes before sharing with the team.
+description: Trigger a strict self-review of MedVentory code changes. Use when the user asks for a code review, to review their branch/PR, or to review code before sharing. The actual review criteria and output format are in docs/ai/code_review_prompt.md — this skill only defines when to run and what to review (scope).
 ---
 
 # Code Review Skill
 
 ## Purpose
 
-Run strict self-reviews of Kova code changes. **Do not duplicate checklist or output format here** — `docs/code_review_prompt.md` is the single source of truth for criteria, categories, and format. This skill defines when to run and how to scope the review.
+This skill **triggers** a code review. It does not define how to review: **all review criteria, categories, output format, and instructions** come from **`docs/ai/code_review_prompt.md`**. When the user asks for a code review, you must read that document in full and follow it for the actual review.
 
 ## When to Use
 
-- User asks for a code review, or to review their branch/PR/changes
-- User says "review my code" or "review this branch"
+- User asks for a code review, or to review their branch / PR / changes
+- User says e.g. "review my code", "review this branch", "code review"
 
 ## Scope (what to review)
 
-- **Default:** Current git branch (`git branch --show-current`) vs `main`. Commands like "code review" or "review my code" use this without the user naming a branch.
-- **Other branch:** If the user names a branch (e.g. "review branch feature-xyz"), compare that branch to `main`.
-- **Base:** Always compare against `main` unless the user says otherwise.
-- **Specific files:** If the user names files, focus the review on those files (still use the full checklist for them).
+- **Default:** Changes on the current branch vs `main`. Use `git branch --show-current`; if the user does not name a branch, review the current branch.
+- **Named branch:** If the user names a branch (e.g. "review branch feature-xyz"), review that branch vs `main`.
+- **Base:** Compare against `main` unless the user specifies another base.
+- **Specific files:** If the user names files or paths, restrict the review to those files; still apply the full checklist from `docs/ai/code_review_prompt.md` to them.
 
-## Instructions
+## What You Must Do When Invoked
 
-1. **Read** `docs/code_review_prompt.md` in full and use it as the checklist. Do not re-list its sections or criteria in your reply; apply them.
-2. **Determine scope** from the section above (current branch vs main, or user-specified branch/files).
-3. **Review the diff** (or the specified files) against every section of the prompt in order.
-4. **Output** exactly as defined in the "Output Format" section of `docs/code_review_prompt.md` (categories, "Only list actionable items", Risk Level, Pre-Review Checklist). Do not invent new categories or skip any.
+1. **Read** `docs/ai/code_review_prompt.md` in full. Use it as the single source of truth for:
+   - Context & stack
+   - All review criteria (React architecture, TypeScript, UI/Tamagui, i18n, Blueprint, etc.)
+   - Pre-Review Execution Instructions (e.g., Running terminal commands like `npm run check`) 
+   - Output format exactly as requested.
+2. **Determine scope** from the section above (current or named branch vs main, optional file focus).
+3. **Execute Pre-Flight Checks:** Run the required terminal commands (linters and tests) indicated in `docs/ai/code_review_prompt.md` BEFORE generating text. Feed any failures into the final review payload.
+4. **Run the review** by applying every relevant section of the prompt to the in-scope code and the terminal outputs. Do not add or remove categories; follow the prompt’s output rules (omit empty headers, no praise, etc.).
+5. **Produce output** exactly as specified in the "Output Format" section of `docs/ai/code_review_prompt.md`, including Risk Level and Pre-Review Checklist.
 
-## Reference
+## References
 
-- **Checklist, criteria, output format:** `docs/code_review_prompt.md`
-- **General dev standards (kill list, quality tools):** `.cursorrules`
-
-## Testing
-
-- **Test setup:** Jest + jest-expo + React Native Testing Library; mocks in `__mocks__/expo-sqlite.js` and `__mocks__/expo-router.js`; tests in `**/__tests__/**/*.(test|spec).(ts|tsx)`. Scripts: `npm test`, `npm run test:coverage`.
-- **In reviews:** When the PR adds or changes logic that could be tested, or adds/edits test files, ensure **`npm test`** is run and passes. Apply the "Quality gate" item in `docs/code_review_prompt.md` (run check + test when relevant).
+- **Review criteria, categories, output format:** `docs/ai/code_review_prompt.md` (read in full when performing a review)
+- **General project standards:** `.cursorrules`

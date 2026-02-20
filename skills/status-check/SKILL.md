@@ -1,43 +1,37 @@
 ---
 name: status-check
-description: Rehydrates full context so the user can seamlessly resume work on a feature, even in a brand new chat session after a long gap.
+description: Rehydrates project context regarding the active feature. Use when the user asks "where are we at", "what's next", or if progress is blocked and you need to figure out who is blocking progress.
 ---
 
 # Status Check Skill
 
-**Goal:** Provide a comprehensive status report that reconstructs the exact state of the project, allowing the user to jump between features and chats agilely.
+## Purpose
+To quickly rehydrate context during a long-running task, especially when picking up after a break or when an async process (like CI/CD or another developer's review) has halted momentum. It pinpoints exactly what has been done and *Who* is blocking progress.
 
-## Instructions for the Agent (Rehydrating Context)
+## Instructions / Workflow
 
-When invoked, you MUST investigate the following to reconstruct the exact state of the project:
-1.  **The Plan:** Read `implementation_plan.md` to identify the hierarchical steps and overall goal.
-2.  **The Code & Tests:** Check the codebase against the plan. Which steps are already implemented? Are there failing tests (`npm test`)? Is the linter happy (`npm run check`)?
-3.  **The Polish State:** Is the code waiting for a BugBot review on GitHub? Has a PR been drafted?
+1. **Rehydrate Implementation Plan**
+   - Look for `docs/implementation_plan.md` in the workspace. Read it explicitly.
+   - Compare the plan's checklist against the files currently modified in the active branch (`git status`, `git diff main --name-status`).
 
-## Determine the Current Status
+2. **Assess Codebase & Tests**
+   - Check if there are failing unit tests (`npm test`) or failing TS/Lint checks (`npm run check`) for the active files.
+   - If there are local failures, compile a summary of the failing files/lines.
 
-Based on your context gathering, pinpoint exactly WHO is blocking progress and WHERE you are in the workflow:
+3. **Identify the Blocker ("Who is blocking?")**
+   - **The AI / Developer (You):** If there are failing tests, uncommitted code, or unchecked boxes in the `implementation_plan.md` that you can directly address.
+   - **The User:** If you are waiting for requirements clarification, approval on a plan, or manual UI verification.
+   - **Remote Bots / CI:** If the PR is submitted but pipeline checks failed or remote reviews are pending.
 
-*   **Discovery Phase:** "Waiting on User (Gathering requirements for the Implementation Plan)"
-*   **TDD Loop:** "Executing Step [X] of [Y]: [Task Name]."
-    *   *If tests exist but fail:* "Waiting on AI (Need to write implementation code to pass tests)."
-    *   *If code exists but tests fail/missing:* "Waiting on AI (Need to write tests)."
-    *   *If both pass:* "Waiting on User (Ready to proceed to Step [X+1])."
-*   **Local Code Review:** "Waiting on User (Code review findings presented, awaiting selection of fixes)."
-*   **Remote Polish (BugBot):** "Waiting on BugBot (Paused: awaiting remote async review or user to say 'BugBot is happy')."
-*   **Final Polish:** "Waiting on AI/User (Drafting PR, checking test gaps, harvesting rules)."
+4. **Report to User**
+   - Print out a concise summary using the following Output Template:
 
-## Output Template
-
-> **📍 Macro Status:** [e.g., Phase 2: The TDD Loop / Phase 3: Final Polish]
-> **📝 Micro Status:** [e.g., Step 2 of 3 - Building the Modal UI]
-> **🚦 Blocker:** [e.g., Waiting on User to approve tests]
->
-> **Summary of where we left off:**
-> [Brief 2-3 sentence summary of the last completed action and the current state of the codebase. Explicitly mention if tests are passing or failing].
->
-> **Suggested Next Action:**
-> [Specific recommendation, e.g., "Would you like me to write the tests for Step 2 now?" or "Please paste the BugBot review when ready."]
-
-## Example Trigger via Chat
-"Status check", "Where are we?", "Context resume"
+   > **📍 Macro Status:** [e.g., Phase 2: The TDD Loop / Phase 3: Final Polish]
+   > **📝 Micro Status:** [e.g., Step 2 of 3 - Building the Modal UI]
+   > **🚦 Blocker:** [e.g., Waiting on User to approve tests]
+   >
+   > **Summary of where we left off:**
+   > [Brief 2-3 sentence summary of the last completed action and the current state of the codebase. Explicitly mention if tests are passing or failing].
+   >
+   > **Suggested Next Action:**
+   > [Specific recommendation, e.g., "Would you like me to write the tests for Step 2 now?" or "Please paste the BugBot review when ready."]
