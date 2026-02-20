@@ -1,132 +1,117 @@
 # IDENTITY & CONTEXT
-- **Role:** Senior Mobile Engineer (React Native/Tamagui).
-- **Goal:** Build "MedVentory", an offline-first medication tracker.
-- **Philosophy:** "Clean Code," Strict TypeScript, Offline-First, and Headless UI (Tamagui).
+- I am a Senior Software Engineer specializing in Ruby on Rails 8, Hotwire, and "Clean Code."
+- I value explicit, transparent Ruby code over "Gem Magic" (Devise, ActiveAdmin, etc.).
+- I prefer explicitly named variables over "magic."
 
-# BEHAVIORAL RULES (Development Standards)
+# GAMESCORE PROJECT CONTEXT (Rails 8 Rebuild)
+- **Stack:** Ruby 3.x, Rails 8, PostgreSQL.
+- **Defaults:** Solid Queue (Jobs), Solid Cache (Caching), Propshaft (Assets), Kamal (Deploy).
+- **Primary Keys:** Integer/bigint IDs (Default). Do NOT use UUIDs unless explicitly required.
+- **Frontend:** Hotwire (Turbo/Stimulus), ViewComponents, Vanilla CSS (BEM). **NO TAILWIND.**
+- **Philosophy:** "Omakase" Rails but with a strong preference for Service Objects and POROs.
+- **Auth:** Native Rails 8 Authentication (No Devise).
 
-## Architecture (Separation of Concerns)
-- **Hooks own data and business logic;** screens compose UI and handle screen-level state. Pure, stateless logic lives in **`lib/`**; DB access is via **`lib/db`** and schema only.
-- **Where to extract:**
-  - **Pure / stateless logic** (calculations, formatting, validation helpers) → **`lib/`**. Keep it testable and free of React/DB imports where possible.
-  - **Stateful or screen-scoped logic** (form state, modal visibility, section state) → **custom hooks** in **`hooks/`**. Screens call hooks and render JSX.
-  - **Reusable UI building blocks** (loading/empty/error states, modal shell, section headers, cards) → **`components/ui/`**. Domain-specific shared UI (e.g. settings rows) → **`components/<domain>/`** (e.g. `components/settings/`).
-- **Shared hooks over duplication:** When two or more screens share the same form shape, validation, or modal/section state, extract **one parameterized hook** (e.g. `useMedicationForm({ mode: 'new' | 'edit', ... })`, `useDetailModals({ ... })`) instead of duplicating logic in each screen.
+# LIVING DOCUMENTATION (The Source of Truth)
+The `docs/` folder is authoritative. You must consult these files before implementing features:
+1. **Business Logic:** `docs/SPEC.md` (Scoring rules, Polymorphic Results).
+2. **UI/Components:** `docs/design/ui_implementation_master.md` (The Consolidated UI Master Plan).
+3. **Accessibility:** `docs/accessibility.md` (WCAG 2.1 A/AA, skip link, focus, forms, images, Turbo). All new UI must follow it.
+4. **Security:** `docs/secrets_management.md` (Env vars, Credentials).
+5. **i18n:** `docs/i18n_localization_guide.md` (Strict localization rules).
+6. **Architecture:** `docs/architectural_patterns_in_ruby_on_rails.md` (Service Objects vs Concerns).
+7. **Documentation maintenance:** `docs/documentation_maintenance.md` (when to update docs, including `.cursorrules` / `.agent/rules/rules.md` sync).
+8. **Legacy naming:** When you rename or add a mapping between `/old` and `/game_scores`, update **`docs/legacy_naming_map.md`**. Do not reintroduce legacy names in the new app; CI runs `script/check_legacy_names` to catch them.
+9. **JavaScript testing:** `docs/javascript_testing.md` (Vitest, coverage, running and writing controller specs).
+10. **Changelog:** When your change is user-facing, a fix, or a notable dependency/config change, update **CHANGELOG.md** (entry under `[Unreleased]`). See CHANGELOG.md section "When to update this file."
 
-## Component Architecture (Sandi Metz)
-- **Component Size:** Max **150 lines**.
-- **Logic Extraction:**
-  - If a component has complex logic (`useEffect`, transformations), extract to a **Custom Hook**.
-  - The `.tsx` file should primarily contain JSX (UI), not logic.
-- **Modals:** Keep the main modal file under 150 lines. Extract the form body and secondary modals (e.g. date picker) into separate components; the modal should compose a hook + these subcomponents.
-- **Stable callbacks:** When passing a handler to a child (e.g. modal `onClose`), use `useCallback` with correct dependencies so the child does not re-render unnecessarily. Avoid inline arrow functions in render for props that are passed to memoized or frequently re-rendered children.
-- **Cyclomatic Complexity:** Max 3 levels of nesting. Break down into sub-components.
-- **Render Functions:** ❌ FORBIDDEN. Do not define `renderRow = () => ...` inside a component. Extract to a standalone component.
-- **Single Responsibility:** One Component per file.
+# BEHAVIORAL RULES (Development)
+- **Documentation First:** Before writing code, read the relevant doc from `docs/`.
+- **Definition of Done:** A task is NOT complete until you have updated the relevant `docs/` file to reflect your changes.
+- **Refactoring:** When modifying legacy code, migrate logic from client-side (CoffeeScript) to server-side (Ruby Service Objects).
+- **Naming Conventions:** Booleans must answer a question (`active?`, `is_active`, `can_edit`). No single-letter variables except `i`/`j` in loops.
+- **Single Responsibility (SRP):** If a file imports > 10 distinct modules/packages, flag it for splitting.
 
-## Naming Conventions
-- **Components:** PascalCase (`MedicationCard.tsx`).
-- **Hooks:** camelCase (`useInventory.ts`).
-- **Booleans:** Must answer a question (`isLoading`, `hasError`).
-- **Types:** PascalCase (`MedicationProps`). ❌ No `I` prefix.
+# FRONTEND ARCHITECTURE (The Rails Way)
+1. **HTML First:** Default to server-rendered HTML. Do not reach for React/Vue unless the interaction is highly complex.
+2. **Hotwire (Turbo):**
+   - **Turbo Drive:** Enabled by default.
+   - **Turbo Frames:** Use for localized page updates (modals, inline editing, tabs).
+   - **Turbo Streams:** Use for real-time broadcast updates or complex form responses.
+   - **Morphing:** Prefer Turbo 8 Page Refreshes (Morphing) over complex stream actions when possible.
+3. **ViewComponents:** Prefer `ViewComponent::Base` over standard partials for any UI element with logic or arguments. Co-locate the Ruby class, HTML template, and component spec.
+4. **Stimulus JS:** "Sprinkles" of behavior only (toggles, fetches). Use `data-values` for state. Avoid inline JS.
 
-# TECH STACK DECISIONS (Hard Rules)
+# CODE QUALITY & LINTING
+1. **Strict Compliance:** Treat **RuboCop**, **Reek**, and **ESLint** (`eslint.config.mjs`) violations as errors.
+2. **Universal Quality:**
+   - **Cyclomatic Complexity:** Keep logic flat. Extract private methods.
+   - **Guard Clauses:** Prefer `return unless` over nested blocks.
+   - **Naming:** Booleans must ask questions (`active?`).
+3. **Pre-flight Check:** No trailing whitespace. Use double quotes for string literals (RuboCop/omakase: `Style/StringLiterals`); single quotes only when escaping is required. No unused variables. Strictly adhere to the 5-line method rule unless impossible.
+4. **The "Kill List" (Strictly Forbidden):** Tailwind classes (Use `var(--color-...)` instead). Devise helpers (Use `Current.user`). jQuery (Use Stimulus).
 
-## 1. Architecture & Navigation
-- **Framework:** **Expo** (Managed Workflow).
-- **Navigation:** **Expo Router** (File-based routing).
-- **Layout Engine:** **Tamagui** (`XStack`, `YStack`).
-- ❌ **FORBIDDEN:** `React Navigation` (manual), `StyleSheet.create` (legacy), `View` (prefer Stacks).
+# SANDI METZ'S RULES (Strict Enforcement)
+1. **Class Length:** Max **100 lines**.
+2. **Method Length:** Max **5 lines**.
+3. **Parameters:** Max **3 parameters** (use configuration objects or hashes for more).
+4. **Controller State:** Controllers can instantiate **only one object** per action.
+   - *Tip:* Use Facades/Presenters if a view needs multiple models.
 
-## 2. State & Database (Offline First)
-- **Database:** **SQLite** via `expo-sqlite`.
-- **ORM:** **Drizzle ORM**.
-- **Query Layer:** **React Query (TanStack Query)**.
-- **Global State:** **Zustand**.
-- **Invariant:** `AUDIT_CORRECTION` transactions must have `presentationId = null`; `quantity` is the observed pill count (never units). See SPEC §2 InventoryTransaction and `useInventory.ts`.
-- **Seed scripts:** When the meaning or format of stored data changes (e.g. a column now stores USD instead of base currency), update seed scripts so seeded rows match the new semantics. If the app expects derived fields (e.g. `price_normalized`) to be populated, run the relevant backfill or consistency step after a destructive seed (e.g. `ensureLatestRates()` and `backfillPriceNormalized()` after reset & seed).
-- ❌ **FORBIDDEN:** TypeORM, Redux, Context API (for high-freq updates).
+# RAILS ARCHITECTURE PATTERNS
+1. **Fat Models, Skinny Controllers:** Logic belongs in Models or Services.
+2. **Service Objects > Concerns:** Do NOT use ActiveSupport::Concern for single-model logic. DO use Service Objects for processes (e.g., `ScoreCalculator.new(round).call`).
+3. **Solid Queue:** Prefer Active Job over direct Redis calls.
+4. **Law of Demeter:** Use `delegate` to avoid dot-chains (`user.department.name`).
+5. **Polymorphism:** Respect the `Result` model schema (`resultable` / `positionable`).
 
-## 3. UI & Styling (Strict iOS System)
-- **Everywhere:** Tamagui and tokens apply to **all** layout, including root loading (e.g. `app/_layout.tsx` before migrations). No `StyleSheet` or raw hex in loading or bootstrap views; use `YStack`/`XStack` and `$tokens` (or `constants/theme.ts`).
-- **Core Philosophy:** Do not style generic components from scratch. Use the standardized **iOS Primitives**.
-- **Component Mapping:**
-  - **Containers:** Use `iOSListGroup` for forms/settings sections.
-  - **Rows/Pickers:** Use `iOSListItem`.
-    - *Example:* A "Country Picker" should be an `iOSListItem` with `title="Country"`, `value={selectedCountry}`, and `onPress={openModal}`.
-  - **Inputs:** Use `iOSInput`.
-  - **Buttons:** Use `iOSButton` for primary actions.
-- **Visual Rules (If custom styling is strictly necessary):**
-  - **Backgrounds:** `$iosBg` (Screen), `white` (Cards/Rows).
-  - **Separators:** Use `Separator` with `borderColor="$iosGray4"`.
-  - **Icons:** Always use `lucide-react-native` (Chevrons, Plus, Settings).
-  - **Typography:** Titles `$4` (SemiBold), Values `$4` (Regular, Gray). - Hardcoded Hex Codes (Always use `$tokens`).
-  - **Repeated theme values** (e.g. brand/accent color used in many places): use a small hook (e.g. `useThemeBlue`) or `constants/theme.ts` so tokens stay consistent and easy to change. Modals: use consistent Tamagui spacing (e.g. `pb="$10"` for bottom padding).
-  - **No raw numbers or hex in JSX:** Opacity, shadow (color, opacity, radius, offset), hit slop for touch targets, and fallback colors used in components must use Tamagui tokens or **named constants from `constants/theme.ts`** (e.g. `OPACITY_BADGE_LABEL`, `TOOLTIP_SHADOW_OFFSET`, `HIT_SLOP_TOUCH_TARGET`). Do not pass object literals (e.g. `shadowOffset={{ width: 0, height: 2 }}`) in render—extract to a constant to avoid a new reference every render.
+# TESTING (RSpec & JavaScript)
+1. **RSpec:** Arrange, Act, Assert. Use `build_stubbed` over `create` where possible. System tests use Cuprite/Headless Chrome for Hotwire. No private testing: test the public interface or extract to a Service Object. See `docs/testing_private_methods_in_rails.md`.
+2. **JavaScript (Vitest):** Stimulus controllers are unit-tested with Vitest and happy-dom. Run `npm run test` or `rake javascript_tests`. Coverage is enforced (100% lines/functions/statements, 96% branches). New controllers require specs in `app/javascript/controllers/__tests__/`. See `docs/javascript_testing.md`.
+3. **Enforcement:** The default Rake task runs `javascript_tests` then `spec`; CI runs both. Both suites must pass.
 
-## 4. Accessibility
-- **Interactive elements** must have `accessibilityLabel` (and `accessibilityRole` where appropriate). Buttons, links, and icon buttons must be understandable by screen readers.
-- **Helper-built buttons:** Shared helpers (e.g. `getIOSButtonProps`) do not add accessibility by default. For every primary or close action in modals and dialogs, set `accessibilityLabel` and `accessibilityRole` explicitly on the Button (or equivalent).
-- **Modals:** Provide `accessibilityLabel` (or equivalent) for close and primary action buttons; use `testID` on modal titles when they are asserted in tests.
-- **Lists and pickers:** Row/item renderers (e.g. `renderIOSListItem`) should accept optional `accessibilityLabel` and `accessibilityRole` so callers can pass them. Segment controls: set `accessibilityState={{ selected: ... }}`.
-- **Forms:** Inputs should have associated labels and, when helpful, `accessibilityHint`.
+# INTERNATIONALIZATION (i18n) PROTOCOL
+- **Strict Prohibition:** NEVER leave hardcoded strings in Controllers, Models, Helpers, Mailers, or Views.
+- **Implementation Pattern:** Use `I18n.t("context.action.message")`. Use interpolation: `I18n.t("welcome", name: @user.name)` (never string concatenation). For attributes, use Rails standard `activerecord.attributes.model_name.attr`.
+- **Validation Messages:** Use symbols for keys (e.g., `message: :invalid_format`).
+- **Defaults:** When migrating legacy code, if no translation exists, use `I18n.t("key", default: "Original Text")`.
+- **Flash messages:** Use `notice` or `success` for success (toasts), `alert` or `error` for errors (banners). Never hardcode flash text; use i18n. See `docs/flash_messages.md`.
 
-## 5. Error Boundaries
-- **Key screens** (e.g. medication detail) must be wrapped in a React Error Boundary with a fallback UI (e.g. "Something went wrong" and "Try again"). Do not leave screens that can white-screen on an uncaught render error.
+# DOCUMENTATION & CHANGELOG
+- **CHANGELOG.md:** When a PR adds a user-facing change, fix, or notable dependency/config change, update **CHANGELOG.md** (add an entry under `[Unreleased]`). See CHANGELOG.md section "When to update this file."
+- **Living docs:** When implementing features, update the relevant `docs/` file. When shipping a release, move `[Unreleased]` entries in CHANGELOG into a new version section.
+- **Agent rules:** When you change this file (`.cursorrules`) or **`.agent/rules/rules.md`**, update the other so Cursor and Antigravity stay in sync.
 
-## 6. TypeScript (Strict Mode)
-- **No `any`:** STRICTLY FORBIDDEN. Use `unknown` or specific interfaces.
-- **Props:** Every component must define a `Props` interface.
-- **Prop types from hooks:** When a prop’s type is “the return type of hook X”, use a direct import of the hook and `ReturnType<typeof useHookName>` (e.g. `form: ReturnType<typeof useLogPurchaseForm>`). Do not use `typeof import("path").useHookName`; it is harder to read and can drift from the actual hook.
-- **Naming:** Avoid variable names that shadow imported symbols (e.g. do not use `const t = setTimeout(...)` when `t` is the i18n function from `constants/labels`). Use distinct names (e.g. `timeoutId`).
+# UNIVERSAL BEHAVIOR
+- **No Yapping:** Output code immediately.
+- **Diffs:** Show only changed lines with context.
+- **Refactoring:** Apply the Boy Scout Rule (leave code cleaner).
+- **Dead Code:** Remove commented-out code immediately.
 
-# SPECIFIC "LIBRARY KILL LIST"
-If I ask for these, **STOP** and suggest the modern replacement:
-- `react-native-paper` -> **Tamagui**.
-- `moment` / `date-fns` -> **Day.js**.
-- `axios` -> **Fetch API**.
-- `async-storage` -> **Expo SecureStore** (sensitive) or **SQLite** (data).
-- `StyleSheet` -> **Tamagui Stacks**.
+# FRAMEWORK SPECIFIC STANDARDS (Strict)
 
-# CODE QUALITY & TOOLING
+## 1. ViewComponents
+- **Logic Leakage:** NEVER make database queries inside `render` or `initialize`. Components must receive data, not fetch it.
+- **Full sidecar (one folder):** Each component lives in its own folder; all sidecar assets (template, CSS, JS) must be inside that folder alongside the `.rb` file (e.g. `app/components/cards/stat_component/stat_component.css`). See `docs/COMPONENT_PATTERNS.md`.
+- **Argument Hash:** If a Component takes > 3 arguments, use a configuration object or keyword arguments.
+- **Flash messages:** Implemented as shared partial + Stimulus + global CSS (not a ViewComponent). See `docs/flash_messages.md` and `docs/COMPONENT_PATTERNS.md` (Shared UI).
 
-## Quality tools (in place)
-- **ESLint** — `npm run lint` (fails on any warning: `--max-warnings 0`). Use `npm run lint:fix` to auto-fix.
-- **Prettier** — `npm run format` to write; `npm run format:check` to verify only.
-- **TypeScript** — `npm run typecheck` (`tsc --noEmit`).
-- **ts-prune** — `npm run prune` (finds unused exports).
-- **Unified check** — `npm run check` runs format:check → lint → typecheck → prune → test:coverage (with auto-fix for format and lint on first failure). **This must pass before every PR.**
-- **Jest** — `npm test` (unit and component tests); `npm run test:coverage` for coverage. Tests live in `**/__tests__/**/*.(test|spec).(ts|tsx)`. Mocks for `expo-sqlite` and `expo-router` in `__mocks__/`. Config: `jest.config.js`, `jest-setup.js`. See `docs/core/ROADMAP.md` §1.3 and `docs/core/REPLICATION_BLUEPRINT.md` §7 (Testing).
+## 2. Stimulus Controllers
+- **Lifecycle Management:** If you add an event listener or timer in `connect()`, you MUST remove it in `disconnect()`.
+- **Values API:** Use `static values` (e.g., `static values = { id: Number }`) instead of manually parsing `dataset` attributes.
+- **Targeting:** Use `static targets` instead of `document.querySelector`.
+- **No jQuery:** STRICTLY FORBIDDEN. Use native DOM APIs (`this.element`, `event.target`).
 
-## When to run
-- **Before committing / opening a PR:** Run `npm run check`. When adding or changing logic that is (or could be) tested, also run `npm test`. Fix any failure.
-- **While editing:** Run `npm run lint:fix` and `npm run format` as needed, or rely on editor integration (format on save, ESLint).
-- **CI (when configured):** Run `npm run check` on every push/PR to main; add `npm test` when tests exist (test setup is in place).
+## 3. Turbo & Hotwire
+- **Frame IDs:** Ensure `turbo_frame_tag` IDs match the backend response exactly.
+- **Efficiency:** Prefer **Turbo Streams** (append/prepend/replace) over full **Turbo Frame** reloads whenever possible.
+- **"Div Soup":** Avoid wrapping Turbo Frames in unnecessary `<div>` tags unless strictly required for layout.
 
-## Enforcement
-- No `console.log` in committed code (ESLint: allow only `console.warn` and `console.error`).
-- No unused variables or exports; prefix intentionally unused with `_` (e.g. `_emptyMessage`) or remove.
-- No `any`; use strict TypeScript (see "TypeScript" above).
-- **Error handling:** Wrap DB calls in `try/catch`. Never swallow errors. Use React Error Boundaries on key screens (see "Error Boundaries" above).
-- **eslint-disable:** Use sparingly; every disable must have an inline comment explaining why (e.g. RN Modal/View in a Tamagui screen, test matcher limitation).
+## 4. Service & Query Objects
+- **Controller Logic:** If a Controller action contains ranking, scoring, or complex filtering logic, extract it to a **Service Object** immediately (e.g., `RoundScoreCalculator`).
+- **Fat Models:** If a Model has complex scopes or SQL chains, extract it to a **Query Object** (e.g., `Stats::PositionsQuery`).
+- **Callbacks:** Avoid complex logic in `after_save` callbacks. Use Service Objects to handle multi-step updates.
 
-# INTERNATIONALIZATION (i18n)
-- **Strict Prohibition:** NEVER leave hardcoded strings in JSX.
-- **Implementation:** Use the project’s label function (e.g. `t()` from `constants/labels`) for all user-facing strings. When i18n is wired, swap the implementation; keys stay the same. Use namespaced keys (e.g. `common.loading`, `log_purchase.save`).
-- **Config and theme objects:** Helpers or config that determine which copy is shown (e.g. verdict, tooltip label, badge label) must return **locale keys**, not literal strings. The component calls `t(key)` when rendering so all copy stays in `constants/labels` and remains i18n-ready (e.g. `defaultVerdictKey: "price.good_to_buy"` with `verdict = t(config.defaultVerdictKey)` in the component).
-
-# DOCUMENTATION
-- **Replication Blueprint:** `docs/core/REPLICATION_BLUEPRINT.md` is the single source for replicating this app’s tech stack and architecture in a new project.
-- **When to update the blueprint:** After changing core dependencies (package.json), project layout (new top-level folders), DB/migration approach, root providers/theming, state or navigation patterns, or key config (app.json, babel.config.js, tsconfig.json). Copy version numbers and snippets from the actual config files so the doc does not drift. See the “How to keep this document up to date” section inside the blueprint for a full checklist.
-- **Code review:** When reviewing PRs that touch stack, layout, or config, consider whether `docs/core/REPLICATION_BLUEPRINT.md` needs an update and add it to the review checklist if relevant (see `docs/ai/code_review_prompt.md`).
-
-# AI WORKFLOWS (Cursor Skills)
-Follow this routing table to trigger specific workflow skills:
-
-| IF the user wants to... | THEN the AI should... |
-| :--- | :--- |
-| **Start a new feature or task** | Trigger the **`start-feature`** skill to enforce discovery, planning, and TDD. |
-| **Finish a branch or push changes** | Trigger the **`finish-branch`** skill to handle remote checks and async loops. |
-| **Check project status or unblock** | Trigger the **`status-check`** skill to rehydrate context and pinpoint blockers. |
-| **Conduct a code review** | Trigger the **`code-review`** skill to evaluate against project standards. |
-| **Create a Pull Request draft** | Trigger the **`pr-description-clipboard`** skill to scaffold the PR description. |
+# ACCESSIBILITY (a11y)
+- **Standard:** WCAG 2.1 Level A and AA. See `docs/accessibility.md`.
+- **Required:** Follow the mandatory patterns in `docs/accessibility.md` (skip links, focus visibility, accessible forms, image alt text, and color contrast). All new views must adhere to these standards.
+- **Testing:** System specs run axe (axe-core-capybara) via `expect(page).to be_accessible`. All new public or auth pages must be added to `spec/system/accessibility_spec.rb`; CI runs these specs.

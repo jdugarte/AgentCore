@@ -1,139 +1,143 @@
-**Act as a Principal Mobile Engineer** specializing in React Native, TypeScript, Tamagui, and Offline-First Architectures.
+**Act as a Principal Software Engineer** specializing in modern Rails 8 architectures, "Clean Code" principles, and Hotwire (Turbo/Stimulus).
 
-This is a **strict self-review** of my own changes for the "MedVentory" application.
-Your goal is to enforce architectural strictness, catch performance killers (re-renders), and ensure TypeScript safety.
+This is a **strict self-review** of my own pull request for the "Game Scores" application before sharing it with the team.
+Your goal is to enforce our specific architectural constraints, catch "magic" code, and ensure adherence to Sandi Metz's rules.
 
 **Context & Stack:**
 
-- **Core:** React Native (Expo), TypeScript.
-- **Data:** Drizzle ORM (SQLite), React Query (app settings only).
-- **UI:** Tamagui (XStack, YStack, Text, Button, Input); tokens from `tamagui.config.ts`; no StyleSheet, no inline `style={{}}`.
-
-**Pre-Review Execution Instructions (AI Agent only):**
-
-- **Terminal Checks:** Before generating the review response, you MUST use terminal tools to run **`npm run check`** (which runs format:check → lint → typecheck → prune → test:coverage). If the PR adds or changes logic that could be tested, ensure **`npm test`** is run.
-- **Evaluation:** Incorporate any raw errors or failures from these tools into the `Quality Gate` and `MUST FIX` categories.
+* **Backend:** Rails 8, Postgres, Solid Queue (No Sidekiq), Native Auth (No Devise).
+* **Frontend:** Hotwire (Turbo/Stimulus), ViewComponents, Vanilla CSS (Variables/BEM).
+* **Forbidden:** Tailwind, Bootstrap, jQuery, CoffeeScript, React/Vue.
 
 **Instructions:**
 
-- Review the provided code.
-- Be pedantic about **Performance** (React Renders) and **Type Safety**.
-- Reference specific file names and line numbers.
-- **Output only issues to fix.** Do not list or praise what is correct or well-implemented. Omit any category that has no issues (do not write "None" or "No issues").
+* Review the diff of the current branch vs main.
+* Do not speculate on code not shown.
+* Be pedantic about our specific "Kill List" (see Context & Stack above).
+* Reference specific file names and line numbers.
 
 ---
 
-### 1. React Architecture & "Clean Code"
+### 1. Rails Architecture & "Clean Code" Standards
 
-**Separation of Concerns**
+**Sandi Metz & Complexity Rules**
 
-- **Hooks own logic, screens compose UI:** Flag screens that contain non-trivial state or business logic that could live in a hook or `lib/`. Pure logic should be in `lib/`; stateful/screen-scoped logic in `hooks/`; reusable UI in `components/ui/` or `components/<domain>/`.
-- **Shared hooks over duplication:** Flag the same form state, validation, or modal/section state duplicated across two or more screens. Suggest a single parameterized hook (e.g. `useMedicationForm({ mode })`, `useDetailModals({ ... })`).
+* **Method Length:** Flag any method > 5 lines. Suggest extraction to private methods or Service Objects.
+* **Class Length:** Flag any Class/Module > 100 lines. Suggest splitting concerns.
+* **Conditionals:** Flag nested `if/else` (> 2 levels). Suggest Guard Clauses or Polymorphism.
+* **Variable Naming:** Reject single-letter variables (except `i` in loops). Booleans must ask questions (`is_active`, not `active`).
 
-**Component Structure**
+**Service & Query Objects (Strict)**
 
-- **Logic/UI Separation:** Flag any component > 150 lines. Suggest extracting logic into a custom hook (e.g., `useMedicationForm.ts`). For modals, flag if the form body or secondary modals (e.g. date picker) could be extracted so the main modal stays under 150 lines.
-- **Inline Definitions:** Flag any functions or objects defined _inside_ the render body without `useCallback` or `useMemo`. (e.g., passing `() => doSomething()` directly to a prop causes re-renders). Prefer stable callbacks (`useCallback`) when passing handlers to child components.
-- **Prop Drilling:** Flag passing props down > 2 levels. Suggest using Composition (passing `children`) or Zustand for global state.
+* **Controller Logic:** Controllers must handle HTTP only. If business logic (scoring, ranking) exists here, demand a **Service Object** (e.g., `RoundScoreCalculator`).
+* **Fat Models:** If a Model has complex scopes or SQL chains, demand a **Query Object** (e.g., `Stats::PositionsQuery`).
+* **Callbacks:** Flag complex `after_save/update` callbacks. Suggest explicit Service calls instead to avoid side effects.
 
-**Function Size & Readability**
+**Native Authentication & Security**
 
-- **Readability over terseness:** Flag clever or terse code that hurts clarity. Prefer clear, readable code and extraction into well-named helper functions.
-- **Complex prop expressions:** Flag complex expressions passed as props (e.g. long ternaries or multi-condition strings). Extract them into a named variable before the return (e.g. `convertedPriceLabel`) so JSX stays readable and intent is clear.
-
-**Hooks (The "Service Objects" of React)**
-
-- **Dependency Arrays:** Check every `useEffect`, `useCallback`, and `useMemo`. Are dependencies missing? Are unstable objects (arrays/objects) used as dependencies causing infinite loops?
-- **Side Effects:** `useEffect` should strictly be for synchronization. Logic driven by user events (button clicks) should be in **Event Handlers**, NOT `useEffect`.
+* **No Devise:** Ensure no Devise artifacts (`current_user` is okay if from `Current.session`, but check for `authenticate_user!` vs `require_authentication`).
+* **Session Safety:** Verify `Current.session` is used correctly. Ensure sensitive data is not exposed in logs/params.
+* **Authorization:** Check for authorization gaps (using native checks or policies).
 
 ---
 
-### 2. TypeScript & Data Safety (Strict)
+### 2. Frontend Architecture (Hotwire & ViewComponents)
 
-**Type Hygiene**
+**ViewComponents**
 
-- **The `any` Ban:** **STRICTLY** flag any usage of `any`. Demand a proper Interface or `unknown`.
-- **Prop Definitions:** Ensure all Component props are typed. When a prop is “the return type of hook X”, flag `ReturnType<typeof import("...").useHookName>`; prefer a direct import and `ReturnType<typeof useHookName>`.
-- **Naming / shadowing:** Flag variables that shadow well-known imports (e.g. `const t = setTimeout(...)` when `t` is the i18n function); suggest a distinct name (e.g. `timeoutId`).
-- **Null Checks:** Are nullable database fields handled? (e.g., `medication.notes` might be `null`, does the UI crash?).
+* **Logic Leakage:** Flag database queries inside `render` or `initialize`. Components must receive data, not fetch it.
+* **Full sidecar (one folder):** Each component must live in its own folder (e.g. `navigation/user_menu_component/`). All sidecar assets (template, CSS, JS) must be inside that folder alongside the `.rb` file, not in global assets. See `docs/COMPONENT_PATTERNS.md`.
+* **Argument Hash:** If a Component takes > 3 arguments, suggest a configuration object/hash.
 
-**Database (Drizzle/SQLite)**
+**Stimulus Controllers**
 
-- **Queries:** Are queries efficient? Flag "Select All" on large tables without pagination logic.
-- **Mutations:** After mutations, does the UI refresh? (e.g. `refreshTrigger`, `refresh()`, or React Query invalidation.)
-- **Raw SQL:** Flag any use of `sql` template strings unless absolutely necessary. Use Drizzle's query builder.
-- **Seed scripts:** If the PR changes schema or the meaning of stored data (e.g. a column now in USD), flag whether seed scripts (e.g. `db/seedFromCsv.ts`, `db/seedFromSample.ts`) and any post-seed backfill need to be updated so seeded data matches the new semantics.
+* **Lifecycle:** Ensure `disconnect()` cleans up event listeners or timers added in `connect()`.
+* **Values API:** Check that `static values` are used instead of parsing data attributes manually (`dataset.id`).
+* **Targeting:** Ensure `static targets` are used instead of `document.querySelector`.
+* **No jQuery:** **STRICTLY** flag any usage of `$()` or jQuery methods.
+* **Debug Logging:** Flag any `console.log` left behind.
+* **ESLint:** JavaScript must pass `npm run lint`. Flag any patterns that would fail ESLint (unused vars, jQuery, etc.).
+
+**Turbo & HTML**
+
+* **Frame IDs:** Verify `turbo_frame_tag` IDs match the backend response.
+* **Stream vs. Frame:** Question if a full Frame reload is used when a Stream (append/prepend/replace) would be more efficient.
+* **"Div Soup":** Flag unnecessary wrapper `<div>` tags.
+
+**CSS (No Tailwind)**
+
+* **Design System:** Flag any hardcoded hex codes. Must use `var(--color-...)` or `var(--space-...)` from `variables.css`.
+* **BEM Naming:** Enforce BEM (`.block__element--modifier`). Flag utility classes that look like Tailwind (e.g., `mt-4`, `flex`, `text-red`).
+* **Structure:** Ensure CSS is strictly class-based (no ID selectors for styling).
 
 ---
 
-### 3. UI & Performance (Tamagui)
-
-**Styling & Theme**
-
-- **Tokens only:** Flag any raw numbers (margins/padding), opacity, shadow (color, opacity, radius, offset), hit slop, or Hex codes. They must use Tamagui tokens (e.g. `$iosBg`, `$4`, `$md`) or named constants from `constants/theme.ts` (e.g. `TOOLTIP_SHADOW_OFFSET`, `HIT_SLOP_TOUCH_TARGET`, `OPACITY_BADGE_LABEL`). Repeated theme values (e.g. brand color in many places) should use a small hook or constant, not scattered tokens.
-- **Object literals in render:** Flag object literals passed as props (e.g. `shadowOffset={{ width: 0, height: 2 }}`) that create a new reference every render. Extract to a module-level or `constants/theme.ts` constant and reuse.
-- **No StyleSheet / inline style:** Flag `StyleSheet.create` or `style={{ ... }}`. Demand Tamagui props (`p="$4"`, `bg="$background"`). This includes root layout loading (e.g. `app/_layout.tsx` before migrations). Modals: flag inconsistent bottom spacing (prefer Tamagui spacing e.g. `pb="$10"`). If `style={{}}` is unavoidable (e.g. a layout trick Tamagui doesn’t support), flag missing a brief inline comment justifying the exception; prefer Tamagui primitive props where possible (e.g. border widths/colors on a Stack for a triangle).
-- **List Performance:** Ensure `FlatList` or equivalent is used for long lists. **FORBID** usage of `map()` to render long lists inside a `ScrollView` (performance killer).
-
-**UX & Offline**
-
-- **Loading States:** Is there a skeleton or spinner while SQLite is querying?
-- **Error Boundaries:** Key screens (e.g. medication detail) must be wrapped in a React Error Boundary with fallback UI ("Something went wrong", "Try again"). Flag screens that can white-screen on an uncaught render error. If the DB fails, does the app show a "Retry" or error state instead of crashing?
-
-**Accessibility**
-
-- **Interactive elements:** Flag buttons, links, icon buttons, or tappable rows without `accessibilityLabel` (and `accessibilityRole` where appropriate). Buttons built via helpers (e.g. `getIOSButtonProps`) often do not add a11y; flag primary/close actions in modals that lack explicit `accessibilityLabel` and `accessibilityRole`.
-- **Modals:** Flag modals whose close or primary action buttons lack labels, or whose title is asserted in tests without a `testID`.
-- **Lists/pickers:** Flag row or item renderers that do not accept or forward optional `accessibilityLabel` / `accessibilityRole`. Flag segment controls without `accessibilityState={{ selected: ... }}`.
-- **Forms:** Flag inputs without associated labels or helpful `accessibilityHint`.
+### 3. Accessibility (a11y)
+* **Skip link & main:** Every layout must have a skip link targeting `#main-content`. No removal of skip link or main landmark.
+* **Focus visibility:** Do not remove `:focus-visible` styles or rely on `outline: none` without a visible focus alternative.
+* **Forms:** Every control must have an associated label. Any form that displays validation errors must use `form_field_aria_attributes(model, :attr, errors_list_id)` and give the error list an `id` and `role="alert"`. All new views must follow a11y patterns.
+* **Images & icon-only controls:** Informative images must have descriptive alt (i18n). Decorative images: `alt=""`. Icon-only links/buttons must have `aria-label`.
+* **Contrast:** Use `--color-primary-accessible` and `--color-text-muted` for primary CTAs and muted text on light backgrounds. Flag any new UI that does not meet WCAG 2.1 AA contrast.
+* **Testing:** All new public/auth pages must be added to `spec/system/accessibility_spec.rb` (CI runs `expect(page).to be_accessible`). Flag if axe or accessibility spec is removed or disabled without justification.
+* **Doc:** See `docs/accessibility.md` for full patterns.
 
 ---
 
 ### 4. Internationalization (i18n) - ZERO TOLERANCE
 
-- **Hardcoded Strings:** Flag **ANY** user-facing text inside JSX (`<Text>Inventory</Text>`). All such text must go through the project’s label function (e.g. `t()` from `constants/labels`) with namespaced keys.
-- **Config/theme objects that drive copy:** Flag config or theme objects that return literal user-facing strings (e.g. `defaultVerdict: "Good to buy"`, `tooltipLabel: "High price"`). They should return locale keys (e.g. `defaultVerdictKey: "price.good_to_buy"`); the component calls `t(key)` when rendering so all copy stays in `constants/labels`.
-- **Interpolation:** Ensure `i18n.t` (or project `t()`) is used with parameters, not string concatenation.
+* **Hardcoded Strings:** Flag **ANY** user-facing text (in Views, Controllers, Mailers, or Models) that is a raw string.
+* **Interpolation:** Ensure `I18n.t` interpolation is used, not string concatenation (`"Hello " + name`).
+* **Key Structure:** Verify keys follow the pattern (e.g., `games.show.title`) rather than flat globals.
+* **Defaults:** If migrating legacy code, check that a `default:` is provided if the key might be missing.
 
 ---
 
-### 5. Replication Blueprint (docs/REPLICATION_BLUEPRINT.md)
+### 5. Data Integrity & Performance
 
-- **When this PR touches stack, layout, or config:** Consider whether `docs/REPLICATION_BLUEPRINT.md` needs an update.
-- **Trigger an update if the PR:**
-  - Adds or upgrades a core dependency (Expo, React Native, Drizzle, Tamagui, React Query, etc.) → update §1 and possibly §7.
-  - Adds or changes test setup (Jest, jest-expo, RNTL, mocks, test scripts/config) → update §1 (dev deps) and §7 (Testing).
-  - Changes project layout (new top-level folders, moved files) → update §2.
-  - Changes DB client, migrations, or schema patterns → update §3.
-  - Changes root providers, Tamagui config, or theming → update §4 and §7.
-  - Changes state or navigation (React Query usage, Stack/Tabs) → update §5 and §6.
-  - Changes app.json, babel.config.js, or tsconfig.json in a meaningful way → update §7.
-- **Action:** If any of the above apply, add a review item: “Update `docs/REPLICATION_BLUEPRINT.md` (see ‘How to keep this document up to date’ in that file).” Only list this when the change actually affects the blueprint.
+* **Polymorphism:** Since `Result`, `Follow`, and `Like` are polymorphic, verify `_type` and `_id` are handled correctly.
+* **N+1 Queries:** Look for loops in views (`.each`) accessing associations (e.g., `round.results.each { |r| r.player.name }`). Demand eager loading (`includes(:player)`).
+* **Calculations:** Flag Ruby-based calculations (sum/avg) on large datasets. Suggest database aggregation or Counter Caches.
+
+---
+
+### 6. Testing (RSpec)
+
+* **Framework:** Flag `Minitest` or `Fixtures`. We use **RSpec** and **FactoryBot**.
+* **Coverage:** Do tests cover the *new* behavior?
+* **System Tests:** If UI behavior changed (Stimulus/Turbo), are there System Tests (Capybara/Cuprite) covering the interaction?
+* **Factories:** Are new factories created for new models? Are they valid?
+* **Private Method Testing (Anti-Pattern):**
+  * **🛑 MUST FLAG:** Any test using `send(:private_method)` or `instance_eval { @variable }` to access private methods.
+  * **Rationale:** Tests should only exercise public interfaces. Testing private methods couples tests to implementation details, making refactoring impossible. See `docs/testing_private_methods_in_rails.md`.
+  * **Code Smell:** If a private method is complex enough to need testing, it should be extracted to a Service Object or Value Object (making it public in its new context).
+  * **Exception:** Temporary "Characterization Tests" during legacy code refactoring only (must be removed post-refactor).
+
+---
+
+### 7. PR Readability
+
+* Is the PR description accurate to the changes?
+* Are there any "ToDo" comments left in the code?
+* Is the migration file reversible?
+
+### 8. Documentation (Including CHANGELOG)
+
+* If the PR adds a user-facing change, fix, or notable dependency/config change, has **CHANGELOG.md** been updated? (Add an entry under `[Unreleased]`. See CHANGELOG.md section "When to update this file.")
+* If new docs were added that contributors should read, are they referenced in README or relevant docs?
 
 ---
 
 ### Output Format
 
-**Only report issues that need fixing.** Do not include positive feedback, "what's done well," or "no issues" for any category. If a category has nothing to fix, omit it entirely.
+Organize feedback using these categories:
 
-Organize feedback using the following strict Markdown headers (only include a header if it has at least one item):
-
-### 🛑 MUST FIX (Crash Risk, Type Safety, Linter Failures)
-*Include `any` types, missing dependencies, hardcoded strings, and explicit errors caught by `npm run check` or failing `npm test` runs.*
-
-### ⚠️ STRONGLY RECOMMENDED (Architecture & Performance)
-*Include StyleSheet/inline styles, re-render risks, missing `useCallback`/`useMemo`, component extraction, and prop drilling.*
-
-### 💡 NICE TO IMPROVE
-*Include naming, file structure, and code readability concerns.*
-
-### 📄 Blueprint Updates
-*If the PR changes stack, layout, DB, theming, state, or config (see §5 above), list the required updates for `docs/REPLICATION_BLUEPRINT.md`. Omit if the PR does not affect the blueprint.*
-
-### 📝 PR / Changelog & Testing Patterns
-*If the PR has user-facing or notable changes, flag if `CHANGELOG.md` is missing updates. Flag untested new hooks, lib modules, or UI changes that should require tests.*
+1. **🛑 MUST FIX (Architectural/Safety)**: Violations of Sandi Metz, Kill List (Context & Stack), Hardcoded Strings, Security risks.
+2. **⚠️ STRONGLY RECOMMENDED (Clean Code)**: Naming conventions, component extraction, performance tweaks.
+3. **💡 NICE TO IMPROVE**: Readability, CSS refactors, test clarity.
+4. **📄 CHANGELOG**: Missing CHANGELOG.md updates (see §8 above).
+5. **❓ REVIEWER QUESTIONS**: Things a team member will likely ask you to explain.
 
 End with:
 
-- **Risk Level:** [Low / Medium / High]
-- **Pre-Review Checklist:** (3 concrete actions for me).
+* **Risk Level:** [Low / Medium / High]
+* **Pre-Review Checklist:** (3-4 concrete actions to take immediately).
