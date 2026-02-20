@@ -3,7 +3,7 @@
 # Quickly downloads the universal AI Skills and Playbooks from the AgentCore Global Brain.
 # Usage: ./sync.sh
 
-REPO_URL="https://raw.githubusercontent.com/jesus/AgentCore/main"
+REPO_URL="https://raw.githubusercontent.com/jdugarte/AgentCore/main"
 
 echo "🧠 Initializing Local Agent Brain..."
 
