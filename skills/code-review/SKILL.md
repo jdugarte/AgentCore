@@ -25,11 +25,11 @@ This skill **triggers** a code review. It does not define how to review: **all r
 
 1. **Read** `docs/ai/code_review_prompt.md` in full. Use it as the single source of truth for:
    - Context & stack
-   - All review criteria (React architecture, TypeScript, UI/Tamagui, i18n, Blueprint, etc.)
+   - All project-specific review criteria defined in the prompt (e.g., architecture, type safety, UI standards, etc.)
    - Pre-Review Execution Instructions (e.g., Running terminal commands like `npm run check`) 
    - Output format exactly as requested.
 2. **Determine scope** from the section above (current or named branch vs main, optional file focus).
-3. **Execute Pre-Flight Checks:** Run the required terminal commands (linters and tests) indicated in `docs/ai/code_review_prompt.md` BEFORE generating text. Feed any failures into the final review payload.
+3. **Execute Pre-Flight Checks:** Run the required terminal commands (e.g., project-specific linters and test suites) indicated in `docs/ai/code_review_prompt.md` BEFORE generating text. Feed any failures into the final review payload.
 4. **Run the review** by applying every relevant section of the prompt to the in-scope code and the terminal outputs. Do not add or remove categories; follow the prompt’s output rules (omit empty headers, no praise, etc.).
 5. **Produce output** exactly as specified in the "Output Format" section of `docs/ai/code_review_prompt.md`, including Risk Level and Pre-Review Checklist.
 

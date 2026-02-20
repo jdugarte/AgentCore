@@ -32,7 +32,7 @@ To ensure that all new features in the current project are thoughtfully planned 
    **B) Implementation**
    - Write the minimum application code required to make the failing tests pass.
    - Run the tests again to prove they pass.
-   - Run `npm run lint` and `npm run typecheck` (or `npm run check`) to ensure strict TypeScript/linting rules from `.cursorrules` are met. Fix any errors until green.
+   - **Pre-Flight Checks:** Run the project's static analysis commands (e.g., linters, type checkers, formatters) as defined by the project's `.cursorrules` or toolchain (e.g., `npm run check`, `bundle exec rubocop`). Fix any errors until green.
    - **Pause:** Stop and announce the step is complete. Wait for the user to say "Proceed to next step".
 
    **C) Repeat or Conclude**

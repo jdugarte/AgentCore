@@ -1,6 +1,6 @@
 ---
 name: sync-schema-docs
-description: AI-driven workflow to automatically generate and maintain schema documentation (SCHEMA_REFERENCE.md) based on Drizzle's db/schema.ts and business logic from docs/core/SPEC.md. Use when the database schema changes.
+description: AI-driven workflow to automatically generate and maintain schema documentation (SCHEMA_REFERENCE.md) based on the project's database schema definitions (e.g., db/schema.rb, db/schema.ts, prisma/schema.prisma) and business logic from docs/core/SPEC.md. Use when the database schema changes.
 ---
 
 # Sync Schema Docs Skill

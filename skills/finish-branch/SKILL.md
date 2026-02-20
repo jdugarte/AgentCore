@@ -18,14 +18,14 @@ This skill orchestrates the end-of-branch workflow. It handles the local checks,
 
 2.  **Implementation & Pre-Flight Checks**
     *   **Action:** Implement the changes the user requested.
-    *   *Command:* `npm run check` (Runs lint, typescript checks, format, prune, coverage)
-    *   *Command:* `npm test`
-    *   **Instruction:** Fix any typescript/lint errors until the build is perfectly clean.
+    *   *Command:* Execute the project's primary pre-flight/lint check command (as defined in the project's documentation or `.cursorrules`).
+    *   *Command:* Execute the project's test suite command (e.g., `npm test`, `rspec`).
+    *   **Instruction:** Fix any linter, type, or test errors natively required by this tech stack until the build is perfectly clean.
 
 ### PHASE 2: Remote Async Review & Testing
 3.  **The BugBot Loop**
     *   **Action:** Instruct the user to explicitly review all changes, commit them, push the branch to GitHub, and WAIT for the BugBot review email. **CRITICAL RULE: NEVER commit or push on the user's behalf. At most, you may suggest a commit message for their uncommitted changes.**
-    *   **Instruction:** Pause execution. Tell the user to paste BugBot's feedback here. If there are issues, fix them, run `npm run check` (or equivalent), ask the user to commit/push again, and WAIT.
+    *   **Instruction:** Pause execution. Tell the user to paste BugBot's feedback here. If there are issues, fix them, run the relevant verification commands (linters/tests), ask the user to commit/push again, and WAIT.
     *   **Exit Condition:** The user explicitly tells you "BugBot is happy" or that there are no more issues.
 
 4.  **Test Gap Analysis & Edge Cases**
