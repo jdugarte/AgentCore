@@ -9,7 +9,7 @@ echo "🧠 Initializing Local Agent Brain..."
 
 # Create necessary directories
 mkdir -p .cursor/skills/{start-feature,finish-branch,harvest-rules,status-check,code-review}
-mkdir -p docs/{ai,core,ui}
+mkdir -p docs/{ai,core,ui,features,audit,guides}
 mkdir -p docs/core/ADRs
 mkdir -p .github
 mkdir -p docs/.agent-core-templates
