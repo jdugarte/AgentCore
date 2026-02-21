@@ -11,6 +11,7 @@ echo "🧠 Initializing Local Agent Brain..."
 mkdir -p .cursor/skills/{start-feature,finish-branch,harvest-rules,status-check,code-review}
 mkdir -p docs/ai
 mkdir -p docs/core/ADRs
+mkdir -p .github
 
 # Download Playbooks and expected structure
 echo "📥 Syncing Playbooks..."
@@ -28,5 +29,9 @@ curl -s "$REPO_URL/skills/finish-branch/SKILL.md" > .cursor/skills/finish-branch
 curl -s "$REPO_URL/skills/status-check/SKILL.md" > .cursor/skills/status-check/SKILL.md
 curl -s "$REPO_URL/skills/harvest-rules/SKILL.md" > .cursor/skills/harvest-rules/SKILL.md
 curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKILL.md
+
+# Download GitHub PR Template
+echo "📥 Syncing GitHub Templates..."
+curl -s "$REPO_URL/templates/pr/PULL_REQUEST_TEMPLATE.md" > .github/PULL_REQUEST_TEMPLATE.md
 
 echo "✅ Sync complete. Local AI workflows are up-to-date with AgentCore."
