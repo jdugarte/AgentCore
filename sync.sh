@@ -9,9 +9,10 @@ echo "🧠 Initializing Local Agent Brain..."
 
 # Create necessary directories
 mkdir -p .cursor/skills/{start-feature,finish-branch,harvest-rules,status-check,code-review}
-mkdir -p docs/ai
+mkdir -p docs/{ai,core,ui}
 mkdir -p docs/core/ADRs
 mkdir -p .github
+mkdir -p docs/.agent-core-templates
 
 # Download Playbooks and expected structure
 echo "📥 Syncing Playbooks..."
@@ -33,5 +34,47 @@ curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKI
 # Download GitHub PR Template
 echo "📥 Syncing GitHub Templates..."
 curl -s "$REPO_URL/templates/pr/PULL_REQUEST_TEMPLATE.md" > .github/PULL_REQUEST_TEMPLATE.md
+
+# Download Documentation Templates (as starting points)
+echo "📥 Syncing Documentation Templates..."
+curl -s "$REPO_URL/templates/core/SPEC.md" > docs/.agent-core-templates/SPEC.md
+curl -s "$REPO_URL/templates/ui/ui_roadmap_and_inventory.md" > docs/.agent-core-templates/ui_roadmap_and_inventory.md
+
+# Initialize Core Docs if missing and cleanup
+if [ ! -f "docs/core/SPEC.md" ]; then
+    echo "📄 Initializing docs/core/SPEC.md from template..."
+    cp docs/.agent-core-templates/SPEC.md docs/core/SPEC.md
+    rm docs/.agent-core-templates/SPEC.md
+fi
+
+if [ ! -f "docs/ui/ui_roadmap_and_inventory.md" ]; then
+    echo "📄 Initializing docs/ui/ui_roadmap_and_inventory.md from template..."
+    cp docs/.agent-core-templates/ui_roadmap_and_inventory.md docs/ui/ui_roadmap_and_inventory.md
+    rm docs/.agent-core-templates/ui_roadmap_and_inventory.md
+fi
+
+# Cleanup template directory if empty
+if [ -z "$(ls -A docs/.agent-core-templates)" ]; then
+    rmdir docs/.agent-core-templates
+fi
+
+# Smart Git Hook Installation
+echo "⚓ Installing Git Hooks..."
+curl -s "$REPO_URL/templates/git-hooks/pre-commit-logic.sh" > .cursor/pre-commit-logic.sh
+
+HOOK_FILE=".git/hooks/pre-commit"
+if [ -f "$HOOK_FILE" ]; then
+    if ! grep -q "AGENTCORE PR DRAFT PROTECTION" "$HOOK_FILE"; then
+        echo "📝 Appending safety check to existing pre-commit hook..."
+        cat .cursor/pre-commit-logic.sh >> "$HOOK_FILE"
+    else
+        echo "✅ Safety check already present in pre-commit hook."
+    fi
+else
+    echo "🆕 Creating new pre-commit hook..."
+    echo "#!/bin/bash" > "$HOOK_FILE"
+    cat .cursor/pre-commit-logic.sh >> "$HOOK_FILE"
+    chmod +x "$HOOK_FILE"
+fi
 
 echo "✅ Sync complete. Local AI workflows are up-to-date with AgentCore."
