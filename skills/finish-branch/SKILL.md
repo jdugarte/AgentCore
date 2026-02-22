@@ -17,6 +17,10 @@ Before running this skill, check that these exist:
 ## Purpose
 This skill orchestrates the end-of-branch workflow. It handles the local checks, creates the PR draft, and most importantly, manages the async loop of waiting for remote CI checks and GitHub bot reviews by explicitly pausing for user feedback.
 
+## Execution Rule (Critical)
+
+**Always start with Phase 1, Step 1.** Do not skip to Phase 2 or Phase 3 unless the user explicitly says to skip the code review (e.g. "skip the review" or "BugBot is happy, do Phase 3 only"). Every time the user invokes "finish this branch", perform the **Interactive Local Review** first: run the review, list findings, and ask which to fix. Only after the user responds (with fixes to apply or "none" / "skip") may you proceed.
+
 ## Workflow
 
 ### PHASE 1: Local Code Review & Polish
