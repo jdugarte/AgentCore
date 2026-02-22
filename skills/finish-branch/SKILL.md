@@ -39,6 +39,11 @@ This skill orchestrates the aerospace-grade verification pipeline. It handles lo
     *   **Action:** Implement requested fixes/refactors.
     *   **Command:** Execute project's pre-flight/lint and test suite commands.
 
+4.  **Iterative Review Loop (The "Recursive Clean")**
+    *   **Decision:** If any application code was modified in Step 3, you **MUST** loop back to Step 1 (**Interactive Local Review**) to ensure the new changes haven't introduced regressions or new HRE violations.
+    *   **Instruction:** Explicitly ask the user: "I've applied the fixes. Shall I perform a final follow-up review to ensure everything is perfect, or proceed to the remote BugBot loop?"
+    *   **Exit Condition:** Proceed to Phase 2 only when the user says "Proceed" or if no changes were needed in Step 3.
+
 ### PHASE 2: Remote Async Review & Testing
 4.  **The BugBot Loop**
     *   **Action:** Instruct user to commit, push, and WAIT for BugBot feedback. **NEVER** commit or push for the user.
