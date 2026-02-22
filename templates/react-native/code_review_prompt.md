@@ -95,17 +95,28 @@ Your goal is to enforce architectural strictness, catch performance killers (re-
 
 ---
 
+### 6. HRE & Resiliency (Mobile First)
+
+- **HRE Compliance:**
+    - **Complexity:** Flag hooks/helpers with cyclomatic complexity > 10.
+    - **Length:** Flag functions/hooks > 60 lines.
+    - **Assertions:** Ensure data-mutating hooks have input validation (Pre-conditions).
+- **Traceability:** Every `test` block MUST be tagged with a `[REQ-ID]`.
+- **Offline Resiliency:** Check `failure_matrix.md`. Does the UI handle offline states (local cache) and API timeouts gracefully?
+
+---
+
 ### Output Format
 
 Organize feedback using these categories:
 
-1. **🛑 MUST FIX (Crash Risk / Type Safety)**: `any` types, missing dependencies, hardcoded strings.
-2. **⚠️ STRONGLY RECOMMENDED (Performance)**: StyleSheet/inline styles, re-render risks, component extraction.
+1. **🛑 MUST FIX (Audit / Safety)**: JPL violations, untraced code, `any` types, hardcoded strings.
+2. **⚠️ STRONGLY RECOMMENDED (Performance/Resiliency)**: Offline fallbacks, re-render risks, component extraction.
 3. **💡 NICE TO IMPROVE**: Naming, file structure, code readability.
-4. **📄 Docs/Config:** If the PR changes stack, layout, DB, theming, state, or config (see §5 above), add the relevant doc update. Omit if the PR does not affect docs.
-5. **Quality gate:** Ensure **`npm run check`** passes (lint, format:check, typecheck, prune, test:coverage). When the PR adds or changes logic that could be tested, or adds/edits test files, ensure **`npm test`** is run and passes. Flag if the branch was not checked.
+4. **📄 Docs/Config**: Updates for `SPEC.md`, `failure_matrix.md`, or stack/layout docs.
+5. **Quality gate**: Ensure **`npm run check`** and **`npm test`** pass.
 
-**Only list actionable items.** Do not include bullets that say "no changes required", "no action needed", or that a file is fine as-is. If a section has no issues, omit that section or say "None" for that category.
+**Only list actionable items.**
 
 End with:
 

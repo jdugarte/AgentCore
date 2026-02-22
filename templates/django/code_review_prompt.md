@@ -52,6 +52,15 @@ This is a **strict self-review** of changes for a Django project. Your goal is t
 - [cite_start]**Living Documentation:** If a feature changes business rules or data structures, flag if `docs/core/SPEC.md` was not updated[cite: 17, 47].
 - [cite_start]**Changelog:** Ensure `CHANGELOG.md` has an entry under `[Unreleased]` for user-facing or config changes[cite: 15, 46].
 
+### 5. HRE & Resiliency (Mission Critical)
+
+- **HRE Compliance:**
+    - **Complexity:** Flag methods with cyclomatic complexity > 10.
+    - **Length:** Strictly flag functions > 60 lines.
+    - **Assertions:** Ensure critical Services have pre/post condition assertions.
+- **Traceability:** Verify mapping of changes to `[REQ-IDs]` in `SPEC.md`. Ensure tests are tagged with IDs.
+- **Resiliency:** Check `failure_matrix.md` compliance. Are timeouts and external API failures handled gracefully (retries/fallbacks)?
+
 ---
 
 ### Output Format

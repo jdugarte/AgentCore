@@ -30,10 +30,16 @@ curl -s "$REPO_URL/skills/finish-branch/SKILL.md" > .cursor/skills/finish-branch
 curl -s "$REPO_URL/skills/status-check/SKILL.md" > .cursor/skills/status-check/SKILL.md
 curl -s "$REPO_URL/skills/harvest-rules/SKILL.md" > .cursor/skills/harvest-rules/SKILL.md
 curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKILL.md
+curl -s "$REPO_URL/skills/audit-compliance/SKILL.md" > .cursor/skills/audit-compliance/SKILL.md
 
 # Download GitHub PR Template
 echo "📥 Syncing GitHub Templates..."
 curl -s "$REPO_URL/templates/pr/PULL_REQUEST_TEMPLATE.md" > .github/PULL_REQUEST_TEMPLATE.md
+
+# Download HRE Compliance Standards
+echo "📥 Syncing HRE Standards..."
+mkdir -p docs/ai/hre
+curl -s "$REPO_URL/templates/hre/jpl_standards.md" > docs/ai/hre/jpl_standards.md
 
 # Download Documentation Templates (as starting points)
 echo "📥 Syncing Documentation Templates..."

@@ -127,14 +127,32 @@ Your goal is to enforce our specific architectural constraints, catch "magic" co
 
 ---
 
+### 9. HRE Compliance & Traceability (Aerospace Grade)
+
+* **JPL Standards:**
+  * **Complexity:** Flag any method with cyclomatic complexity > 10.
+  * **Method Length:** STRICTLY flag any method > 60 lines (fit on one page).
+  * **Assertions:** Ensure all state mutations (Services/Models) have Pre-condition and Post-condition assertions.
+* **Traceability [REQ-ID]:** 
+  * Every new test block (`it`) MUST be tagged with a `[REQ-ID]` from `SPEC.md`. 
+  * Flag any logic change that cannot be traced back to a requirement.
+
+### 10. Cloud-Native & Resiliency
+
+* **Twelve-Factor:** Ensure no hardcoded secrets; use `ENV.fetch`.
+* **Chaos Engineering:** Check the feature's `failure_matrix.md`. Does the code implement the defined fallbacks for timeouts and 5xx errors?
+* **Design by Contract:** Verify that Service Objects use Guard Clauses (Pre-conditions) and verify mutations (Post-conditions) as defined in the contract.
+
+---
+
 ### Output Format
 
 Organize feedback using these categories:
 
-1. **🛑 MUST FIX (Architectural/Safety)**: Violations of Sandi Metz, Kill List (Context & Stack), Hardcoded Strings, Security risks.
-2. **⚠️ STRONGLY RECOMMENDED (Clean Code)**: Naming conventions, component extraction, performance tweaks.
+1. **🛑 MUST FIX (Architectural/Safety/HRE)**: JPL violations, untraced code, security risks, Sandi Metz violations.
+2. **⚠️ STRONGLY RECOMMENDED (Clean Code/Resiliency)**: Naming, component extraction, missing retry logic, performance tweaks.
 3. **💡 NICE TO IMPROVE**: Readability, CSS refactors, test clarity.
-4. **📄 CHANGELOG**: Missing CHANGELOG.md updates (see §8 above).
+4. **📄 CHANGELOG & DOCS**: Missing CHANGELOG or SPEC.md/Traceability updates.
 5. **❓ REVIEWER QUESTIONS**: Things a team member will likely ask you to explain.
 
 End with:
