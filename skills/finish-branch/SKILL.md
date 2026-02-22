@@ -43,7 +43,7 @@ This skill orchestrates the end-of-branch workflow. It handles the local checks,
 
 ### PHASE 3: Final Spackle (Docs & PR)
 5.  **Documentation Sync**
-    *   **Action 1 (Schema):** Check if `db/schema.ts` (or equivalent database schema file) was modified. If so, announce you are generating schema docs, trigger the `sync-schema-docs` skill, and PAUSE for the user to review/commit.
+    *   **Action 1 (Schema):** Check if the database schema file (e.g., `db/schema.ts`, `db/schema.rb`, or equivalent database schema file) was modified. If so, announce you are generating schema docs, trigger the `sync-schema-docs` skill, and PAUSE for the user to review/commit.
     *   **Action 2 (General Docs):** Check if `docs/core/SPEC.md` or any other architectural, UI, or feature plans in the `docs/` folder need updates based on the final, reviewed state of the code in this branch.
     *   **Instruction:** Explicitly advise the user on which specific documents (if any) are now out-of-date or drifting because of their code changes, and ask if they would like you to update them.
 
