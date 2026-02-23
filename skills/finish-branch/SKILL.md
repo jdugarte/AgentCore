@@ -40,33 +40,34 @@ This skill orchestrates the aerospace-grade verification pipeline. It handles lo
     *   **Command:** Execute project's pre-flight/lint and test suite commands.
 
 4.  **Iterative Review Loop (The "Recursive Clean")**
-    *   **Decision:** If any application code was modified in Step 3, you **MUST** loop back to Step 1 (**Interactive Local Review**) to ensure the new changes haven't introduced regressions or new HRE violations.
-    *   **Instruction:** Explicitly ask the user: "I've applied the fixes. Shall I perform a final follow-up review to ensure everything is perfect, or proceed to the remote BugBot loop?"
-    *   **Exit Condition:** Proceed to Phase 2 only when the user says "Proceed" or if no changes were needed in Step 3.
+    *   **Logic:** If any code was modified in Step 3, you **MUST** loop back to Step 1.
+    *   **Instruction:** "I've applied the fixes. Shall I perform a follow-up review to ensure 100% compliance, or move to the remote loop?"
+    *   **Exit Condition:** Only exit this loop and move to Phase 2 when the user explicitly says "Proceed" or if no findings remain.
 
 ### PHASE 2: Remote Async Review & Testing
-4.  **The BugBot Loop**
+5.  **The BugBot Loop (Recursive Verification)**
     *   **Action:** Instruct user to commit, push, and WAIT for BugBot feedback. **NEVER** commit or push for the user.
-    *   **Instruction:** Pause. Tell user to paste feedback here. Fix issues, test, push again.
+    *   **Process:** Paste Feedback -> Analyze -> Fix -> Test -> Push -> Wait.
+    *   **Condition:** Repeat this process until BugBot returns "Green" (no issues) or the user explicitly decides to bypass further fixes.
 
-5.  **Test Gap Analysis & Edge Cases**
-    *   **Action:** Review fixes. Ask if tests are needed for new late-stage edge cases.
+6.  **Test Gap Analysis & Edge Cases**
+    *   **Action:** Review final fixes. Ask if tests are needed for new late-stage edge cases.
 
 ### PHASE 3: Traceability & Final Spackle
-6.  **Traceability Audit**
+7.  **Traceability Audit**
     *   **Action:** Scan all tests for `[REQ-ID]` tags.
     *   **Requirement:** Every `REQ-ID` listed in `implementation_plan.md` MUST have at least one passing test.
     *   **Output:** Alert the user if requirements are "untraced" (lack tests).
 
-7.  **Documentation Sync**
+8.  **Documentation Sync**
     *   **Action 1 (Schema):** If DB schema modified, trigger `sync-schema-docs`, PAUSE for review.
     *   **Action 2 (General Docs):** Check if `SPEC.md` or other docs need updates.
 
-8.  **Rule Harvesting**
+9.  **Rule Harvesting**
     *   **Action:** Trigger `harvest-rules` skill to codify new patterns.
 
-9.  **PR Description**
+10. **PR Description**
     *   **Action:** Trigger `pr-description-clipboard` skill. Ensure the draft mentions the `[REQ-ID]` and ADRs.
 
-10. **Merge**
+11. **Merge Preparation**
     *   **Action:** Tell user branch is ready for merge in GitHub UI.
