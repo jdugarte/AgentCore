@@ -14,19 +14,24 @@ Date: 2026-02-20
 
 ### 2. Finish Branch
 **Goal**: Safely finalize a branch before opening a PR, ensuring all tests pass and docs are up-to-date.
-**Workflow Steps (Strict 8-Step Pipeline)**:
-1. **Local Review**: Check uncommitted files and test status.
-2. **Pre-Flight**: Run linters (RuboCop, Reek, ESLint).
-3. **BugBot Loop**: Automatically fix basic issues found by linters.
-4. **Test Gaps**: Identify and write tests for missing coverage.
-5. **Doc Sync**: Synchronize `docs/core/SPEC.md` and update `CHANGELOG.md` if necessary.
-6. **Rule Harvesting**: Find new conventions introduced in this branch and add to docs or `.cursorrules`.
-7. **PR Draft**: Generate the PR description and propose the commit command. **Crucial:** The AI must NEVER auto-run the `git commit` or `git push` command without explicit user revision and approval.
-8. **Merge**: Provide the user with the exact `git push` command to integrate.
+
+Finishing a branch runs a code review (guided by `docs/ai/code_review_prompt.md`), then a compliance and traceability audit against deterministic standards. The AI waits for you to push and paste any CI or BugBot feedback, loops on fixes until CI is green, and only then proceeds to final spackle: syncing schema docs if the database changed, harvesting new rules into architecture docs, ensuring CHANGELOG is updated for user-facing changes, and outputting the PR description in a code block. The AI never auto-commits or auto-pushes; it provides the exact `git push` command for you to run.
 
 ### 3. Status Check
 **Goal**: Understand blocking issues and re-hydrate the AI's state.
 **Workflow Action**: The AI reads `.agentcore/current_state.md`, the active session memory plan, and the git state to output a macro/micro status report and identify exactly what is blocking progress.
+
+### Skills Index
+| Skill | Triggers | Purpose |
+|-------|----------|---------|
+| start-task | start task, new feature, bugfix, build a | Discovery, planning, and strict TDD loop |
+| finish-branch | finish branch, open a PR | Code review, compliance audit, CI loop, schema sync, rule harvest, PR description |
+| code-review | code review, run code review, review my changes | Project-specific static analysis and fix loop |
+| status-check | status check, where are we, blocked | Rehydrate context and diagnose blockers |
+| harvest-rules | harvest rules, update docs | Extract new patterns into docs and .cursorrules |
+| audit-compliance | audit compliance, run audit | IV&V audit against deterministic standards |
+| sync-schema-docs | sync schema docs, sync schema | Map DB schema to SPEC.md, generate SCHEMA_REFERENCE.md |
+| pr-description | PR description, draft PR | Output PR description in a code block |
 
 ## Memory & State Management (Agent RAM)
 

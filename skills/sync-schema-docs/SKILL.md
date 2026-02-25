@@ -19,7 +19,7 @@
     <phase id="1" name="Schema Ingestion">
       <step id="1.1">
         <action>
-          Read the project's raw database schema file.
+          Read the project's raw database schema file. If the schema path is specified in `docs/ai/EXPECTED_PROJECT_STRUCTURE.md` or `docs/ai/project_config.md`, use it; otherwise infer from common paths (e.g. `db/schema.rb`, `prisma/schema.prisma`, `db/schema.ts`).
           Read `docs/core/SPEC.md` to rehydrate your understanding of the business logic.
           Map every table and column to its purpose based on `SPEC.md`.
         </action>

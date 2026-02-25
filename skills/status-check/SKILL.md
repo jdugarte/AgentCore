@@ -13,7 +13,12 @@
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` and `docs/core/SPEC.md` exist.</check>
     <action>If they are missing, abort the skill and point the user to `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`. Do NOT hallucinate their contents.</action>
+    <rehydrate>If `.agentcore/` or `.agentcore/current_state.md` is missing or empty: Create the minimal structure (current_state.md, blocker_log.md, pending_refactors.md, active_sessions/), advise the user to run sync.sh for full setup, and output a minimal status report. Then [PAUSE].</rehydrate>
   </pre_flight>
+
+  <memory_format>
+    <current_state>Expected format: `<active_task_pointer>` = session filename (e.g. `task_foo.md`) or `[NONE]`; `<execution_context>` contains `<active_skill>`, `<current_phase>`, `<current_step>`.</current_state>
+  </memory_format>
 
   <workflow>
     <phase id="1" name="State Read">
@@ -22,7 +27,7 @@
           Read `.agentcore/current_state.md`.
           Read the active session file in `.agentcore/active_sessions/` indicated by the current state.
           Read the `<implementation_plan>` block inside that session file to see unchecked boxes.
-          Read `git status` and `git diff main --name-status`.
+          Read `git status` and `git diff` against the default branch (e.g. `main`).
         </action>
         <yield>[PAUSE - AUTO-TRANSITION TO 1.2]</yield>
       </step>

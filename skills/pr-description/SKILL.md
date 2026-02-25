@@ -1,7 +1,7 @@
 <agentcore_skill>
   <skill_definition>
-    <name>pr-description-clipboard</name>
-    <description>Drafts a PR description using Git history and prepares it for copying.</description>
+    <name>pr-description</name>
+    <description>Drafts a PR description from Git history and outputs it in a code block for the user to copy.</description>
   </skill_definition>
 
   <state_machine_directives>
@@ -19,21 +19,12 @@
     <phase id="1" name="Context & Drafting">
       <step id="1.1">
         <action>
-          Run `git log main..HEAD --oneline` and `git diff main...HEAD --name-only` in the terminal to gather absolute facts.
+          Run `git log main..HEAD --oneline` and `git diff main...HEAD --name-only` in the terminal to gather absolute facts. Use the default branch (e.g. `main`) unless the project uses a different convention.
           Read `.github/PULL_REQUEST_TEMPLATE.md` if it exists.
-          Draft the PR description to `.cursor/pr-draft.md`.
-          Print the draft in the chat.
+          Draft the PR description.
+          Output the draft in a markdown code block directly in the chat (do not write to a file or copy to clipboard).
         </action>
-        <yield>[PAUSE - AWAIT USER APPROVAL OF PR TEXT]</yield>
-      </step>
-    </phase>
-
-    <phase id="2" name="Clipboard Execution">
-      <step id="2.1">
-        <action>
-          Execute the OS-specific terminal command to copy the contents of `.cursor/pr-draft.md` to the user's clipboard.
-        </action>
-        <yield>[PAUSE - PR DRAFT COPIED. SKILL COMPLETE]</yield>
+        <yield>[PAUSE - PR DESCRIPTION READY. USER MAY COPY FROM CODE BLOCK. SKILL COMPLETE]</yield>
       </step>
     </phase>
   </workflow>

@@ -70,9 +70,9 @@
     - Delete legacy directories like `.agent/` or `.cursor/rules/` so all tools share a single source of truth.
 2.  **Skill Refinement (XML State Machines):**
     - Update universal workflow skills (e.g., `start-task`, `finish-branch`, `status-check`) to ensure they use strict `<agentcore_skill>` XML formatting.
-    - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical `implementation_plan.md`, checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
+    - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical implementation plan inside the active session file (`active_sessions/task_*.md`), checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
     - **Finish Branch:** Ensure the AI handles async loops (like waiting for remote bots) by pausing and yielding control.
-    - **Status Check:** Ensure the skill can rehydrate context by reading `.agentcore/current_state.md` and the `implementation_plan.md` to pinpoint blockers.
+    - **Status Check:** Ensure the skill can rehydrate context by reading `.agentcore/current_state.md` and the implementation plan inside the active session file to pinpoint blockers.
 3.  **Playbook Documentation:**
     - Ensure `docs/ai/AI_WORKFLOW_PLAYBOOK.md` exists to document the exact purpose and triggers for all Custom Skills and the Memory architecture.
 4.  **Prevent Future "Drift" via PR Templates:**

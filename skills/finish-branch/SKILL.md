@@ -19,7 +19,7 @@
   <workflow>
     <phase id="1" name="Interactive Local Review">
       <step id="1.1">
-        <action>Trigger the `code-review` skill. Wait for its internal loop to conclude.</action>
+        <action>Read and follow `.cursor/skills/code-review/SKILL.md` until it yields. Execute the full skill with its own PAUSEs; then return to finish-branch.</action>
         <yield>[PAUSE - AWAIT CODE REVIEW COMPLETION]</yield>
       </step>
     </phase>
@@ -38,39 +38,39 @@
     <phase id="3" name="Remote Async Review (The BugBot Loop)">
       <step id="3.1">
         <action>
-          Instruct the user to commit their code, push to the remote branch, and wait for CI/BugBot feedback.
+          Instruct the user to commit their code, push to the remote branch, and wait for CI feedback.
           Update `.agentcore/current_state.md` to indicate waiting status.
         </action>
         <yield>
-          [PAUSE - AWAIT BUGBOT STATUS]
-          Tell the user: "Paste any BugBot errors here, or reply 'BUGBOT IS HAPPY' if CI is green."
+          [PAUSE - AWAIT CI STATUS]
+          Tell the user: "Paste any CI/BugBot errors here, or reply 'CI IS GREEN' / 'BUGBOT IS HAPPY' to confirm CI is passing."
         </yield>
       </step>
       <step id="3.2">
         <action>
           Evaluate the user's input from Step 3.1:
-          - If they pasted BugBot errors: Analyze the errors, write the fixes, and run local tests.
-          - If they replied "BUGBOT IS HAPPY": Skip any fixes.
+          - If they pasted CI/BugBot errors: Analyze the errors, write the fixes, and run local tests.
+          - If they replied "CI IS GREEN" or "BUGBOT IS HAPPY": Skip any fixes.
         </action>
         <yield>
           [PAUSE - AWAIT COMMAND]
-          If fixes were applied: "I have applied the BugBot fixes. I am looping back to Phase 3, Step 3.1." (Silently update state to 3.1).
-          If BUGBOT IS HAPPY: "CI is green. Reply PROCEED to begin Phase 4."
+          If fixes were applied: "I have applied the fixes. I am looping back to Phase 3, Step 3.1." (Silently update state to 3.1).
+          If CI is green: "CI is green. Reply PROCEED to begin Phase 4."
         </yield>
       </step>
     </phase>
 
     <phase id="4" name="Final Spackle & PR">
       <step id="4.1">
-        <action>Trigger `sync-schema-docs` if the database was modified.</action>
+        <action>Determine from git diff of schema/migration paths whether the database was modified. If yes: read and follow `.cursor/skills/sync-schema-docs/SKILL.md` until it yields. If no: skip and PROCEED.</action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.2">
-        <action>Trigger `harvest-rules` to identify new patterns.</action>
+        <action>Read and follow `.cursor/skills/harvest-rules/SKILL.md` until it yields. Then return to finish-branch.</action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.3">
-        <action>Trigger `pr-description-clipboard`.</action>
+        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields.</action>
         <yield>[PAUSE - BRANCH IS FINISHED]</yield>
       </step>
     </phase>

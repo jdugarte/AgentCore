@@ -9,7 +9,7 @@ echo "🧠 Initializing AgentCore Operating System..."
 
 # 1. Create necessary directories
 echo "📁 Building directory structure..."
-mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-schema-docs,pr-description-clipboard}
+mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-schema-docs,pr-description}
 mkdir -p .agentcore/active_sessions
 mkdir -p docs/{ai,core,features,audit,guides}
 mkdir -p docs/core/ADRs
@@ -53,7 +53,7 @@ curl -s "$REPO_URL/skills/harvest-rules/SKILL.md" > .cursor/skills/harvest-rules
 curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKILL.md
 curl -s "$REPO_URL/skills/audit-compliance/SKILL.md" > .cursor/skills/audit-compliance/SKILL.md
 curl -s "$REPO_URL/skills/sync-schema-docs/SKILL.md" > .cursor/skills/sync-schema-docs/SKILL.md
-curl -s "$REPO_URL/skills/pr-description-clipboard/SKILL.md" > .cursor/skills/pr-description-clipboard/SKILL.md
+curl -s "$REPO_URL/skills/pr-description/SKILL.md" > .cursor/skills/pr-description/SKILL.md
 
 # 5. Download Templates (To temporary holding folder)
 echo "📥 Syncing Governance Templates..."
@@ -114,11 +114,11 @@ curl -s "$REPO_URL/templates/git-hooks/pre-commit-logic.sh" > .cursor/pre-commit
 
 HOOK_FILE=".git/hooks/pre-commit"
 if [ -f "$HOOK_FILE" ]; then
-    if ! grep -q "AGENTCORE PR DRAFT PROTECTION" "$HOOK_FILE"; then
+    if ! grep -q "AGENTCORE PRE-COMMIT" "$HOOK_FILE"; then
         echo "📝 Appending safety check to existing pre-commit hook..."
         cat .cursor/pre-commit-logic.sh >> "$HOOK_FILE"
     else
-        echo "✅ Safety check already present in pre-commit hook."
+        echo "✅ AgentCore pre-commit hook already present."
     fi
 else
     if [ -d ".git/hooks" ]; then

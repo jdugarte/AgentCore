@@ -14,6 +14,7 @@
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` and `docs/core/SPEC.md` exist.</check>
     <action>If they are missing, abort the skill and point the user to `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`. Do NOT hallucinate their contents.</action>
+    <tdd_strictness>If the user prompts you to write implementation code before a failing test has been confirmed, remind them of the strict TDD routine (write failing test first, then make it pass) and ask if they want to proceed with TDD or skip.</tdd_strictness>
   </pre_flight>
 
   <workflow>
@@ -33,7 +34,7 @@
           Silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`.
           Silently update `.agentcore/current_state.md` to point to this new file.
           Write the task classification and description into the session file.
-          Next, draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the newly created `task_[name].md` file.
+          Next, draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the newly created `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format (see task_template.md).
           - If Bugfix: Step 1 MUST be "Write a failing test that reproduces the bug."
           - If Refactor: Step 1 MUST be "Run existing tests to establish a green baseline."
           - If Feature: You MUST define Pre-conditions and Post-conditions for any new core functions.
@@ -55,9 +56,16 @@
         <action>
           Write the minimum application code required to make the failing test pass.
           Ensure you do not violate `docs/core/SYSTEM_ARCHITECTURE.md`.
-          Run the project's linters/checkers.
+          Run the project's linters/checkers. If `docs/ai/code_review_prompt.md` exists, read it for project-specific commands (e.g. Quality or Pre-Flight section); otherwise run the project's standard linters.
+          Mark the completed step in the session file (set `status="complete"` on the step).
         </action>
         <yield>[PAUSE - AWAIT COMMAND TO PROCEED TO NEXT TDD STEP OR FINISH]</yield>
+      </step>
+      <step id="3.3">
+        <action>
+          If more steps remain in the `<implementation_plan>` with `status="pending"`, return to Step 3.1. Otherwise, announce Phase 3 complete and suggest running the `finish-branch` skill.
+        </action>
+        <yield>[PAUSE - PHASE 3 COMPLETE OR PROCEED TO NEXT STEP]</yield>
       </step>
     </phase>
   </workflow>

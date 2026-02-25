@@ -19,7 +19,7 @@
     <phase id="1" name="Pattern Analysis">
       <step id="1.1">
         <action>
-          Read the `git diff` of the current branch against `main`.
+          Read the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
           Analyze the changes for new error handling, naming conventions, UI patterns, or data structures.
           Scan the `docs/` directory and `.cursorrules` to determine where these new patterns should be codified.
           Output a list of "New Rule Candidates" formatted as: `[Target File] -> [Proposed Rule Addition]`.
@@ -31,7 +31,7 @@
     <phase id="2" name="Knowledge Commit">
       <step id="2.1">
         <action>
-          Parse the user's approval.
+          Parse the user's approval. Accept phrasings such as "APPROVE", "Yes", "Write rules", or a list of which candidates to apply.
           Write the approved rules directly into the corresponding target files (e.g., `.cursorrules`, `docs/core/SYSTEM_ARCHITECTURE.md`).
         </action>
         <yield>[PAUSE - RULES HARVESTED. SKILL COMPLETE]</yield>

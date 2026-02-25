@@ -28,7 +28,7 @@ Located in `.cursor/skills/`, these tech-agnostic workflows orchestrate the deve
 * **`status-check`**: The GPS. Reads the `.agentcore/` memory folder to diagnose blockers and rehydrate context.
 * **`harvest-rules`**: Scans Git diffs to extract new architectural patterns and map them to living documentation.
 * **`sync-schema-docs`**: Automatically maps raw database tables to business logic inside your `SPEC.md`.
-* **`pr-description-clipboard`**: Generates a Git-history-based PR draft and copies it to your clipboard.
+* **`pr-description`**: Outputs a Git-history-based PR description in a code block for the user to copy.
 
 ### Universal Playbooks & Templates
 * **`AI_DEVELOPER_PROTOCOL.md`**: A 6-phase masterclass playbook to audit, clean, and refine documentation in any legacy project.

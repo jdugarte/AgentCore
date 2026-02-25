@@ -35,9 +35,13 @@
     <directive>You must map user intents to the strict XML skills located in `.cursor/skills/`. Before answering a prompt, check if it matches these triggers. If it does, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
     <routes>
       <route trigger="start task, new feature, bugfix, build a">Read `.cursor/skills/start-task/SKILL.md`</route>
-      <route trigger="finish branch, code review, open a PR">Read `.cursor/skills/finish-branch/SKILL.md`</route>
+      <route trigger="finish branch, open a PR">Read `.cursor/skills/finish-branch/SKILL.md`</route>
+      <route trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
       <route trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
       <route trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
+      <route trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
+      <route trigger="sync schema docs, sync schema">Read `.cursor/skills/sync-schema-docs/SKILL.md`</route>
+      <route trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
     </routes>
   </intent_routing>
 </agentcore_operating_system>
