@@ -47,7 +47,7 @@
         <yield>
           [PAUSE - AWAIT COMMAND]
           Ask the user to review the applied changes and commit them locally if satisfied.
-          Conversationally ask whether they'd like to do another review pass over the new commits, or if they are completely finished with the review.
+          Conversationally ask whether they'd like to do another review pass over the new commits (which will loop back to Phase 1, Step 1.1), or if they are completely finished with the review (which will exit the code review skill).
         </yield>
       </step>
     </phase>

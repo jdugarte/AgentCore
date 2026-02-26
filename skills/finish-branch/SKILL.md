@@ -54,9 +54,9 @@
       </step>
       <step id="3.2">
         <action>
-          Evaluate the user's input from Step 3.1:
-          - If they pasted CI/BugBot errors: Analyze the errors, write the fixes, and run local tests.
-          - If they replied "CI IS GREEN" or "BUGBOT IS HAPPY": Skip any fixes.
+          Parse the user's input from Step 3.1 to determine their intent:
+          - If they provided CI/BugBot errors: Analyze the errors, write the fixes, and run local tests.
+          - If they confirmed that CI is passing: Skip any fixes.
         </action>
         <yield>
           [PAUSE - AWAIT COMMAND]

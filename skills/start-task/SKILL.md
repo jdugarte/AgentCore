@@ -44,7 +44,7 @@
       </step>
       <step id="1.3">
         <action>
-          If user confirmed inference: Use that roadmap item, set `<roadmap_item>`, infer classification, and [AUTO-TRANSITION TO 2.1]. If new task: The task description is already known. Ask the user how we should classify this task (Feature, Bugfix, Refactor, or Chore) so we can plan the implementation properly.
+          If user confirmed inference: Use that roadmap item, set `<roadmap_item>`, infer classification, and [AUTO-TRANSITION TO 2.1]. If the user rejected the inference, or if it is a specifically new task: The task description is already known. Ask the user how we should classify this task (Feature, Bugfix, Refactor, or Chore) so we can plan the implementation properly.
         </action>
         <yield>[PAUSE - AWAIT USER CLASSIFICATION]</yield>
       </step>
