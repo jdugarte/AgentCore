@@ -22,6 +22,7 @@
           Read the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
           Analyze the changes for new error handling, naming conventions, UI patterns, or data structures.
           Scan the `docs/` directory and `.cursorrules` to determine where these new patterns should be codified.
+          If the changes imply future work (e.g. a new pattern that will need follow-up features), consider suggesting adding a roadmap item to `docs/ROADMAP.md` via the roadmap-manage skill.
           Output a list of "New Rule Candidates" formatted as: `[Target File] -> [Proposed Rule Addition]`.
         </action>
         <yield>[PAUSE - WRITE LOCK ACTIVE. AWAIT USER APPROVAL OF CANDIDATES]</yield>

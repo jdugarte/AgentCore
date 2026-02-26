@@ -33,8 +33,9 @@
       </step>
       <step id="1.2">
         <action>
+          If `docs/ROADMAP.md` exists: Count Done, In Progress, Pending, Backlog. Include a one-line Roadmap summary (e.g. "Roadmap: 3 done, 1 in progress, 5 pending").
           Output a strict Status Report:
-          1. Macro Status: (e.g., Active Skill, Current Phase)
+          1. Macro Status: (e.g., Active Skill, Current Phase, Roadmap summary)
           2. Micro Status: (e.g., Current Step, active files)
           3. Blockers: (Read from `.agentcore/blocker_log.md` or failing tests)
           4. Recovery Command: (Explicitly tell the user what to type to resume, e.g., "Reply RESUME to continue Phase 2, Step 2 of finish-branch").

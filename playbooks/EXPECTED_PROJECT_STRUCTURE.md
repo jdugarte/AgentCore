@@ -23,6 +23,8 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `harvest-rules/SKILL.md` | Scans diffs to update architecture docs and `.cursorrules`. |
 | `sync-docs/SKILL.md` | Keeps project docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.). |
 | `pr-description/SKILL.md` | Outputs a Git-based PR description in a code block for the user to copy. |
+| `roadmap-manage/SKILL.md` | Add, prioritize, catalog items in the project roadmap. |
+| `roadmap-consult/SKILL.md` | Read-only view of roadmap: done, pending, priorities. |
 
 ## 3. The Constitution (Project Governance)
 *Located in `docs/core/`*
@@ -56,7 +58,12 @@ The `.cursorrules` file contains a `<project_config>` block (from AgentCore). Pr
 |-----|---------|
 | Schema path | Path to the raw database schema (e.g. `db/schema.rb`, `prisma/schema.prisma`, `db/schema.ts`). Skills that need it (e.g. sync-docs) read this first. If not filled in, the skill will infer a path, ask you to confirm, and remind you to fill it for future runs. |
 
-### 5.2 Other config sources
+### 5.2 Roadmap
+| Path | Purpose |
+|------|---------|
+| `docs/ROADMAP.md` | Things done and things left to do. Used by start-task (pick pending), finish-branch (mark done), status-check (summary), roadmap-manage, roadmap-consult. Format: Done, In Progress, Pending, Backlog with `[x]`/`[ ]`, REQ-IDs, dates, dependencies. |
+
+### 5.3 Other config sources
 | Key | Purpose |
 |-----|---------|
 | Linter commands | See `docs/ai/code_review_prompt.md` — projects define Quality/Pre-Flight commands there; start-task and code-review read it. |

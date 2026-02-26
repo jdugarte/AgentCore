@@ -11,8 +11,9 @@
 **Goal:** Understand what we have.
 
 1.  **List & Group:** List all files in `docs/` and group them by "Domain" (e.g., UI, Backend, Process, Legacy).
-2.  **Identify "Split Brains":** finding multiple documents that seem to cover the same topic (e.g., `ui_plan.md` and `ui_rebuild.md`, or `auth_flow_v1.md` and `AUTHENTICATION.md`).
-3.  **Identify "Snapshots":** Find documents that look like point-in-time audits or specific task plans (e.g., `CODE_REVIEW_7df209c.md`, `feature_xyz_notes.md`) rather than living documentation.
+2.  **Roadmap Check:** If `docs/ROADMAP.md` exists, use it to compare planned vs implemented items during the Discovery phase.
+3.  **Identify "Split Brains":** finding multiple documents that seem to cover the same topic (e.g., `ui_plan.md` and `ui_rebuild.md`, or `auth_flow_v1.md` and `AUTHENTICATION.md`).
+4.  **Identify "Snapshots":** Find documents that look like point-in-time audits or specific task plans (e.g., `CODE_REVIEW_7df209c.md`, `feature_xyz_notes.md`) rather than living documentation.
 
 ## Phase 2: Redundancy Analysis (The "Dry" Check)
 
@@ -65,6 +66,7 @@
 
 1.  **Agent OS Initialization:**
     - Ensure `.agentcore/` directory exists with `current_state.md`, `blocker_log.md`, and `pending_refactors.md`.
+    - Ensure `docs/ROADMAP.md` exists (AgentCore sync initializes it) for project planning and task tracking.
     - Consolidate AI rules into `.cursorrules` to act as an IF/THEN routing table, and ensure it contains the `<agentcore_operating_system>` header.
     - **CRITICAL RULE:** All agents and instructions must explicitly forbid auto-committing or auto-pushing code. At most, suggest a commit message.
     - Delete legacy directories like `.agent/` or `.cursor/rules/` so all tools share a single source of truth.

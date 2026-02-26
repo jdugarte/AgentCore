@@ -24,6 +24,7 @@
   <project_config>
     Projects fill in project-specific paths here. Skills that need these paths will read them.
     Schema path: [e.g. db/schema.rb, prisma/schema.prisma, db/schema.ts]
+    Roadmap path: [optional, default docs/ROADMAP.md]
   </project_config>
 
   <architectural_anchors>
@@ -47,6 +48,8 @@
       <route trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
       <route trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
       <route trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
+      <route trigger="roadmap, manage roadmap, add to roadmap">Read `.cursor/skills/roadmap-manage/SKILL.md`</route>
+      <route trigger="roadmap status, what's pending, roadmap consult">Read `.cursor/skills/roadmap-consult/SKILL.md`</route>
     </routes>
   </intent_routing>
 </agentcore_operating_system>

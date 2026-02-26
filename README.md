@@ -29,10 +29,12 @@ Located in `.cursor/skills/`, these tech-agnostic workflows orchestrate the deve
 * **`harvest-rules`**: Scans Git diffs to extract new architectural patterns and map them to living documentation.
 * **`sync-docs`**: Keeps project docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.).
 * **`pr-description`**: Outputs a Git-history-based PR description in a code block for the user to copy.
+* **`roadmap-manage`**: Add, prioritize, and catalog items in `docs/ROADMAP.md`.
+* **`roadmap-consult`**: Read-only view of roadmap status (done, pending, priorities).
 
 ### Universal Playbooks & Templates
 * **`AI_DEVELOPER_PROTOCOL.md`**: A 6-phase masterclass playbook to audit, clean, and refine documentation in any legacy project.
-* **Governance Templates**: Starter files for `DATA_FLOW_MAP.md`, `TESTING_STRATEGY_MATRIX.md`, and enterprise-grade coding standards.
+* **Governance Templates**: Starter files for `DATA_FLOW_MAP.md`, `ROADMAP.md`, `TESTING_STRATEGY_MATRIX.md`, and enterprise-grade coding standards.
 * **Stack Configurations**: Pre-configured `.cursorrules` and code review prompts for Rails, Django, and React Native.
 
 ## 🚀 Getting Started

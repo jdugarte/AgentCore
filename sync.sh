@@ -9,7 +9,7 @@ echo "🧠 Initializing AgentCore Operating System..."
 
 # 1. Create necessary directories
 echo "📁 Building directory structure..."
-mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description}
+mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult}
 mkdir -p .agentcore/active_sessions
 mkdir -p docs/{ai,core,features,audit,guides}
 mkdir -p docs/core/ADRs
@@ -54,6 +54,8 @@ curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKI
 curl -s "$REPO_URL/skills/audit-compliance/SKILL.md" > .cursor/skills/audit-compliance/SKILL.md
 curl -s "$REPO_URL/skills/sync-docs/SKILL.md" > .cursor/skills/sync-docs/SKILL.md
 curl -s "$REPO_URL/skills/pr-description/SKILL.md" > .cursor/skills/pr-description/SKILL.md
+curl -s "$REPO_URL/skills/roadmap-manage/SKILL.md" > .cursor/skills/roadmap-manage/SKILL.md
+curl -s "$REPO_URL/skills/roadmap-consult/SKILL.md" > .cursor/skills/roadmap-consult/SKILL.md
 
 # 5. Download Templates (To temporary holding folder)
 echo "📥 Syncing Governance Templates..."
@@ -64,6 +66,7 @@ curl -s "$REPO_URL/templates/core/deterministic_coding_standards.md" > docs/.age
 curl -s "$REPO_URL/templates/core/TESTING_STRATEGY_MATRIX.md" > docs/.agent-core-templates/TESTING_STRATEGY_MATRIX.md
 curl -s "$REPO_URL/templates/core/DATA_FLOW_MAP.md" > docs/.agent-core-templates/DATA_FLOW_MAP.md
 curl -s "$REPO_URL/templates/core/AGENT_CORE_RULES.md" > docs/.agent-core-templates/AGENT_CORE_RULES.md
+curl -s "$REPO_URL/templates/core/ROADMAP.md" > docs/.agent-core-templates/ROADMAP.md
 
 # Memory Scaffold Templates
 curl -s "$REPO_URL/templates/core/memory_scaffold/current_state.md" > docs/.agent-core-templates/current_state.md
@@ -92,6 +95,11 @@ done
 
 if [ ! -f ".agentcore/active_sessions/task_template.md" ]; then
     cp docs/.agent-core-templates/task_template.md .agentcore/active_sessions/task_template.md
+fi
+
+if [ ! -f "docs/ROADMAP.md" ]; then
+    echo "   📄 Initializing docs/ROADMAP.md..."
+    cp docs/.agent-core-templates/ROADMAP.md docs/ROADMAP.md
 fi
 
 # 7. Inject AgentCore OS Rules into .cursorrules

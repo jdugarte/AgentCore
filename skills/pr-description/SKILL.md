@@ -21,7 +21,7 @@
         <action>
           Run `git log main..HEAD --oneline` and `git diff main...HEAD --name-only` in the terminal to gather absolute facts. Use the default branch (e.g. `main`) unless the project uses a different convention.
           Read `.github/PULL_REQUEST_TEMPLATE.md` if it exists.
-          Draft the PR description.
+          Draft the PR description. If this PR likely completes a roadmap item (check branch name or session metadata), add a reminder: "If this closes a roadmap item, ensure `docs/ROADMAP.md` was updated (finish-branch does this) and mention it in the PR."
           Output the draft in a markdown code block directly in the chat (do not write to a file or copy to clipboard).
         </action>
         <yield>[PAUSE - PR DESCRIPTION READY. USER MAY COPY FROM CODE BLOCK. SKILL COMPLETE]</yield>

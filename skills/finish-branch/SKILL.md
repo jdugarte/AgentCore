@@ -70,7 +70,7 @@
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.3">
-        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields. Remind the user to mark completed items in their project roadmap or pending tasks file.</action>
+        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Read the active session file (if any) for `<roadmap_item>`. If this branch corresponds to a roadmap item, update `docs/ROADMAP.md`: move the item to Done, add today's date. If unclear, ask the user which roadmap item (if any) this branch completes. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields. Remind the user to commit `docs/ROADMAP.md` if it was updated.</action>
         <yield>[PAUSE - BRANCH IS FINISHED]</yield>
       </step>
     </phase>
