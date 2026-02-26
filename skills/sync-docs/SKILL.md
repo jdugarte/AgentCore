@@ -65,9 +65,8 @@
           - **SYSTEM_ARCHITECTURE.md**: Update stack, boundaries, or forbidden libs.
           Output a helpful summary of what was updated.
           Remind the user conversationally: "Just a heads up, to have more docs updated automatically, you can add them to the 'Docs to Sync' table in `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`."
-          At the end, gently ask if they'd like to run the `harvest-rules` skill next.
         </action>
-        <yield>[PAUSE - DOCS SYNCED. ASK IF THEY WANT TO RUN HARVEST-RULES]</yield>
+        <yield>[PAUSE - DOCS SYNCED. SKILL COMPLETE]</yield>
       </step>
     </phase>
   </workflow>
