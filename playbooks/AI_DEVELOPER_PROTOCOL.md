@@ -11,16 +11,16 @@
 **Goal:** Understand what we have.
 
 1.  **List & Group:** List all files in `docs/` and group them by "Domain" (e.g., UI, Backend, Process, Legacy).
-2.  **Identify "Split Brains":** finding multiple documents that seem to cover the same topic (e.g., `ui_plan.md` and `ui_rebuild.md`, or `auth_flow_v1.md` and `AUTHENTICATION.md`).
-3.  **Identify "Snapshots":** Find documents that look like point-in-time audits or specific task plans (e.g., `CODE_REVIEW_7df209c.md`, `feature_xyz_notes.md`) rather than living documentation.
+2.  **Roadmap Check:** If `docs/ROADMAP.md` exists, use it to compare planned vs implemented items during the Discovery phase.
+3.  **Identify "Split Brains":** finding multiple documents that seem to cover the same topic (e.g., `ui_plan.md` and `ui_rebuild.md`, or `auth_flow_v1.md` and `AUTHENTICATION.md`).
+4.  **Identify "Snapshots":** Find documents that look like point-in-time audits or specific task plans (e.g., `CODE_REVIEW_7df209c.md`, `feature_xyz_notes.md`) rather than living documentation.
 
 ## Phase 2: Redundancy Analysis (The "Dry" Check)
 
 **Goal:** Find repeated information.
 
-1.  **Cursorrules Check:** Compare `docs/` against `.cursorrules`.
-    - _Question:_ Is `docs/tech_stack.md` just a copy of the "Tech Stack" section in `.cursorrules`?
-    - _Question:_ Does `docs/component_library.md` repeat rules already defined in `.cursorrules`?
+1.  **Cursorrules Check:** Compare `docs/` against `.cursorrules` and `docs/core/SYSTEM_ARCHITECTURE.md`.
+    - _Question:_ Does any doc (e.g. a legacy `docs/tech_stack.md` or `docs/component_library.md`) merely duplicate `.cursorrules` or `docs/core/SYSTEM_ARCHITECTURE.md`?
 2.  **Cross-Doc Check:** Do disparate docs repeat the same architectural patterns?
 
 ## Phase 3: Drift Analysis (Truth vs. Reality)
@@ -65,14 +65,15 @@
 
 1.  **Agent OS Initialization:**
     - Ensure `.agentcore/` directory exists with `current_state.md`, `blocker_log.md`, and `pending_refactors.md`.
+    - Ensure `docs/ROADMAP.md` exists (AgentCore sync initializes it) for project planning and task tracking.
     - Consolidate AI rules into `.cursorrules` to act as an IF/THEN routing table, and ensure it contains the `<agentcore_operating_system>` header.
     - **CRITICAL RULE:** All agents and instructions must explicitly forbid auto-committing or auto-pushing code. At most, suggest a commit message.
-    - Delete legacy directories like `.agent/` or `.cursor/rules/` so all tools share a single source of truth.
+    - Delete legacy directories (e.g. `.agent/`, `.cursor/rules/`) if they duplicate `.agentcore/` or `.cursorrules`; ensure all tools share a single source of truth.
 2.  **Skill Refinement (XML State Machines):**
     - Update universal workflow skills (e.g., `start-task`, `finish-branch`, `status-check`) to ensure they use strict `<agentcore_skill>` XML formatting.
-    - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical `implementation_plan.md`, checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
+    - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical implementation plan inside the active session file (`active_sessions/task_*.md`), checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
     - **Finish Branch:** Ensure the AI handles async loops (like waiting for remote bots) by pausing and yielding control.
-    - **Status Check:** Ensure the skill can rehydrate context by reading `.agentcore/current_state.md` and the `implementation_plan.md` to pinpoint blockers.
+    - **Status Check:** Ensure the skill can rehydrate context by reading `.agentcore/current_state.md` and the implementation plan inside the active session file to pinpoint blockers.
 3.  **Playbook Documentation:**
     - Ensure `docs/ai/AI_WORKFLOW_PLAYBOOK.md` exists to document the exact purpose and triggers for all Custom Skills and the Memory architecture.
 4.  **Prevent Future "Drift" via PR Templates:**

@@ -12,7 +12,7 @@
   <pre_flight>
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/deterministic_coding_standards.md` and `docs/core/SPEC.md` exist.</check>
-    <action>If they are missing, abort the skill and point the user to `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`. Do NOT hallucinate their contents.</action>
+    <action>If they are missing, abort the skill, inform the user, and explicitly ask: "Do you want me to initialize the missing files using the templates?" If the user says yes, run sync.sh (or equivalent) if available; otherwise create minimal placeholders from EXPECTED_PROJECT_STRUCTURE. Do NOT hallucinate contents without user confirmation.</action>
   </pre_flight>
 
   <workflow>
@@ -21,7 +21,7 @@
         <action>
           Assume the persona of an Independent Auditor. You have no knowledge of the brainstorming process.
           Read `docs/core/deterministic_coding_standards.md` to establish the strict rules.
-          Read the `git diff` of the branch.
+          Read the `git diff` of the branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
           Scan test files for `[REQ-ID]` traceability against `SPEC.md`.
           
           Generate a strict Compliance Report using the exact format specified below:

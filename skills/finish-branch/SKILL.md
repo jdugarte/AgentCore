@@ -13,13 +13,13 @@
   <pre_flight>
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/deterministic_coding_standards.md`, `docs/core/SYSTEM_ARCHITECTURE.md`, and `docs/core/SPEC.md` exist.</check>
-    <action>If they are missing, abort the skill and point the user to `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`. Do NOT hallucinate their contents.</action>
+    <action>If they are missing, abort the skill, inform the user, and explicitly ask: "Do you want me to initialize the missing files using the templates?" If the user says yes, run sync.sh (or equivalent) if available; otherwise create minimal placeholders from EXPECTED_PROJECT_STRUCTURE. Do NOT hallucinate contents without user confirmation.</action>
   </pre_flight>
 
   <workflow>
     <phase id="1" name="Interactive Local Review">
       <step id="1.1">
-        <action>Trigger the `code-review` skill. Wait for its internal loop to conclude.</action>
+        <action>Read and follow `.cursor/skills/code-review/SKILL.md` until it yields. Execute the full skill with its own PAUSEs; then return to finish-branch.</action>
         <yield>[PAUSE - AWAIT CODE REVIEW COMPLETION]</yield>
       </step>
     </phase>
@@ -38,39 +38,39 @@
     <phase id="3" name="Remote Async Review (The BugBot Loop)">
       <step id="3.1">
         <action>
-          Instruct the user to commit their code, push to the remote branch, and wait for CI/BugBot feedback.
+          Instruct the user to commit their code, push to the remote branch, and wait for CI feedback.
           Update `.agentcore/current_state.md` to indicate waiting status.
         </action>
         <yield>
-          [PAUSE - AWAIT BUGBOT STATUS]
-          Tell the user: "Paste any BugBot errors here, or reply 'BUGBOT IS HAPPY' if CI is green."
+          [PAUSE - AWAIT CI STATUS]
+          Tell the user: "Paste any CI/BugBot errors here, or reply 'CI IS GREEN' / 'BUGBOT IS HAPPY' to confirm CI is passing."
         </yield>
       </step>
       <step id="3.2">
         <action>
           Evaluate the user's input from Step 3.1:
-          - If they pasted BugBot errors: Analyze the errors, write the fixes, and run local tests.
-          - If they replied "BUGBOT IS HAPPY": Skip any fixes.
+          - If they pasted CI/BugBot errors: Analyze the errors, write the fixes, and run local tests.
+          - If they replied "CI IS GREEN" or "BUGBOT IS HAPPY": Skip any fixes.
         </action>
         <yield>
           [PAUSE - AWAIT COMMAND]
-          If fixes were applied: "I have applied the BugBot fixes. I am looping back to Phase 3, Step 3.1." (Silently update state to 3.1).
-          If BUGBOT IS HAPPY: "CI is green. Reply PROCEED to begin Phase 4."
+          If fixes were applied: "I have applied the fixes. I am looping back to Phase 3, Step 3.1." (Silently update state to 3.1).
+          If CI is green: "CI is green. Reply PROCEED to begin Phase 4."
         </yield>
       </step>
     </phase>
 
     <phase id="4" name="Final Spackle & PR">
       <step id="4.1">
-        <action>Trigger `sync-schema-docs` if the database was modified.</action>
+        <action>Read and follow `.cursor/skills/sync-docs/SKILL.md` until it yields. The skill analyzes the branch diff and updates any docs that need changes.</action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.2">
-        <action>Trigger `harvest-rules` to identify new patterns.</action>
+        <action>Read and follow `.cursor/skills/harvest-rules/SKILL.md` until it yields. Then return to finish-branch.</action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.3">
-        <action>Trigger `pr-description-clipboard`.</action>
+        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Read the active session file (if any) for `<roadmap_item>`. If this branch corresponds to a roadmap item, update `docs/ROADMAP.md`: move the item to Done, add today's date. If unclear, ask the user which roadmap item (if any) this branch completes. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields. Remind the user to commit `docs/ROADMAP.md` if it was updated.</action>
         <yield>[PAUSE - BRANCH IS FINISHED]</yield>
       </step>
     </phase>

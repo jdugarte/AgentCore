@@ -13,7 +13,7 @@
   <pre_flight>
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/ai/code_review_prompt.md` exists.</check>
-    <action>If they are missing, abort the skill and point the user to `docs/ai/EXPECTED_PROJECT_STRUCTURE.md`. Do NOT hallucinate their contents.</action>
+    <action>If they are missing, abort the skill, inform the user, and explicitly ask: "Do you want me to initialize the missing files using the templates?" If the user says yes, run sync.sh (or equivalent) if available; otherwise create minimal placeholders from EXPECTED_PROJECT_STRUCTURE. Do NOT hallucinate contents without user confirmation.</action>
   </pre_flight>
 
   <workflow>
@@ -21,7 +21,7 @@
       <step id="1.1">
         <action>
           Read `docs/ai/code_review_prompt.md`.
-          Analyze the `git diff` of the current branch against `main`.
+          Analyze the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
           Format your output using strict hierarchical numbering (e.g., 1. Architecture, 1.1 Extract Service Object, 1.2 Fix N+1 Query, 2. Type Safety, 2.1 Add return type).
         </action>
         <yield>
@@ -36,7 +36,7 @@
         <action>
           Parse the user's numeric selection.
           Implement only the requested fixes.
-          Run the local test suite and linter.
+          Run the local test suite and linter. If `docs/ai/code_review_prompt.md` exists, run the commands it specifies (e.g. Quality or Pre-Flight section).
         </action>
         <yield>
           [PAUSE - AWAIT COMMAND]

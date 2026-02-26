@@ -21,6 +21,12 @@
     </rules>
   </execution_protocol>
 
+  <project_config>
+    Projects fill in project-specific paths here. Skills that need these paths will read them.
+    Schema path: [e.g. db/schema.rb, prisma/schema.prisma, db/schema.ts]
+    Roadmap path: [optional, default docs/ROADMAP.md]
+  </project_config>
+
   <architectural_anchors>
     <directive>You are strictly forbidden from inventing technical decisions. Your code generation must be anchored to the project's living documentation.</directive>
     <anchors>
@@ -35,9 +41,15 @@
     <directive>You must map user intents to the strict XML skills located in `.cursor/skills/`. Before answering a prompt, check if it matches these triggers. If it does, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
     <routes>
       <route trigger="start task, new feature, bugfix, build a">Read `.cursor/skills/start-task/SKILL.md`</route>
-      <route trigger="finish branch, code review, open a PR">Read `.cursor/skills/finish-branch/SKILL.md`</route>
+      <route trigger="finish branch, open a PR">Read `.cursor/skills/finish-branch/SKILL.md`</route>
+      <route trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
       <route trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
       <route trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
+      <route trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
+      <route trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
+      <route trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
+      <route trigger="roadmap, manage roadmap, add to roadmap">Read `.cursor/skills/roadmap-manage/SKILL.md`</route>
+      <route trigger="roadmap status, what's pending, roadmap consult">Read `.cursor/skills/roadmap-consult/SKILL.md`</route>
     </routes>
   </intent_routing>
 </agentcore_operating_system>
