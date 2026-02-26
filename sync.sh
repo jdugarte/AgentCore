@@ -9,7 +9,7 @@ echo "🧠 Initializing AgentCore Operating System..."
 
 # 1. Create necessary directories
 echo "📁 Building directory structure..."
-mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-schema-docs,pr-description}
+mkdir -p .cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description}
 mkdir -p .agentcore/active_sessions
 mkdir -p docs/{ai,core,features,audit,guides}
 mkdir -p docs/core/ADRs
@@ -52,7 +52,7 @@ curl -s "$REPO_URL/skills/status-check/SKILL.md" > .cursor/skills/status-check/S
 curl -s "$REPO_URL/skills/harvest-rules/SKILL.md" > .cursor/skills/harvest-rules/SKILL.md
 curl -s "$REPO_URL/skills/code-review/SKILL.md" > .cursor/skills/code-review/SKILL.md
 curl -s "$REPO_URL/skills/audit-compliance/SKILL.md" > .cursor/skills/audit-compliance/SKILL.md
-curl -s "$REPO_URL/skills/sync-schema-docs/SKILL.md" > .cursor/skills/sync-schema-docs/SKILL.md
+curl -s "$REPO_URL/skills/sync-docs/SKILL.md" > .cursor/skills/sync-docs/SKILL.md
 curl -s "$REPO_URL/skills/pr-description/SKILL.md" > .cursor/skills/pr-description/SKILL.md
 
 # 5. Download Templates (To temporary holding folder)

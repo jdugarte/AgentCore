@@ -27,7 +27,7 @@ Located in `.cursor/skills/`, these tech-agnostic workflows orchestrate the deve
 * **`audit-compliance`**: An Independent Verification (IV&V) agent that mathematically checks code determinism.
 * **`status-check`**: The GPS. Reads the `.agentcore/` memory folder to diagnose blockers and rehydrate context.
 * **`harvest-rules`**: Scans Git diffs to extract new architectural patterns and map them to living documentation.
-* **`sync-schema-docs`**: Automatically maps raw database tables to business logic inside your `SPEC.md`.
+* **`sync-docs`**: Keeps project docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.).
 * **`pr-description`**: Outputs a Git-history-based PR description in a code block for the user to copy.
 
 ### Universal Playbooks & Templates

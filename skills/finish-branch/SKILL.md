@@ -62,7 +62,7 @@
 
     <phase id="4" name="Final Spackle & PR">
       <step id="4.1">
-        <action>Determine from git diff of schema/migration paths whether the database was modified. If yes: read and follow `.cursor/skills/sync-schema-docs/SKILL.md` until it yields. If no: skip and PROCEED.</action>
+        <action>Read and follow `.cursor/skills/sync-docs/SKILL.md` until it yields. The skill analyzes the branch diff and updates any docs that need changes.</action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.2">
@@ -70,7 +70,7 @@
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.3">
-        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields.</action>
+        <action>Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Then read and follow `.cursor/skills/pr-description/SKILL.md` until it yields. Remind the user to mark completed items in their project roadmap or pending tasks file.</action>
         <yield>[PAUSE - BRANCH IS FINISHED]</yield>
       </step>
     </phase>

@@ -40,7 +40,7 @@
 ## 🧠 Anti-Drift Checklist
 To prevent "drift" between the codebase and our AI context, please attest that you have updated the authoritative documentation:
 
-- [ ] **Schema/Model**: I have updated `docs/core/SPEC.md` and ran `sync-schema-docs` for any database changes.
+- [ ] **Docs**: I have run `sync-docs` and updated any docs that require changes (SPEC, schema, DATA_FLOW_MAP, ADRs, etc.).
 - [ ] **Architecture (ADR)**: I have created/updated ADRs in `docs/core/ADRs/` if new paradigms were introduced.
 - [ ] **AI Rules**: I have updated `.cursorrules` or approved a `harvest-rules` run if developer protocols changed.
 - [ ] **Boundaries**: I have updated `docs/core/SYSTEM_ARCHITECTURE.md` if the tech stack, libraries, or core patterns shifted.
