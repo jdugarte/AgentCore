@@ -66,8 +66,9 @@
       </step>
       <step id="2.2">
         <action>
-          Parse user's response. If they approved the plan: [AUTO-TRANSITION TO 3.1].
-          If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. Ask them to confirm the updated plan.
+          Parse user's response. 
+          If they approved the plan: Verifying the plan is not empty. If it is empty, ask the user to provide steps before we can execute. If the plan has at least one step, [AUTO-TRANSITION TO 3.1].
+          If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If their tweak changes the task classification (e.g., from Feature to Bugfix), ensure you also update the classification metadata in the file. Ask them to confirm the updated plan.
         </action>
         <yield>[PAUSE - AWAIT PLAN APPROVAL OR AUTO-TRANSITION TO 3.1]</yield>
       </step>
