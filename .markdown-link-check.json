@@ -1,10 +1,5 @@
 {
   "timeout": "20s",
   "retryOn429": true,
-  "ignorePatterns": [
-    { "pattern": "^mailto:" },
-    { "pattern": "^#" },
-    { "pattern": "^\\./" },
-    { "pattern": "^(?!https?:)" }
-  ]
+  "ignorePatterns": [{ "pattern": "^mailto:" }, { "pattern": "^#" }, { "pattern": "^\\./" }, { "pattern": "^(?!https?:)" }]
 }

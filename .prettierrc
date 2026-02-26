@@ -1,6 +1,5 @@
 {
   "plugins": ["prettier-plugin-sh"],
-  "htmlWhitespaceSensitivity": "ignore",
   "proseWrap": "preserve",
   "printWidth": 200
 }
