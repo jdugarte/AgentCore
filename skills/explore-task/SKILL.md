@@ -28,8 +28,9 @@
     <phase id="1" name="The Whiteboard (Discovery Loop)">
       <step id="1.1">
         <action>
-          If this is a new session (no active task in `current_state.md`): Ask the user what they want to build or what problem they are trying to solve. Once they reply (in Step 1.2), you will derive `[name]` as a kebab-case slug and create `.agentcore/active_sessions/task_[name].md`, and silently update `.agentcore/current_state.md` to point to it.
-          If this is an existing session: Read the file pointed to by `.agentcore/current_state.md`, summarize the current state of the memory file, and ask what we need to figure out next.
+          First, check if `.agentcore/current_state.md` points to an active session file.
+          If it points to a session file: Verify the file actually exists. If it does, read it, summarize its current state, and ask what we need to figure out next. If it does not exist, treat this as a new session.
+          If this is a new session (no active task, or file is missing): Ask the user what they want to build or what problem they are trying to solve. Once they reply (in Step 1.2), you will derive `[name]` as a kebab-case slug, create `.agentcore/active_sessions/task_[name].md`, and silently update `.agentcore/current_state.md` to point to it.
         </action>
         <yield>[PAUSE - AWAIT USER INPUT]</yield>
       </step>
@@ -51,7 +52,7 @@
         <action>
           The user has approved the implementation plan. 
           Verify the plan strictly conforms to classification rules (Bugfix MUST start with "Write a failing test", Refactor MUST start with "Run existing tests to establish a green baseline", Features MUST contain test-first steps) and conforms to `docs/core/SYSTEM_ARCHITECTURE.md`.
-          If it violates rules: automatically fix the plan in the file, and ask the user to confirm the fixed version (Loop back to 1.2).
+          If it violates rules: automatically fix the plan in the file, and ask the user to confirm the fixed version (Loop back to 2.1).
           If it is perfectly valid: Tell the user the spec is locked. Instruct the user to run the `start-task` skill to begin execution.
         </action>
         <yield>[PAUSE - DISCOVERY COMPLETE. HANDOFF TO START-TASK REQUIRED]</yield>

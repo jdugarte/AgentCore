@@ -54,8 +54,8 @@
       <step id="2.1">
         <action>
           First, check if `.agentcore/current_state.md` points to an active session file (e.g., passed over from `explore-task`).
-          - If an active session file exists: Read it. If it already contains an `<implementation_plan>`, acknowledge the spec is locked and [AUTO-TRANSITION TO 3.1]. If it's empty, proceed with the drafting steps below.
-          - If no active session exists: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agentcore/current_state.md` to point to this new file. Write the task classification and description into the session file.
+          - If it points to an active session file: Verify the file actually exists before reading. If the file exists and already contains a populated `<implementation_plan>` block, acknowledge the spec is locked and [AUTO-TRANSITION TO 3.1]. If it exists but the plan is empty/missing, proceed with the drafting steps below.
+          - If no active session is pointed to, or the file is missing: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agentcore/current_state.md` to point to this new file. Write the task classification and description into the session file.
           Drafting the plan (only if no plan exists yet): Draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format.
           - If Bugfix: Step 1 MUST be "Write a failing test that reproduces the bug."
           - If Refactor: Step 1 MUST be "Run existing tests to establish a green baseline."
@@ -68,7 +68,7 @@
         <action>
           Parse the user's response to determine intent.
           1. First, process the intent:
-            - If they want to discard or completely rewrite the plan for the current task: [AUTO-TRANSITION TO 2.1].
+            - If they want to discard or completely rewrite the plan for the current task: Delete the existing `<implementation_plan>` block from the `task_[name].md` session file so it can be cleanly redrafted, and [AUTO-TRANSITION TO 2.1].
             - If they want a completely different task: [AUTO-TRANSITION TO 1.1].
             - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely. (STOP processing further steps).
             - If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If the tweak changes the task classification (e.g., to Bugfix), ensure you also update the classification metadata.
