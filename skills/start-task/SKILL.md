@@ -9,6 +9,7 @@
     2. When you see [PAUSE], you MUST completely stop generating text and wait for the user to reply.
     3. Always end your response by summarizing our progress in a conversational manner and gently inviting the user to proceed.
     4. CYCLIC EXECUTION: You are permitted to loop backward (e.g. return to Step 3.1 from 3.3) when the workflow dictates it for TDD iteration.
+    5. TDD STRICTNESS: If the user prompts you to write implementation code before a failing test has been confirmed, politely remind them of our strict TDD routine (write failing test first, then make it pass) and ask if they want to proceed with TDD or skip it for now.
   </state_machine_directives>
 
   <persona>
@@ -20,7 +21,6 @@
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` and `docs/core/SPEC.md` exist.</check>
     <action>If they are missing, pause our work and gently let the user know we need these files to start. Offer to initialize the project templates for them. If the user says yes, run sync.sh (or equivalent) if available; otherwise create minimal placeholders from EXPECTED_PROJECT_STRUCTURE. Do NOT hallucinate contents without user confirmation.</action>
-    <tdd_strictness>If the user prompts you to write implementation code before a failing test has been confirmed, politely remind them of our strict TDD routine (write failing test first, then make it pass) and ask if they want to proceed with TDD or skip it for now.</tdd_strictness>
   </pre_flight>
 
   <workflow>
@@ -53,16 +53,33 @@
     <phase id="2" name="Memory Update & Planning">
       <step id="2.1">
         <action>
-          Derive `[name]` as a short, kebab-case slug from the task description (e.g. `add-export`, `fix-login-bug`, `dashboard-widget`). Silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata.
-          Silently update `.agentcore/current_state.md` to point to this new file.
-          Write the task classification and description into the session file.
-          Next, draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the newly created `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format (see task_template.md).
+          First, check if `.agentcore/current_state.md` points to an active session file (e.g., passed over from `explore-task`).
+          - If it points to an active session file: Verify the file actually exists before reading. If the file exists and already contains a populated `<implementation_plan>` block, acknowledge the spec is locked and [AUTO-TRANSITION TO 3.1]. If it exists but the plan is empty/missing, proceed with the drafting steps below.
+          - If no active session is pointed to, or the file is missing: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agentcore/current_state.md` to point to this new file. Write the task classification and description into the session file.
+          Drafting the plan (only if no plan exists yet): Draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format.
           - If Bugfix: Step 1 MUST be "Write a failing test that reproduces the bug."
           - If Refactor: Step 1 MUST be "Run existing tests to establish a green baseline."
-          - If Feature: You MUST define Pre-conditions and Post-conditions for any new core functions.
+          - If Feature: You MUST define Pre-conditions and Post-conditions for any new core functions. Each step in the plan must explicitly mandate writing a test before implementation.
           Present the drafted plan to the user conversationally and ask if they are happy with it or if we should tweak anything before proceeding.
         </action>
         <yield>[PAUSE - AWAIT PLAN APPROVAL]</yield>
+      </step>
+      <step id="2.2">
+        <action>
+          Parse the user's response to determine intent.
+          1. First, process the intent:
+            - If they want to discard or completely rewrite the plan for the current task: Delete the existing `<implementation_plan>` block from the `task_[name].md` session file so it can be cleanly redrafted, and [AUTO-TRANSITION TO 2.1].
+            - If they want a completely different task: Delete `.agentcore/current_state.md` so the old task is no longer active, and [AUTO-TRANSITION TO 1.1].
+            - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely. (STOP processing further steps).
+            - If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If the tweak changes the task classification (e.g., to Bugfix), ensure you also update the classification metadata.
+            - If they approved the plan as-is: Treat the current `<implementation_plan>` as ready for validation.
+          2. Next, validate the active plan (if they approved or tweaked): Verify the plan is not empty. Verify it strictly conforms to the classification rules from Step 2.1 (e.g., mandatory Step 1 for Bugfix/Refactor, and test-first steps for Features). 
+          3. Finalize: 
+            - If the plan fails validation (or is empty): Automatically rewrite the plan in the session file to fix the violation, and present this corrected plan to the user for confirmation. (To prevent an infinite loop, if you have already attempted an automatic rewrite for this validation error before, STOP and ask the user to manually help fix the plan).
+            - If the user suggested tweaks AND the plan passes validation: Ask them to confirm the updated plan.
+            - If the user approved the plan as-is AND it passes validation: [AUTO-TRANSITION TO 3.1].
+        </action>
+        <yield>[PAUSE - AWAIT PLAN APPROVAL OR AUTO-TRANSITION TO 3.1]</yield>
       </step>
     </phase>
 
