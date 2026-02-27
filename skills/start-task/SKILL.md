@@ -70,12 +70,12 @@
           1. First, process the intent:
             - If they want to discard or completely rewrite the plan for the current task: [AUTO-TRANSITION TO 2.1].
             - If they want a completely different task: [AUTO-TRANSITION TO 1.1].
-            - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely.
+            - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely. (STOP processing further steps).
             - If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If the tweak changes the task classification (e.g., to Bugfix), ensure you also update the classification metadata.
             - If they approved the plan as-is: Treat the current `<implementation_plan>` as ready for validation.
-          2. Next, validate the active plan: Verify the plan is not empty. Verify it strictly conforms to the classification rules from Step 2.1 (e.g., mandatory Step 1 for Bugfix/Refactor, and test-first steps for Features). 
+          2. Next, validate the active plan (if they approved or tweaked): Verify the plan is not empty. Verify it strictly conforms to the classification rules from Step 2.1 (e.g., mandatory Step 1 for Bugfix/Refactor, and test-first steps for Features). 
           3. Finalize: 
-            - If the plan fails validation (or is empty): Automatically rewrite the plan in the session file to fix the violation, and present this corrected plan to the user for confirmation.
+            - If the plan fails validation (or is empty): Automatically rewrite the plan in the session file to fix the violation, and present this corrected plan to the user for confirmation. (To prevent an infinite loop, if you have already attempted an automatic rewrite for this validation error before, STOP and ask the user to manually help fix the plan).
             - If the user suggested tweaks AND the plan passes validation: Ask them to confirm the updated plan.
             - If the user approved the plan as-is AND it passes validation: [AUTO-TRANSITION TO 3.1].
         </action>
