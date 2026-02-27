@@ -57,7 +57,7 @@
     <phase id="3" name="Apply Updates">
       <step id="3.1">
         <action>
-          For each doc that needs updates, apply the changes in a single batch:
+          For each doc that needs updates, apply the changes in a single batch using the `replace_file_content` or `write_to_file` tools:
           - **SCHEMA_REFERENCE.md**: Use the schema path resolved in Phase 2 (or skip if user refused). Read the raw schema file, map to SPEC.md, generate/overwrite.
           - **SPEC.md**: Update domain logic, entities, glossary, or REQ-IDs as implied by the diff.
           - **DATA_FLOW_MAP.md**: Update entity lifecycles or side-effects.

@@ -30,7 +30,7 @@
       </step>
       <step id="1.2">
         <action>
-          Execute the user's request. Update `docs/ROADMAP.md` accordingly. Follow the format: `[x]` for done, `[ ]` for pending; `(REQ-ID)` for SPEC links; `— YYYY-MM-DD` for done date; `— Branch: name` for in-progress; `— Depends on: Item` for dependencies.
+          Execute the user's request. Update `docs/ROADMAP.md` accordingly using the `replace_file_content` tool. Follow the format: `[x]` for done, `[ ]` for pending; `(REQ-ID)` for SPEC links; `— YYYY-MM-DD` for done date; `— Branch: name` for in-progress; `— Depends on: Item` for dependencies.
           Output the updated roadmap or a pleasant summary of changes.
         </action>
         <yield>[PAUSE - ROADMAP UPDATED. SKILL COMPLETE]</yield>
