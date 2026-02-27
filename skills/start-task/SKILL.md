@@ -69,9 +69,9 @@
           Parse the user's response to determine intent.
           - If they suggested tweaks (even if they also approved): Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If their tweak changes the task classification (e.g., to Bugfix), ensure you also update the classification metadata. Important: Validate that the new plan still conforms to the strict classification rules from Step 2.1 (e.g., mandatory Step 1 for Bugfix/Refactor). Ask them to confirm the updated plan.
           - If they approved the plan as-is: Verify the plan is not empty. If it is empty, ask the user to provide steps before we can execute. If the plan has at least one step, [AUTO-TRANSITION TO 3.1].
-          - If they want to discard or completely rewrite the plan: [AUTO-TRANSITION TO 2.1].
-          - If they want a different task completely or want to start over: [AUTO-TRANSITION TO 1.1].
-          - If they rejected the plan without direction or their response is ambiguous: Ask clarifying questions to determine if they want to tweak the plan, discard it, or reconsider the task completely.
+          - If they want to discard or completely rewrite the plan for the current task: [AUTO-TRANSITION TO 2.1].
+          - If they want a completely different task: [AUTO-TRANSITION TO 1.1].
+          - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely.
         </action>
         <yield>[PAUSE - AWAIT PLAN APPROVAL OR AUTO-TRANSITION TO 3.1]</yield>
       </step>
