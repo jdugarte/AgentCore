@@ -40,7 +40,7 @@
       <step id="2.1">
         <action>
           Parse the user's approval. Accept phrasings such as "APPROVE", "Yes", "Write rules", or a list of which candidates to apply.
-          Write the approved rules directly into the corresponding target files (e.g., `.cursorrules`, `docs/core/SYSTEM_ARCHITECTURE.md`).
+          Write the approved rules directly into the corresponding target files (e.g., `.cursorrules`, `docs/core/SYSTEM_ARCHITECTURE.md`) physically using the `replace_file_content` or `write_to_file` tools.
         </action>
         <yield>[PAUSE - RULES HARVESTED. SKILL COMPLETE]</yield>
       </step>

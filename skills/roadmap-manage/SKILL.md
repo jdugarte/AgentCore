@@ -24,13 +24,13 @@
     <phase id="1" name="Manage Roadmap">
       <step id="1.1">
         <action>
-          Read `docs/ROADMAP.md`. Ask the user conversationally what they want to do: add an item, prioritize/reorder items, move an item (e.g. Pending → In Progress, or Done), catalog by phase/category, or something else.
+          Use the `view_file` tool to read `docs/ROADMAP.md`. Ask the user conversationally what they want to do: add an item, prioritize/reorder items, move an item (e.g. Pending → In Progress, or Done), catalog by phase/category, or something else.
         </action>
         <yield>[PAUSE - AWAIT USER INTENT]</yield>
       </step>
       <step id="1.2">
         <action>
-          Execute the user's request. Update `docs/ROADMAP.md` accordingly. Follow the format: `[x]` for done, `[ ]` for pending; `(REQ-ID)` for SPEC links; `— YYYY-MM-DD` for done date; `— Branch: name` for in-progress; `— Depends on: Item` for dependencies.
+          Execute the user's request. Update `docs/ROADMAP.md` accordingly using the `replace_file_content` tool. Follow the format: `[x]` for done, `[ ]` for pending; `(REQ-ID)` for SPEC links; `— YYYY-MM-DD` for done date; `— Branch: name` for in-progress; `— Depends on: Item` for dependencies.
           Output the updated roadmap or a pleasant summary of changes.
         </action>
         <yield>[PAUSE - ROADMAP UPDATED. SKILL COMPLETE]</yield>
