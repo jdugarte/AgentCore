@@ -19,16 +19,17 @@
   </persona>
 
   <pre_flight>
-    <directive>Ensure you have a canvas to work on.</directive>
-    <action>If `.agentcore/active_sessions/task_[name].md` does not exist, silently create it. If it does exist, read it to restore your context before asking the user how they would like to proceed.</action>
+    <directive>Ensure you have a canvas to work on and the project's specific architectural decisions are available.</directive>
+    <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` exists.</check>
+    <action>If `docs/core/SYSTEM_ARCHITECTURE.md` is missing, pause and ask the user to configure it. Read `.agentcore/current_state.md` to find the active session if one exists. Do not guess the `[name]` until the user provides a task description.</action>
   </pre_flight>
 
   <workflow>
     <phase id="1" name="The Whiteboard (Discovery Loop)">
       <step id="1.1">
         <action>
-          If this is a new session: Ask the user what they want to build or what problem they are trying to solve.
-          If this is an existing session: Summarize the current state of the `task_[name].md` file and ask what we need to figure out next.
+          If this is a new session (no active task in `current_state.md`): Ask the user what they want to build or what problem they are trying to solve. Once they reply (in Step 1.2), you will derive `[name]` as a kebab-case slug and create `.agentcore/active_sessions/task_[name].md`, and silently update `.agentcore/current_state.md` to point to it.
+          If this is an existing session: Read the file pointed to by `.agentcore/current_state.md`, summarize the current state of the memory file, and ask what we need to figure out next.
         </action>
         <yield>[PAUSE - AWAIT USER INPUT]</yield>
       </step>
@@ -36,7 +37,7 @@
         <action>
           Process the user's input. 
           1. Converse: Answer questions, propose architectural solutions, or ask clarifying questions to nail down edge cases.
-          2. Update Memory: You MUST update the `task_[name].md` file to reflect any new decisions, requirements, or constraints agreed upon in this exchange. 
+          2. Update Memory: If this is the first exchange and `task_[name].md` hasn't been created, derive the name, create the file, and update `.agentcore/current_state.md`. You MUST update the active memory file to reflect any new decisions, requirements, or constraints agreed upon in this exchange. 
              - If a major pivot occurs (e.g. "let's not use Redis"), move the old plan to `task_[name]_history.md` so the active file stays clean.
           3. Evaluate Readiness: Ask the user if the spec feels complete or if we need to explore further. If they say it is complete and ready to build: draft the strict `<implementation_plan>` block at the bottom of the memory file (mandating TDD) and [AUTO-TRANSITION TO 2.1].
           4. If not ready: Loop back to 1.1 mentally to continue the conversation.
@@ -49,7 +50,7 @@
       <step id="2.1">
         <action>
           The user has approved the implementation plan. 
-          Verify the plan forces TDD (Step 1 must be "Write failing test") and conforms to `docs/core/SYSTEM_ARCHITECTURE.md`.
+          Verify the plan strictly conforms to classification rules (Bugfix MUST start with "Write a failing test", Refactor MUST start with "Run existing tests to establish a green baseline", Features MUST contain test-first steps) and conforms to `docs/core/SYSTEM_ARCHITECTURE.md`.
           If it violates rules: automatically fix the plan in the file, and ask the user to confirm the fixed version (Loop back to 1.2).
           If it is perfectly valid: Tell the user the spec is locked. Instruct the user to run the `start-task` skill to begin execution.
         </action>

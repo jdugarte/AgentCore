@@ -53,10 +53,10 @@
     <phase id="2" name="Memory Update & Planning">
       <step id="2.1">
         <action>
-          Derive `[name]` as a short, kebab-case slug from the task description (e.g. `add-export`, `fix-login-bug`, `dashboard-widget`). Silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata.
-          Silently update `.agentcore/current_state.md` to point to this new file.
-          Write the task classification and description into the session file.
-          Next, draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the newly created `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format (see task_template.md).
+          First, check if `.agentcore/current_state.md` points to an active session file (e.g., passed over from `explore-task`).
+          - If an active session file exists: Read it. If it already contains an `<implementation_plan>`, acknowledge the spec is locked and [AUTO-TRANSITION TO 3.1]. If it's empty, proceed with the drafting steps below.
+          - If no active session exists: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md`. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agentcore/current_state.md` to point to this new file. Write the task classification and description into the session file.
+          Drafting the plan (only if no plan exists yet): Draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the `task_[name].md` file. Use `<step id="N" status="pending">[Description]</step>` format.
           - If Bugfix: Step 1 MUST be "Write a failing test that reproduces the bug."
           - If Refactor: Step 1 MUST be "Run existing tests to establish a green baseline."
           - If Feature: You MUST define Pre-conditions and Post-conditions for any new core functions. Each step in the plan must explicitly mandate writing a test before implementation.
