@@ -17,7 +17,7 @@
 
   <pre_flight>
     <directive>Ensure you have a clean workspace before attempting to pull upstream changes.</directive>
-    <check>Verify no uncommitted changes exist in the directories you are about to update (skills/, docs/ai/, docs/core/, .cursorrules).</check>
+    <check>Verify no uncommitted changes exist in the directories you are about to update (.cursor/skills/, docs/ai/, docs/core/, .cursorrules).</check>
     <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved.</action>
   </pre_flight>
 
@@ -26,7 +26,8 @@
       <step id="0.1">
         <action>
           Clone the AgentCore repository into a temporary directory to get the latest files.
-          Run command: `git clone --depth 1 https://github.com/jdugarte/AgentCore.git .agentcore/tmp_update`
+          First, remove any leftover temp directory from a previously interrupted run: `rm -rf .agentcore/tmp_update`
+          Then run: `git clone --depth 1 https://github.com/jdugarte/AgentCore.git .agentcore/tmp_update`
           This temporary directory will be the source of truth for all subsequent steps.
         </action>
         <yield>[AUTO-TRANSITION TO 1.1]</yield>
@@ -37,14 +38,14 @@
       <step id="1.1">
         <action>
           Ensure required directories exist, creating them if absent:
-          - `skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult,update-agentcore}`
+          - `.cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult,update-agentcore,explore-task}`
           - `.agentcore/active_sessions`
           - `docs/{ai,core,features,audit,guides}` and `docs/core/ADRs`
           - `.github`
 
           Remove obsolete or renamed skill directories that no longer exist in the AgentCore framework. Currently known obsolete dirs:
-          - `skills/sync-schema-docs`
-          - `skills/pr-description-clipboard`
+          - `.cursor/skills/sync-schema-docs`
+          - `.cursor/skills/pr-description-clipboard`
           For each obsolete dir, if it exists locally, delete it and notify the user conversationally (e.g., "Cleaned up the old `sync-schema-docs` skill, which has been renamed.").
         </action>
         <yield>[AUTO-TRANSITION TO 1.2]</yield>
