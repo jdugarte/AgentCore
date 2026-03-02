@@ -1,6 +1,8 @@
 # Expected Project Structure (AgentCore OS)
 
-This document lists every referenced path, its purpose, and how it fits into the AgentCore Operating System. 
+This document lists every referenced path, its purpose, and how it fits into the AgentCore Operating System.
+
+> **Sync Mapping:** For the canonical mapping between AgentCore upstream sources and these local destinations, see [`SYNC_REGISTRY.md`](SYNC_REGISTRY.md). That file drives both `sync.sh` (initial bootstrap) and the `update-agentcore` AI skill (ongoing updates).
 
 ## 1. The Agent RAM (Transient Memory)
 *Located in `.agentcore/` (Gitignored)*

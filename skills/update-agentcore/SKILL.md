@@ -8,6 +8,7 @@
     1. NEVER execute more than ONE <step> per response.
     2. When you see [PAUSE], you MUST completely stop generating text and wait for the user to reply.
     3. Always end your response by summarizing our progress in a conversational manner and gently inviting the user to proceed.
+    4. CONFLICT QUEUE: Maintain a mental list called the "Conflict Queue" throughout the entire skill execution. Any step that detects a conflict MUST add it to this queue rather than attempting to resolve it inline. Phase 3 is the sole owner of conflict resolution. A conflict is only "done" when Phase 3 has fully resolved it.
   </state_machine_directives>
 
   <persona>
@@ -18,7 +19,7 @@
   <pre_flight>
     <directive>Ensure you have a clean workspace before attempting to pull upstream changes.</directive>
     <check>Verify no uncommitted changes exist in the directories you are about to update (.cursor/skills/, docs/ai/, docs/core/, .cursorrules).</check>
-    <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved.</action>
+    <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved. Also check whether `.agentcore/tmp_update` already exists from an interrupted previous run; if so, mention it — it will be cleaned up in Step 0.1.</action>
   </pre_flight>
 
   <workflow>
@@ -29,6 +30,7 @@
           First, remove any leftover temp directory from a previously interrupted run: `rm -rf .agentcore/tmp_update`
           Then run: `git clone --depth 1 https://github.com/jdugarte/AgentCore.git .agentcore/tmp_update`
           This temporary directory will be the source of truth for all subsequent steps.
+          Initialize the Conflict Queue as empty.
         </action>
         <yield>[AUTO-TRANSITION TO 1.1]</yield>
       </step>
@@ -68,7 +70,8 @@
           Guard `.cursorrules` using the latest `templates/core/AGENT_CORE_RULES.md` from `.agentcore/tmp_update`:
           - If `.cursorrules` does not exist: Create it with the contents of `AGENT_CORE_RULES.md`.
           - If `.cursorrules` exists but does NOT contain `&lt;agentcore_operating_system&gt;`: Prepend `AGENT_CORE_RULES.md` to the existing `.cursorrules` content, preserving all existing project-specific rules.
-          - If `.cursorrules` already contains `&lt;agentcore_operating_system&gt;`: Compare the block with the upstream version. If they differ, flag this as a conflict to be handled in Phase 3.
+          - If `.cursorrules` already contains `&lt;agentcore_operating_system&gt;` AND the block is identical to the upstream version: Skip silently.
+          - If `.cursorrules` already contains `&lt;agentcore_operating_system&gt;` AND the block differs from upstream: Add `{ file: ".cursorrules", reason: "AgentCore OS block has drifted from upstream" }` to the Conflict Queue. Do NOT attempt to resolve it here.
         </action>
         <yield>[AUTO-TRANSITION TO 1.4]</yield>
       </step>
@@ -78,7 +81,8 @@
           - If `.git/hooks` does not exist: Warn the user this doesn't appear to be a git repo root and skip this step.
           - If `.git/hooks/pre-commit` does not exist: Create it with `#!/bin/bash` as the first line, append the pre-commit logic, and run `chmod +x .git/hooks/pre-commit`.
           - If `.git/hooks/pre-commit` exists but does NOT contain `# AGENTCORE PRE-COMMIT`: Append the pre-commit logic to the existing hook file, preserving any other hooks already present.
-          - If it already contains `# AGENTCORE PRE-COMMIT`: Compare the existing AgentCore block with the upstream version. If they differ, replace only the AgentCore block, leaving any other pre-commit hooks untouched.
+          - If it already contains `# AGENTCORE PRE-COMMIT` AND the block is identical to upstream: Skip silently.
+          - If it already contains `# AGENTCORE PRE-COMMIT` AND the block differs from upstream: Replace only the AgentCore block with the upstream version, leaving any other pre-commit hooks untouched.
         </action>
         <yield>[AUTO-TRANSITION TO 2.1]</yield>
       </step>
@@ -87,18 +91,25 @@
     <phase id="2" name="Sync Files">
       <step id="2.1">
         <action>
-          Compare the upstream files in `.agentcore/tmp_update` (specifically the `skills/`, `playbooks/`, and `templates/` directories) against their designated local destinations.
-          For each file:
-          - If the file is missing locally: Copy it directly to its designated location. Note it as "added."
-          - If the file exists locally and is identical: Skip it silently.
-          - If the file exists locally but differs: Evaluate the differences.
-            - If it's a safe merge (purely additive: new sections, new rules, typo fixes that don't contradict local content): Silently apply the update using `replace_file_content`. Note it as "merged."
-            - If it's a complex conflict (upstream changes contradict or restructure local content): Flag it for interactive resolution in Phase 3. Note it as "conflicted."
-          Collect all flagged conflicts before moving on.
+          Read the **Sync Registry** from `.agentcore/tmp_update/playbooks/SYNC_REGISTRY.md` using the `view_file` tool. This file is the single source of truth for all file mappings and strategies. Parse the `SYNC_REGISTRY [START]` / `SYNC_REGISTRY [END]` table to get the full list of `Upstream Source`, `Local Destination`, and `Strategy` values.
+
+          IMPORTANT: Skip any rows for `templates/core/AGENT_CORE_RULES.md` and `templates/git-hooks/pre-commit-logic.sh` — these were already handled with specialized logic in Phase 1.
+
+          For each row in the registry with strategy `merge`:
+          - If the file is missing locally: Copy it to its destination. Note it as "added."
+          - If the file exists locally and is identical to upstream: Skip it silently.
+          - If the file exists locally but differs from upstream:
+            - If it's a safe merge (purely additive: new sections, new rules, typo fixes that don't contradict local content): Apply silently using `replace_file_content`. Note it as "merged."
+            - If it's a complex conflict (upstream changes contradict or restructure local content): Add it to the Conflict Queue. Note it as "conflicted."
+
+          For each row in the registry with strategy `init`:
+          - If missing locally: Copy it to its destination. Note it as "added."
+          - If already exists locally: Skip it entirely. Do not compare, diff, or overwrite. These are project-specific files.
+
+          Collect all conflicts into the Conflict Queue. Do NOT transition to cleanup until Phase 3 has cleared them.
         </action>
         <yield>
-          If conflicts found: [PAUSE - LIST ALL CONFLICTS TO USER, THEN AWAIT RESOLUTION IN PHASE 3]
-          If no conflicts: [AUTO-TRANSITION TO 4.1]
+          [AUTO-TRANSITION TO 3.1] (Phase 3 will immediately proceed to cleanup if the Conflict Queue is empty)
         </yield>
       </step>
     </phase>
@@ -106,8 +117,10 @@
     <phase id="3" name="Interactive Conflict Resolution">
       <step id="3.1">
         <action>
-          For each conflicting file (work through them one at a time), guide the user through the differences:
-          1. **Explain the Conflict Contextually:** Clearly describe what changed in the upstream file and how it has drifted from their local version. For example, "The upstream `start-task` skill added a new validation directive in `state_machine_directives`, but your local version restructured that entire block."
+          Check the Conflict Queue (accumulated from all previous phases, including .cursorrules from Phase 1).
+          If the queue is empty: [AUTO-TRANSITION TO 4.1].
+          If conflicts remain: Present the full list of conflicts to the user conversationally (e.g., "I found 2 files that need your input before I can finish: .cursorrules and .cursor/skills/start-task/SKILL.md"). Then work through them one at a time:
+          1. **Explain the Conflict Contextually:** Clearly describe what changed in the upstream file and how it has drifted from their local version.
           2. **Highlight the Specific Differences:** Provide a concise summary of key additions or changes. Show a brief snippet of the divergent sections if helpful.
           3. **Ask for Plain English Instructions:** Ask the user how they'd like to resolve it. Encourage natural input like "keep the new upstream section but preserve my custom rule" or "just append whatever is new."
           4. **Offer a Proposed Merge:** Draft a combined version that respects their local context while incorporating upstream improvements. Show it to the user and ask if this looks right.
@@ -116,8 +129,8 @@
       </step>
       <step id="3.2">
         <action>
-          Evaluate the user's response from 3.1. If their instructions are broad, draft the merged file content, show them the result, and ask for confirmation before applying it using `replace_file_content`. If they confirm, apply it.
-          If more conflicting files remain, loop back to 3.1 for the next one. Otherwise, proceed to Phase 4.
+          Evaluate the user's response from 3.1. If their instructions are broad, draft the merged file content, show them the result, and ask for confirmation before applying it using `replace_file_content`. If they confirm, apply it and remove the file from the Conflict Queue.
+          If more conflicts remain in the Conflict Queue, loop back to 3.1 for the next one. Otherwise, proceed to Phase 4.
         </action>
         <yield>[AUTO-TRANSITION TO 3.1 IF MORE CONFLICTS REMAIN, OTHERWISE AUTO-TRANSITION TO 4.1]</yield>
       </step>
@@ -127,7 +140,7 @@
       <step id="4.1">
         <action>
           Clean up the temporary workspace: Run `rm -rf .agentcore/tmp_update`.
-          Report a clear, conversational summary of everything that happened: files added, files merged, files with conflicts resolved, and any housekeeping actions taken (e.g., ".gitignore updated, pre-commit hook installed").
+          Report a clear, conversational summary of everything that happened: files added, files merged, files with conflicts resolved, any housekeeping actions taken (e.g., ".gitignore updated, pre-commit hook installed"), and any init-only files that were skipped because they already existed.
         </action>
         <yield>[PAUSE - UPDATE COMPLETE. SKILL COMPLETE]</yield>
       </step>
