@@ -33,11 +33,11 @@
         <action>
           Use the `view_file` tool to read `docs/ai/code_review_prompt.md`.
           Analyze the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
-          Format your output using strict hierarchical numbering (e.g., 1. Architecture, 1.1 Extract Service Object, 1.2 Fix N+1 Query, 2. Type Safety, 2.1 Add return type).
+          Format your output using strict categories (MUST FIX, STRONGLY RECOMMENDED, NICE TO IMPROVE) and hierarchical numbering for every item found. Every identified issue, regardless of category, must be listed.
         </action>
         <yield>
           [PAUSE - AWAIT USER COMMAND]
-          Conversationally ask the user which fixes they would like applied (by number, all of them, or if they'd prefer to skip for now).
+          Conversationally present the numbered list and ask the user which fixes they would like applied across ALL categories (e.g. MUST FIX, STRONGLY RECOMMENDED, and NICE TO IMPROVE). Explain they can choose by number, do "all of them", or skip.
         </yield>
       </step>
     </phase>
@@ -50,9 +50,18 @@
           Run the local test suite and linter. If `docs/ai/code_review_prompt.md` exists, run the commands it specifies (e.g. Quality or Pre-Flight section).
         </action>
         <yield>
-          [PAUSE - AWAIT COMMAND]
+          [PAUSE - AWAIT VERIFICATION]
           Tell the user the changes are applied and verified clean. Output a suggested commit message as a plain-text code block (e.g. `git commit -m "..."`). Do NOT propose or run any git command — the user runs it themselves.
-          Conversationally ask whether they'd like to do another review pass over the new commits (which will loop back to Phase 1, Step 1.1), or if they are completely finished with the review (which will exit the code review skill).
+        </yield>
+      </step>
+      <step id="2.2">
+        <action>
+          Explicitly ask the user if they'd like to do another code review pass over the new changes.
+          If they say yes, loop back to Phase 1, Step 1.1.
+          If they say no, confirm that the code review is complete.
+        </action>
+        <yield>
+          [PAUSE - AWAIT COMMAND]
         </yield>
       </step>
     </phase>

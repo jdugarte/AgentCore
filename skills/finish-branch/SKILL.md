@@ -42,7 +42,21 @@
           Analyze the branch to ensure no cyclomatic complexity or function length violations occurred.
           Scan all new tests for `[REQ-ID]` tags referencing `docs/core/SPEC.md`.
         </action>
-        <yield>[PAUSE - REPORT FINDINGS. AWAIT COMMAND TO FIX OR PROCEED]</yield>
+        <yield>
+          [PAUSE - REPORT FINDINGS]
+          Conversationally present the findings of the audit. Explicitly ask the user if they want you to fix any missing `[REQ-ID]` tags or complexity violations before proceeding.
+          AWAIT COMMAND TO FIX OR PROCEED.
+        </yield>
+      </step>
+      <step id="2.2">
+        <action>
+          If the user requested fixes in Step 2.1, implement the necessary changes to fix complexity violations and add missing `[REQ-ID]` tags to the tests.
+          Run local tests to verify the changes.
+        </action>
+        <yield>
+          [PAUSE - AWAIT COMMAND]
+          Inform the user that the compliance and traceability fixes have been applied. Ask if they want to review the changes or proceed to the next phase.
+        </yield>
       </step>
     </phase>
 
