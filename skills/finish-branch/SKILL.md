@@ -55,7 +55,8 @@
         </action>
         <yield>
           [PAUSE - AWAIT COMMAND]
-          Inform the user that the compliance and traceability fixes have been applied. Ask if they want to review the changes or proceed to the next phase.
+          If fixes were applied: Inform the user that the compliance and traceability fixes have been applied. Ask if they want to review the changes or proceed to the next phase.
+          If no fixes were requested: Acknowledge that no fixes were needed, and ask if they are ready to proceed to the next phase.
         </yield>
       </step>
     </phase>
