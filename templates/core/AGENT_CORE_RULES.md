@@ -45,6 +45,7 @@
       <route intent="Wrap up a task, audit compliance, and open a PR" trigger="finish branch, open a PR, complete task">Read `.cursor/skills/finish-branch/SKILL.md`</route>
       <route intent="Perform a code review or check code quality" trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
       <route intent="Check current progress or see what is blocking the task" trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
+      <route intent="Process feedback from CI, linters, or human reviewers and fix the code" trigger="process feedback, fix errors, lint errors">Read `.cursor/skills/process-feedback/SKILL.md`</route>
       <route intent="Extract new codebase rules or update AI docs based on recent learnings" trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
       <route intent="Audit compliance against architecture and coding standards" trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
       <route intent="Synchronize project documentation or initialize AgentCore" trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
