@@ -38,18 +38,19 @@
   </architectural_anchors>
 
   <intent_routing>
-    <directive>You must map user intents to the strict XML skills located in `.cursor/skills/`. Before answering a prompt, check if it matches these triggers. If it does, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
+    <directive>You must map the user's semantic intent to the strict XML skills located in `.cursor/skills/`. Do not rely solely on exact keyword matching; evaluate what the user is actually trying to accomplish. If their intent matches a route below, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
     <routes>
-      <route trigger="start task, new feature, bugfix, build a">Read `.cursor/skills/start-task/SKILL.md`</route>
-      <route trigger="finish branch, open a PR">Read `.cursor/skills/finish-branch/SKILL.md`</route>
-      <route trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
-      <route trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
-      <route trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
-      <route trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
-      <route trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
-      <route trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
-      <route trigger="roadmap, manage roadmap, add to roadmap">Read `.cursor/skills/roadmap-manage/SKILL.md`</route>
-      <route trigger="roadmap status, what's pending, roadmap consult">Read `.cursor/skills/roadmap-consult/SKILL.md`</route>
+      <route intent="Explore, brainstorm, or figure out requirements for a new feature or task BEFORE implementation" trigger="explore task, explore feature, brainstorm">Read `.cursor/skills/explore-task/SKILL.md`</route>
+      <route intent="Begin the actual implementation or coding of an agreed-upon plan, feature, or bugfix" trigger="start task, begin task, implement feature">Read `.cursor/skills/start-task/SKILL.md`</route>
+      <route intent="Wrap up a task, audit compliance, and open a PR" trigger="finish branch, open a PR, complete task">Read `.cursor/skills/finish-branch/SKILL.md`</route>
+      <route intent="Perform a code review or check code quality" trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
+      <route intent="Check current progress or see what is blocking the task" trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
+      <route intent="Extract new codebase rules or update AI docs based on recent learnings" trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
+      <route intent="Audit compliance against architecture and coding standards" trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
+      <route intent="Synchronize project documentation or initialize AgentCore" trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
+      <route intent="Draft or format a Pull Request description" trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
+      <route intent="Manage, add to, or update the project roadmap" trigger="roadmap, manage roadmap, add to roadmap">Read `.cursor/skills/roadmap-manage/SKILL.md`</route>
+      <route intent="Consult the roadmap to see what is pending or next" trigger="roadmap status, what's pending, roadmap consult">Read `.cursor/skills/roadmap-consult/SKILL.md`</route>
     </routes>
   </intent_routing>
 </agentcore_operating_system>
