@@ -29,6 +29,7 @@ Finishing a branch runs a code review (guided by `docs/ai/code_review_prompt.md`
 | finish-branch | finish branch, open a PR | Code review, compliance audit, CI loop, docs sync, rule harvest, PR description |
 | code-review | code review, run code review, review my changes | Project-specific static analysis and fix loop |
 | status-check | status check, where are we, blocked | Rehydrate context and diagnose blockers |
+| process-feedback | pasting CI logs, Bugbot comments, SonarQube errors | Interrupt subroutine: fix code, log diagnosis to short-term memory, resume previous task |
 | harvest-rules | harvest rules, update docs | Extract new patterns into docs and .cursorrules |
 | audit-compliance | audit compliance, run audit | IV&V audit against deterministic standards |
 | sync-docs | sync docs, sync project docs | Keep docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.) |

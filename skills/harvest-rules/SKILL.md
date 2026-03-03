@@ -28,6 +28,13 @@
 
   <workflow>
     <phase id="1" name="Pattern Analysis">
+      <step id="1.0">
+        <action>
+          Check if `.agentcore/review_ledger.md` exists. 
+          If it exists, read its contents. Synthesize the recorded CI/Review diagnoses into actionable "Gotchas" or "Anti-Patterns" you should avoid in the future.
+          Combine these findings with your standard git diff analysis in the next step to propose a unified list of "New Rule Candidates".
+        </action>
+      </step>
       <step id="1.1">
         <action>
           Read the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
@@ -46,6 +53,7 @@
         <action>
           Parse the user's approval. Accept phrasings such as "APPROVE", "Yes", "Write rules", or a list of which candidates to apply.
           Write the approved rules directly into the corresponding target files (e.g., `.cursorrules`, `docs/core/SYSTEM_ARCHITECTURE.md`) physically using the `replace_file_content` or `write_to_file` tools.
+          Once the knowledge transfer is complete, clear `.agentcore/review_ledger.md` using file tools so the short-term memory is fresh for the next branch. This must be done unconditionally; any ledger entries that did not result in an approved rule are considered implicitly rejected by the user and should be garbage collected.
         </action>
         <yield>[PAUSE - RULES HARVESTED. SKILL COMPLETE]</yield>
       </step>
