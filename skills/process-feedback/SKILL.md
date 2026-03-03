@@ -15,14 +15,16 @@
     <phase id="1" name="Diagnosis and Fix">
       <step id="1.1">
         <action>
-          Read the pasted feedback. Identify the file(s) causing the issue.
-          Propose the fix internally, then immediately use file editing tools to deploy the fix to the codebase.
+          Read the pasted feedback. If multiple discrete comments or errors are provided at once, break them down and analyze them individually.
+          Identify the file(s) causing each issue. Propose the fixes internally.
+          If multiple fixes affect the same file, consolidate them into a single file editing tool call if possible, or sequence them carefully.
+          Immediately use file editing tools to deploy all the fixes to the codebase.
         </action>
       </step>
       <step id="1.2">
         <action>
-          Silently append a structured entry to `.agentcore/review_ledger.md`. If the file doesn't exist, create it.
-          Format: 
+          Silently append a structured entry to `.agentcore/review_ledger.md` for EACH distinct issue fixed. If the file doesn't exist, create it.
+          Format for each entry: 
           - **Issue:** [Brief description of the feedback]
           - **Diagnosis/Why it failed:** [The root cause]
           - **Fix:** [What was changed]
