@@ -33,7 +33,6 @@
           Check if `.agentcore/review_ledger.md` exists. 
           If it exists, read its contents. Synthesize the recorded CI/Review diagnoses into actionable "Gotchas" or "Anti-Patterns" you should avoid in the future.
           Combine these findings with your standard git diff analysis in the next step to propose a unified list of "New Rule Candidates".
-          Once harvested, clear `.agentcore/review_ledger.md` using file tools so it is clean for the next branch.
         </action>
       </step>
       <step id="1.1">
@@ -54,6 +53,7 @@
         <action>
           Parse the user's approval. Accept phrasings such as "APPROVE", "Yes", "Write rules", or a list of which candidates to apply.
           Write the approved rules directly into the corresponding target files (e.g., `.cursorrules`, `docs/core/SYSTEM_ARCHITECTURE.md`) physically using the `replace_file_content` or `write_to_file` tools.
+          Once the rules are successfully written, clear up `.agentcore/review_ledger.md` using file tools so the memory is fresh for the next branch.
         </action>
         <yield>[PAUSE - RULES HARVESTED. SKILL COMPLETE]</yield>
       </step>
