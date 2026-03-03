@@ -28,6 +28,14 @@
 
   <workflow>
     <phase id="1" name="Pattern Analysis">
+      <step id="1.0">
+        <action>
+          Check if `.agentcore/review_ledger.md` exists. 
+          If it exists, read its contents. Synthesize the recorded CI/Review diagnoses into actionable "Gotchas" or "Anti-Patterns" you should avoid in the future.
+          Combine these findings with your standard git diff analysis in the next step to propose a unified list of "New Rule Candidates".
+          Once harvested, clear `.agentcore/review_ledger.md` using file tools so it is clean for the next branch.
+        </action>
+      </step>
       <step id="1.1">
         <action>
           Read the `git diff` of the current branch against the default branch (e.g. `main`). Use the repository's default branch unless the project uses a different convention.
