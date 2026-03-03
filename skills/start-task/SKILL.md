@@ -103,6 +103,16 @@
       </step>
       <step id="3.2">
         <action>
+          Use the `view_file` tool to read `templates/CbC_GENERATION_PROMPT.md`.
+          Before writing any implementation code, apply the CbC generation protocol:
+          1. Fill the `<context>` block with the relevant REQ-ID from `docs/core/SPEC.md` and the current step description from the active session file.
+          2. Apply all `<constraints>` from the template to your generation:
+             - No function over 60 lines.
+             - No unbounded loops.
+             - Pre-condition and Post-condition assertions on all data mutations and service calls.
+             - No raw primitive types for domain concepts — use Value Objects (Ruby) or Branded Types (TypeScript).
+             - Cyclomatic complexity ≤ 10.
+          3. REFLECTION GATE: Before outputting the code, you MUST silently execute the `<reflection>` step from the template — critique your own proposed implementation against each constraint. If any violation is found, fix the code first. Only then output the final implementation.
           Write the minimum application code required to make the failing test pass.
           Ensure you do not violate `docs/core/SYSTEM_ARCHITECTURE.md`.
           Run the project's linters/checkers. If `docs/ai/code_review_prompt.md` exists, use the `view_file` tool to read it for project-specific commands (e.g. Quality or Pre-Flight section); otherwise run the project's standard linters.
