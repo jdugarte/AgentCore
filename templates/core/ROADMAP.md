@@ -7,14 +7,20 @@ Things done and things left to do. Update this when finishing branches; use `roa
 ---
 
 ## Done
-- [x] [Example: Auth & sessions] (REQ-AUTH-001) — 2026-02-15
+*(No completed items yet)*
 
 ## In Progress
-- [ ] [Example: User dashboard] (REQ-DASH-001) — Branch: feature/dashboard
+*(No items currently in progress)*
 
 ## Pending (by priority)
-1. [ ] [Example: Export to CSV] (REQ-EXPORT-001)
-2. [ ] [Example: Email notifications]
+*(Add pending items here)*
 
 ## Backlog
-- [ ] [Example: Mobile app]
+*(Add backlog items here)*
+
+<!-- 
+Example formats:
+- [x] Auth & sessions (REQ-AUTH-001) — 2026-02-15
+- [ ] User dashboard (REQ-DASH-001) — Branch: feature/dashboard
+1. [ ] Export to CSV (REQ-EXPORT-001)
+-->
