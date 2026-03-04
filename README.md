@@ -9,7 +9,7 @@ AgentCore is a meta-framework that turns your AI coding assistant into a **disci
 
 ---
 
-## The Problem With AI-Assisted Development Today
+## The problem with AI-assisted development today
 
 Left to their own devices, AI coding assistants are **eager completion engines**. They will:
 
@@ -22,7 +22,7 @@ The result is **vibe coding** — fast, messy, inconsistent, and increasingly di
 
 ---
 
-## What AgentCore Does
+## What AgentCore does
 
 AgentCore injects a **software engineering operating system** into your project. It gives your AI agent:
 
@@ -36,7 +36,7 @@ The AI doesn't just help you type faster. It **becomes a team member with a job 
 
 ---
 
-## The Process Is the Product
+## The process is the product
 
 Most tools optimize for output. AgentCore optimizes for the **process that generates output**.
 
@@ -50,7 +50,7 @@ The result is a system that doesn't just enforce good practices. It **accumulate
 
 ---
 
-## Who Is This For?
+## Who is this for?
 
 AgentCore is for developers and technical leads who:
 
@@ -63,7 +63,7 @@ If you've ever thought *"I need this AI to follow the same rules my team follows
 
 ---
 
-## How It Transforms Your Workflow
+## How it transforms your workflow
 
 ### Before AgentCore
 - You describe a feature, the AI codes it, you review, it breaks something, you fix it, repeat.
@@ -82,7 +82,7 @@ If you've ever thought *"I need this AI to follow the same rules my team follows
 
 ---
 
-## The Core Skills (What Your AI Can Now Do)
+## The core skills (what your AI can now do)
 
 Once AgentCore is installed, your AI assistant gains a suite of structured, stateful workflows:
 
@@ -141,7 +141,7 @@ The AI handles the rest — structured, gated, auditable.
 
 ---
 
-## The Engineering Standards AgentCore Enforces
+## The engineering standards AgentCore enforces
 
 AgentCore ships with battle-tested templates for the standards that improve code quality and maintainability:
 
@@ -154,7 +154,7 @@ AgentCore ships with battle-tested templates for the standards that improve code
 
 ---
 
-## Stack Templates Included
+## Stack templates included
 
 AgentCore is **tech-stack-agnostic** at its core and ships with ready-to-use configurations for:
 
