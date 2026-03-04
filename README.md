@@ -1,4 +1,4 @@
-# 🧠 AgentCore: Engineering-Grade AI Development
+# AgentCore: Engineering-Grade AI Development
 
 [![Status: Active](https://img.shields.io/badge/Status-Active-success.svg)](https://github.com/jdugarte/AgentCore)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
