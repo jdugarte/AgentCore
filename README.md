@@ -189,10 +189,9 @@ agentic:guild is actively evolving. Upcoming work:
 agentic:guild is built in the open. If you've built a stack-agnostic skill, improved an HRE constraint, or have a new governance template — PRs are welcome.
 
 To contribute:
-1. Read [`playbooks/AI_DEVELOPER_PROTOCOL.md`](playbooks/AI_DEVELOPER_PROTOCOL.md) to understand the philosophy
-2. Read [`playbooks/EXPECTED_PROJECT_STRUCTURE.md`](playbooks/EXPECTED_PROJECT_STRUCTURE.md) to understand how the repo is organized
-3. Ensure any new skills follow the `<agentic_guild_skill>` XML state-machine format with `[PAUSE]` gateway methodology
-4. Open a PR — the `finish-branch` skill will guide you through our own review process
+1. Read [`playbooks/EXPECTED_PROJECT_STRUCTURE.md`](playbooks/EXPECTED_PROJECT_STRUCTURE.md) to understand how the repo is organized
+2. Ensure any new skills follow the `<agentic_guild_skill>` XML state-machine format with `[PAUSE]` gateway methodology
+3. Open a PR — the `finish-branch` skill will guide you through our own review process
 
 We are building the practices that make AI-assisted development trustworthy. Come build them with us.
 
