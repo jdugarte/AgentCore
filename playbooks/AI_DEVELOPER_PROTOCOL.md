@@ -68,7 +68,7 @@
     - Ensure `docs/ROADMAP.md` exists (agentic:guild sync initializes it) for project planning and task tracking.
     - Consolidate AI rules into `.cursorrules` to act as an IF/THEN routing table, and ensure it contains the `<agentic_guild_os>` header.
     - **CRITICAL RULE:** All agents and instructions must explicitly forbid auto-committing or auto-pushing code. At most, suggest a commit message.
-    - Delete legacy directories (e.g. `.agent/`, `.cursor/rules/`) if they duplicate `.agenticguild/` or `.cursorrules`; ensure all tools share a single source of truth.
+    - Delete legacy directories (e.g. `.cursor/rules/`) if they duplicate `.agenticguild/` or `.cursorrules`; ensure all tools share a single source of truth.
 2.  **Skill Refinement (XML State Machines):**
     - Update universal workflow skills (e.g., `start-task`, `finish-branch`, `status-check`) to ensure they use strict `<agentic_guild_skill>` XML formatting.
     - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical implementation plan inside the active session file (`active_sessions/task_*.md`), checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
