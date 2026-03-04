@@ -5,8 +5,6 @@
 
 > *Stop vibe coding. Start engineering.*
 
-> *"Code is a liability. Judgment is an asset."*
-
 AgentCore is a meta-framework that turns your AI coding assistant into a **disciplined software engineer** — one that follows the strict practices, processes, and documentation standards we've always known mattered, but rarely enforced.
 
 ---
@@ -96,6 +94,10 @@ Here's how it works:
 1. **Rules as guardrails** — Your `SYSTEM_ARCHITECTURE.md` and `.cursorrules` act as the AI's engineering conscience. Every code generation decision is made *against* these constraints.
 2. **Experience as input** — After each task, `harvest-rules` scans the Git diff for patterns that emerged organically: new abstractions, solutions to recurring problems, architectural decisions that actually worked.
 3. **Rules as output** — It evaluates those patterns against your existing documentation and, where they represent genuine new knowledge, proposes additions to your living standards.
+
+> *"Code is a liability. Judgment is an asset."*
+>
+> The code is an expression of the process — not the other way around. What `harvest-rules` preserves and compounds is the judgment: the architectural thinking, the trade-offs considered, the patterns that held up under real conditions.
 
 The result is an AI that doesn't just *follow* your first set of rules. It **gets better at engineering** as the project matures — surfacing its own good decisions back into the standards that govern future decisions. Its capacity for architecturally sound judgment compounds over time.
 
