@@ -1,4 +1,4 @@
 # shellcheck shell=bash
-# --- AGENTCORE PRE-COMMIT START ---
-# Reserved for future AgentCore hook logic.
-# --- AGENTCORE PRE-COMMIT END ---
+# --- AGENTIC-GUILD PRE-COMMIT START ---
+# Reserved for future agentic:guild hook logic.
+# --- AGENTIC-GUILD PRE-COMMIT END ---

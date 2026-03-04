@@ -1,14 +1,14 @@
 #!/bin/bash
 # sync.sh
-# Bootstraps AgentCore OS in a new destination project.
-# For projects already running AgentCore, use the `update-agentcore` AI skill instead.
+# Bootstraps agentic:guild OS in a new destination project.
+# For projects already running agentic:guild, use the `update-agentic-guild` AI skill instead.
 # Usage: ./sync.sh
 
-REPO_URL="https://raw.githubusercontent.com/jdugarte/AgentCore/main"
+REPO_URL="https://raw.githubusercontent.com/jdugarte/agentic-guild/main"
 REGISTRY_URL="$REPO_URL/playbooks/SYNC_REGISTRY.md"
-TMP_REGISTRY="/tmp/agentcore_sync_registry.md"
+TMP_REGISTRY="/tmp/agenticguild_sync_registry.md"
 
-echo "🧠 Initializing AgentCore Operating System..."
+echo "🧠 Initializing agentic:guild Operating System..."
 
 # 1. Fetch the Sync Registry (single source of truth for all file mappings)
 echo "📋 Fetching Sync Registry..."
@@ -21,7 +21,7 @@ fi
 # 2. Create necessary directories
 echo "📁 Building directory structure..."
 mkdir -p .cursor/skills
-mkdir -p .agentcore/active_sessions
+mkdir -p .agenticguild/active_sessions
 mkdir -p docs/{ai,core,features,audit,guides}
 mkdir -p docs/core/ADRs
 mkdir -p .github
@@ -29,27 +29,27 @@ mkdir -p .github
 # 3. Configure Gitignore for AI Memory
 GITIGNORE_FILE=".gitignore"
 if [ -f "$GITIGNORE_FILE" ]; then
-  if ! grep -q ".agentcore/\*" "$GITIGNORE_FILE"; then
-    echo "📝 Securing .agentcore/ memory folder in .gitignore..."
+  if ! grep -q ".agenticguild/\*" "$GITIGNORE_FILE"; then
+    echo "📝 Securing .agenticguild/ memory folder in .gitignore..."
     {
       echo ""
-      echo "# AgentCore Transient Memory"
-      echo ".agentcore/*"
-      echo "!.agentcore/.gitkeep"
+      echo "# agentic:guild Transient Memory"
+      echo ".agenticguild/*"
+      echo "!.agenticguild/.gitkeep"
     } >> "$GITIGNORE_FILE"
   fi
 else
-  echo "📝 Creating .gitignore to secure .agentcore/ memory..."
+  echo "📝 Creating .gitignore to secure .agenticguild/ memory..."
   {
-    echo "# AgentCore Transient Memory"
-    echo ".agentcore/*"
-    echo "!.agentcore/.gitkeep"
+    echo "# agentic:guild Transient Memory"
+    echo ".agenticguild/*"
+    echo "!.agenticguild/.gitkeep"
   } > "$GITIGNORE_FILE"
 fi
 
 # Ensure .gitkeep exists so the folder structure survives git
-touch .agentcore/.gitkeep
-touch .agentcore/active_sessions/.gitkeep
+touch .agenticguild/.gitkeep
+touch .agenticguild/active_sessions/.gitkeep
 
 # 4. Download files according to the Sync Registry
 echo "📥 Syncing files from registry..."
@@ -88,40 +88,18 @@ while IFS= read -r line; do
   fi
 done < "$TMP_REGISTRY"
 
-# 5. Remove obsolete skill directories (prevents AI from discovering defunct skills)
-echo "🧹 Removing obsolete skills..."
-in_obsolete_block=false
-while IFS= read -r line; do
-  if [[ "$line" == *"OBSOLETE_SKILLS [START]"* ]]; then in_obsolete_block=true; continue; fi
-  if [[ "$line" == *"OBSOLETE_SKILLS [END]"* ]]; then in_obsolete_block=false; continue; fi
-  if ! $in_obsolete_block; then continue; fi
-
-  [[ "$line" != \|* ]] && continue
-  [[ "$line" == *"Obsolete Path"* ]] && continue
-  [[ "$line" == *"---"* ]] && continue
-
-  IFS='|' read -r _ path _ <<< "$line"
-  path=$(echo "$path" | xargs)
-  [ -z "$path" ] && continue
-
-  if [ -d "$path" ]; then
-    echo "   🗑️  Removing obsolete $path..."
-    rm -rf "$path"
-  fi
-done < "$TMP_REGISTRY"
-
-# 6. Inject AgentCore OS Rules into .cursorrules
+# 5. Inject agentic:guild OS Rules into .cursorrules
 echo "⚙️  Configuring .cursorrules..."
-AGENT_CORE_RULES=$(curl -s "$REPO_URL/templates/core/AGENT_CORE_RULES.md")
-if [ -n "$AGENT_CORE_RULES" ]; then
+AGENTIC_GUILD_RULES=$(curl -s "$REPO_URL/templates/core/AGENTIC_GUILD_RULES.md")
+if [ -n "$AGENTIC_GUILD_RULES" ]; then
   if [ ! -f ".cursorrules" ]; then
-    echo "   ⚙️  Creating .cursorrules with AgentCore OS..."
-    echo "$AGENT_CORE_RULES" > .cursorrules
-  elif ! grep -q "<agentcore_operating_system>" ".cursorrules"; then
-    echo "   ⚙️  Prepending AgentCore OS to existing .cursorrules..."
-    { echo "$AGENT_CORE_RULES"; cat .cursorrules; } > .cursorrules.tmp && mv .cursorrules.tmp .cursorrules
+    echo "   ⚙️  Creating .cursorrules with agentic:guild OS..."
+    echo "$AGENTIC_GUILD_RULES" > .cursorrules
+  elif ! grep -q "<agentic_guild_os>" ".cursorrules"; then
+    echo "   ⚙️  Prepending agentic:guild OS to existing .cursorrules..."
+    { echo "$AGENTIC_GUILD_RULES"; cat .cursorrules; } > .cursorrules.tmp && mv .cursorrules.tmp .cursorrules
   else
-    echo "   ✅ AgentCore OS rules already present in .cursorrules."
+    echo "   ✅ agentic:guild OS rules already present in .cursorrules."
   fi
 fi
 
@@ -131,11 +109,11 @@ PRE_COMMIT_LOGIC=$(curl -s "$REPO_URL/templates/git-hooks/pre-commit-logic.sh")
 if [ -n "$PRE_COMMIT_LOGIC" ]; then
   HOOK_FILE=".git/hooks/pre-commit"
   if [ -f "$HOOK_FILE" ]; then
-    if ! grep -q "AGENTCORE PRE-COMMIT" "$HOOK_FILE"; then
+    if ! grep -q "AGENTIC-GUILD PRE-COMMIT" "$HOOK_FILE"; then
       echo "   📝 Appending safety check to existing pre-commit hook..."
       echo "$PRE_COMMIT_LOGIC" >> "$HOOK_FILE"
     else
-      echo "   ✅ AgentCore pre-commit hook already present."
+      echo "   ✅ agentic:guild pre-commit hook already present."
     fi
   else
     if [ -d ".git/hooks" ]; then
@@ -153,4 +131,4 @@ fi
 # Cleanup
 rm -f "$TMP_REGISTRY"
 
-echo "🚀 Sync complete. AgentCore Operating System is online."
+echo "🚀 Sync complete. agentic:guild Operating System is online."

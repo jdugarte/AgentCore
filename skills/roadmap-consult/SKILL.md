@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>roadmap-consult</name>
     <description>Read-only view of the project roadmap: what's done, what's pending, priorities, phases.</description>
@@ -29,4 +29,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

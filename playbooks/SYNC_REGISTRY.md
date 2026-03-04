@@ -1,19 +1,19 @@
-# AgentCore Sync Registry
+# agentic:guild Sync Registry
 
-This file is the **single source of truth** for all file mappings between the AgentCore global repository and destination projects. It is consumed by:
+This file is the **single source of truth** for all file mappings between the agentic:guild global repository and destination projects. It is consumed by:
 
 - **`sync.sh`** — fetches this file first via `curl`, then drives all downloads from it. No hardcoded file lists in the script.
-- **`update-agentcore` skill** — reads this from the cloned repo at `.agentcore/tmp_update` to drive the AI merge workflow.
+- **`update-agentic-guild` skill** — reads this from the cloned repo at `.agenticguild/tmp_update` to drive the AI merge workflow.
 
 ## Strategies
 
 | Strategy | Behavior |
 |:---------|:---------|
-| `merge`  | Always apply the latest upstream version. For `sync.sh`: always overwrite. For `update-agentcore`: additive changes are applied automatically; conflicting changes trigger the Interactive Conflict Resolution Protocol. |
+| `merge`  | Always apply the latest upstream version. For `sync.sh`: always overwrite. For `update-agentic-guild`: additive changes are applied automatically; conflicting changes trigger the Interactive Conflict Resolution Protocol. |
 | `init`   | Only write if the file does **not** already exist locally. These files contain project-specific content that must be protected from upstream overwrites. |
 
 > **Special files not in this registry** (they require custom logic beyond a simple copy):
-> - `templates/core/AGENT_CORE_RULES.md` → `.cursorrules` (prepend/merge logic — handled by dedicated step in both `sync.sh` and the skill)
+> - `templates/core/AGENTIC_GUILD_RULES.md` → `.cursorrules` (prepend/merge logic — handled by dedicated step in both `sync.sh` and the skill)
 > - `templates/git-hooks/pre-commit-logic.sh` → `.git/hooks/pre-commit` (install/append logic — handled by dedicated step in both)
 
 ---
@@ -33,10 +33,9 @@ This file is the **single source of truth** for all file mappings between the Ag
 | skills/pr-description/SKILL.md | .cursor/skills/pr-description/SKILL.md | merge |
 | skills/roadmap-manage/SKILL.md | .cursor/skills/roadmap-manage/SKILL.md | merge |
 | skills/roadmap-consult/SKILL.md | .cursor/skills/roadmap-consult/SKILL.md | merge |
-| skills/update-agentcore/SKILL.md | .cursor/skills/update-agentcore/SKILL.md | merge |
+| skills/update-agentic-guild/SKILL.md | .cursor/skills/update-agentic-guild/SKILL.md | merge |
 | skills/explore-task/SKILL.md | .cursor/skills/explore-task/SKILL.md | merge |
 | skills/process-feedback/SKILL.md | .cursor/skills/process-feedback/SKILL.md | merge |
-| playbooks/AI_DEVELOPER_PROTOCOL.md | docs/ai/AI_DEVELOPER_PROTOCOL.md | merge |
 | playbooks/AI_WORKFLOW_PLAYBOOK.md | docs/ai/AI_WORKFLOW_PLAYBOOK.md | merge |
 | playbooks/EXPECTED_PROJECT_STRUCTURE.md | docs/ai/EXPECTED_PROJECT_STRUCTURE.md | merge |
 | playbooks/SYNC_REGISTRY.md | docs/ai/SYNC_REGISTRY.md | merge |
@@ -48,22 +47,11 @@ This file is the **single source of truth** for all file mappings between the Ag
 | templates/core/TESTING_STRATEGY_MATRIX.md | docs/core/TESTING_STRATEGY_MATRIX.md | init |
 | templates/core/DATA_FLOW_MAP.md | docs/core/DATA_FLOW_MAP.md | init |
 | templates/core/ROADMAP.md | docs/ROADMAP.md | init |
-| templates/core/memory_scaffold/current_state.md | .agentcore/current_state.md | init |
-| templates/core/memory_scaffold/blocker_log.md | .agentcore/blocker_log.md | init |
-| templates/core/memory_scaffold/pending_refactors.md | .agentcore/pending_refactors.md | init |
-| templates/core/memory_scaffold/task_template.md | .agentcore/active_sessions/task_template.md | init |
+| templates/core/memory_scaffold/current_state.md | .agenticguild/current_state.md | init |
+| templates/core/memory_scaffold/blocker_log.md | .agenticguild/blocker_log.md | init |
+| templates/core/memory_scaffold/pending_refactors.md | .agenticguild/pending_refactors.md | init |
+| templates/core/memory_scaffold/task_template.md | .agenticguild/active_sessions/task_template.md | init |
 | templates/CbC_GENERATION_PROMPT.md | .cursor/templates/CbC_GENERATION_PROMPT.md | merge |
 <!-- SYNC_REGISTRY [END] -->
 
----
 
-## Obsolete Skill Directories
-
-Directories listed here will be **deleted** from `.cursor/skills/` in destination projects to prevent the AI from discovering defunct or renamed skills.
-
-<!-- OBSOLETE_SKILLS [START] -->
-| Obsolete Path |
-|:---|
-| .cursor/skills/sync-schema-docs |
-| .cursor/skills/pr-description-clipboard |
-<!-- OBSOLETE_SKILLS [END] -->

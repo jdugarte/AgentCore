@@ -1,7 +1,7 @@
 # Proposal: Localization Bridge (Multi-Language Support)
 
 **Status**: Draft / Future Feature
-**Goal**: Enable AgentCore projects to operate in any language while maintaining a single English codebase for the framework's core logic.
+**Goal**: Enable agentic:guild projects to operate in any language while maintaining a single English codebase for the framework's core logic.
 
 ## Context
 Standardizing AI workflows in English is great for development speed but can be a barrier for non-English speaking teams or teams building applications for localized markets. LLMs are naturally polyglot; we should leverage this to bridge the gap.

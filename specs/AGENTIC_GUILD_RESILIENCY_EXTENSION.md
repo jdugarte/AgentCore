@@ -1,19 +1,19 @@
-This is the logical next step for AgentCore. If the High-Reliability Engineering (HRE) extension ensures the code is structurally sound, this extension ensures the system can survive the chaotic reality of the cloud and mobile networks.
+This is the logical next step for agentic:guild. If the High-Reliability Engineering (HRE) extension ensures the code is structurally sound, this extension ensures the system can survive the chaotic reality of the cloud and mobile networks.
 
-Here is the detailed specification document for integrating these advanced architectural patterns into your framework. You can save this as `docs/core/AGENT_CORE_RESILIENCY_EXTENSION.md`.
+Here is the detailed specification document for integrating these advanced architectural patterns into your framework. You can save this as `docs/core/AGENTIC_GUILD_RESILIENCY_EXTENSION.md`.
 
 ---
 
-# AgentCore: Advanced Cloud-Native & Resiliency Extension 🌩️
+# agentic:guild: Advanced Cloud-Native & Resiliency Extension 🌩️
 
 **Version:** 1.0
-**Purpose:** To upgrade AgentCore's architectural guidelines to support distributed systems, mathematically proven state machines, and fault-tolerant cloud environments. This bridges the gap between clean code and unbreakable infrastructure.
+**Purpose:** To upgrade agentic:guild's architectural guidelines to support distributed systems, mathematically proven state machines, and fault-tolerant cloud environments. This bridges the gap between clean code and unbreakable infrastructure.
 
 ---
 
 ## 1. The Twelve-Factor App (Cloud-Native Architecture)
 
-The Twelve-Factor methodology ensures applications are built for portability, scalability, and stateless execution. For AgentCore, this means the AI must treat the application as a disposable compute unit that relies entirely on the environment for context and backing services (like PostgreSQL or Solid Queue) for state.
+The Twelve-Factor methodology ensures applications are built for portability, scalability, and stateless execution. For agentic:guild, this means the AI must treat the application as a disposable compute unit that relies entirely on the environment for context and backing services (like PostgreSQL or Solid Queue) for state.
 
 ### Core Principles
 

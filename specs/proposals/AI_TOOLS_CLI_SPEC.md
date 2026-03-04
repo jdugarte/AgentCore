@@ -9,14 +9,14 @@
 
 ## CLI Architecture
 
-The CLI acts as a bridge between Local Projects and the AgentCore "Global Brain."
+The CLI acts as a bridge between Local Projects and the agentic:guild "Global Brain."
 
 ### 1. `ai-tools init <stack>`
 Initialization process for new or existing projects.
 - Creates `.cursor/skills/` and `docs/ai/` structures.
 - Downloads **Universal Playbooks** and **Skills**.
 - Deploys stack-specific `.cursorrules` templates.
-- Links the project to the `AgentCore` versioning system.
+- Links the project to the `agentic:guild` versioning system.
 
 ### 2. `ai-tools status`
 Ecosystem health check.
