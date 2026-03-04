@@ -21,7 +21,7 @@ Finishing a branch runs a code review (guided by `docs/ai/code_review_prompt.md`
 
 ### 3. Status Check
 **Goal**: Understand blocking issues and re-hydrate the AI's state.
-**Workflow Action**: The AI reads `.agentcore/current_state.md`, the active session memory plan, the git state, and `docs/ROADMAP.md` (if present) to output a macro/micro status report including a roadmap summary (done, in progress, pending) and identify exactly what is blocking progress.
+**Workflow Action**: The AI reads `.agenticguild/current_state.md`, the active session memory plan, the git state, and `docs/ROADMAP.md` (if present) to output a macro/micro status report including a roadmap summary (done, in progress, pending) and identify exactly what is blocking progress.
 
 ### Skills Index
 | Skill | Triggers | Purpose |
@@ -40,7 +40,7 @@ Finishing a branch runs a code review (guided by `docs/ai/code_review_prompt.md`
 
 ## Memory & State Management (Agent RAM)
 
-AgentCore utilizes a hidden `.agentcore/` folder to survive long conversations and tangents. 
+agentic:guild utilizes a hidden `.agenticguild/` folder to survive long conversations and tangents. 
 
-* **To Resume Work:** If you get distracted by a tangent or start a new chat window, simply tell the AI: **"Resume Task"** or **"Where were we?"**. The AI will read `.agentcore/current_state.md` and immediately pick up on the exact phase and step you left off on.
-* **To Log Debt:** The AI will automatically log technical debt or blocked tasks into `.agentcore/pending_refactors.md` and `.agentcore/blocker_log.md` instead of forgetting them.
+* **To Resume Work:** If you get distracted by a tangent or start a new chat window, simply tell the AI: **"Resume Task"** or **"Where were we?"**. The AI will read `.agenticguild/current_state.md` and immediately pick up on the exact phase and step you left off on.
+* **To Log Debt:** The AI will automatically log technical debt or blocked tasks into `.agenticguild/pending_refactors.md` and `.agenticguild/blocker_log.md` instead of forgetting them.

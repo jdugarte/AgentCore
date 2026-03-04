@@ -1,4 +1,4 @@
-# AgentCore: Correct-by-Construction (CbC) & Generation Extension 🏗️
+# agentic:guild: Correct-by-Construction (CbC) & Generation Extension 🏗️
 
 **Version:** 1.0
 **Purpose:** To define the strict prompt engineering mechanisms and structural patterns required to generate zero-defect, aerospace-grade code on the first attempt.
@@ -22,7 +22,7 @@ To achieve high reliability, natural language is too vague. Prompt engineering f
 
 ### The Standard Generation Prompt Template
 
-Every AgentCore code generation prompt MUST be wrapped in this XML structure to enforce constraints:
+Every agentic:guild code generation prompt MUST be wrapped in this XML structure to enforce constraints:
 
 ```xml
 <context>
@@ -49,7 +49,7 @@ Every AgentCore code generation prompt MUST be wrapped in this XML structure to 
 
 ## 3. Advanced Generation Mechanisms
 
-To prevent the AI from taking "shortcuts," AgentCore must implement advanced prompting techniques during the generation phase.
+To prevent the AI from taking "shortcuts," agentic:guild must implement advanced prompting techniques during the generation phase.
 
 ### A. Prompt Chaining (Multi-Step Generation)
 
@@ -72,7 +72,7 @@ As you build more complex applications, you must pin your production application
 
 ---
 
-## 4. The AgentCore "Code Generation" Playbook
+## 4. The agentic:guild "Code Generation" Playbook
 
 To make this actionable in Cursor or your CLI, create a new skill called `generate-cbc-feature`.
 

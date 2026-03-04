@@ -1,11 +1,11 @@
-# Expected Project Structure (AgentCore OS)
+# Expected Project Structure (agentic:guild OS)
 
-This document lists every referenced path, its purpose, and how it fits into the AgentCore Operating System.
+This document lists every referenced path, its purpose, and how it fits into the agentic:guild Operating System.
 
-> **Sync Mapping:** For the canonical mapping between AgentCore upstream sources and these local destinations, see [`SYNC_REGISTRY.md`](SYNC_REGISTRY.md). That file drives both `sync.sh` (initial bootstrap) and the `update-agentcore` AI skill (ongoing updates).
+> **Sync Mapping:** For the canonical mapping between agentic:guild upstream sources and these local destinations, see [`SYNC_REGISTRY.md`](SYNC_REGISTRY.md). That file drives both `sync.sh` (initial bootstrap) and the `update-agentic-guild` AI skill (ongoing updates).
 
 ## 1. The Agent RAM (Transient Memory)
-*Located in `.agentcore/` (Gitignored)*
+*Located in `.agenticguild/` (Gitignored)*
 | Path | Purpose |
 |------|---------|
 | `current_state.md` | Tracks the active skill, phase, and step. Used to resume tasks. Format: `<active_task_pointer>` = session filename (e.g. `task_foo.md`) or `[NONE]`; `<execution_context>` contains `<active_skill>`, `<current_phase>`, `<current_step>`. |
@@ -21,7 +21,7 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `finish-branch/SKILL.md` | Orchestrates the compliance audit and PR pipeline. |
 | `code-review/SKILL.md` | Runs project-specific static analysis. |
 | `audit-compliance/SKILL.md` | IV&V agent that mathematically checks code determinism. |
-| `status-check/SKILL.md` | Reads `.agentcore/` to diagnose blockers and rehydrate context. |
+| `status-check/SKILL.md` | Reads `.agenticguild/` to diagnose blockers and rehydrate context. |
 | `harvest-rules/SKILL.md` | Scans diffs to update architecture docs and `.cursorrules`. |
 | `sync-docs/SKILL.md` | Keeps project docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.). |
 | `pr-description/SKILL.md` | Outputs a Git-based PR description in a code block for the user to copy. |
@@ -55,7 +55,7 @@ The `sync-docs` skill checks these docs against the branch diff and updates any 
 ## 5. Project-Specific Configuration
 
 ### 5.1 `.cursorrules` &lt;project_config&gt;
-The `.cursorrules` file contains a `<project_config>` block (from AgentCore). Projects should fill in:
+The `.cursorrules` file contains a `<project_config>` block (from agentic:guild). Projects should fill in:
 | Key | Purpose |
 |-----|---------|
 | Schema path | Path to the raw database schema (e.g. `db/schema.rb`, `prisma/schema.prisma`, `db/schema.ts`). Skills that need it (e.g. sync-docs) read this first. If not filled in, the skill will infer a path, ask you to confirm, and remind you to fill it for future runs. |

@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>process-feedback</name>
     <description>An interrupt subroutine that analyzes feedback from CI tools, linters, or human reviewers, applies the fix, logs the diagnosis implicitly, and smoothly returns to the previous state.</description>
@@ -23,7 +23,7 @@
       </step>
       <step id="1.2">
         <action>
-          Silently append a structured entry to `.agentcore/review_ledger.md` for EACH distinct issue fixed. If the file doesn't exist, create it.
+          Silently append a structured entry to `.agenticguild/review_ledger.md` for EACH distinct issue fixed. If the file doesn't exist, create it.
           Format for each entry: 
           - **Issue:** [Brief description of the feedback]
           - **Diagnosis/Why it failed:** [The root cause]
@@ -39,4 +39,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

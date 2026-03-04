@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>code-review</name>
     <description>Triggers a strict self-review of current project code changes, implementing a continuous review-fix-commit loop until perfect.</description>
@@ -66,4 +66,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

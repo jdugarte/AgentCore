@@ -1,6 +1,6 @@
-# AgentCore: The Global AI Developer Protocol
+# agentic:guild: The Global AI Developer Protocol
 
-This document captures the master vision for AgentCore—a framework designed to eliminate fragmentation and documentation drift in AI-enhanced development.
+This document captures the master vision for agentic:guild—a framework designed to eliminate fragmentation and documentation drift in AI-enhanced development.
 
 ---
 
@@ -8,7 +8,7 @@ This document captures the master vision for AgentCore—a framework designed to
 As developers manage multiple projects across diverse tech stacks, AI "intelligence" becomes siloed. Improvements in prompt engineering or new workflow SOPs discovered in one project don't benefit others, leading to "Playbook Drift."
 
 ## 2. The Solution: The Engine vs. Fuel Model
-AgentCore separates the **way we work** (SOPs) from the **tech we use** (Stack Specifics).
+agentic:guild separates the **way we work** (SOPs) from the **tech we use** (Stack Specifics).
 
 ### ⚙️ The Engine (Universal SOPs)
 High-level workflows stored in `.cursor/skills/`. The logic of "How to start a task" is tech-agnostic and shared across all projects.
@@ -20,12 +20,12 @@ Stack-specific instructions in `.cursorrules` and project documentation. This te
 
 ## 3. The Ecosystem Architecture
 
-### 🛡️ AgentCore Repository (The Source of Truth)
+### 🛡️ agentic:guild Repository (The Source of Truth)
 The central database of wisdom.
 - `/skills/`: Master versions of universal workflows.
 - `/playbooks/`: Tech-agnostic developer protocols.
 - `/templates/`: Starter `.cursorrules` and stack-specific prompts.
-- `/specs/proposals/`: Strategic development roadmaps (e.g. [AGENT_CORE_CONFIG_SPEC.md](./AGENT_CORE_CONFIG_SPEC.md), [LOCALIZATION_BRIDGE.md](./LOCALIZATION_BRIDGE.md)).
+- `/specs/proposals/`: Strategic development roadmaps (e.g. [AGENTIC_GUILD_CONFIG_SPEC.md](./AGENTIC_GUILD_CONFIG_SPEC.md), [LOCALIZATION_BRIDGE.md](./LOCALIZATION_BRIDGE.md)).
 
 ### 🛠️ `ai-tools` CLI (The Bridge)
 A system-wide utility to initialize and synchronize projects with the Global Brain.
@@ -34,7 +34,7 @@ A system-wide utility to initialize and synchronize projects with the Global Bra
 ### 🔄 The Network Effect
 1. **Discovery:** Improve a workflow in a **Go** project.
 2. **Harvesting:** AI formalizes the new pattern.
-3. **Sync:** Push the improvement back to `AgentCore`.
+3. **Sync:** Push the improvement back to `agentic:guild`.
 4. **Cross-Pollination:** Update your **Rails** project; it immediately inherits the improved logic.
 
 ---

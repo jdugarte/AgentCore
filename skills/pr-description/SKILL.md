@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>pr-description</name>
     <description>Drafts a PR description from Git history and outputs it in a code block for the user to copy.</description>
@@ -41,4 +41,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

@@ -1,4 +1,4 @@
-# Proposal: AgentCore Configuration (agent_core.yml)
+# Proposal: agentic:guild Configuration (agentic_guild.yml)
 
 **Status**: Draft / Future Feature  
 **Goal**: Document configuration options, evaluate a central config file, and guide future implementation.
@@ -21,15 +21,15 @@ Configuration is scattered across several places:
 
 ---
 
-## 2. Should We Add agent_core.yml?
+## 2. Should We Add agentic_guild.yml?
 
 **Recommendation**: Add it when we need more config options (e.g. Localization Bridge, custom paths) or when the ai-tools CLI needs machine-parseable config. Until then, the current approach is sufficient.
 
-**If added**: Make it optional. Skills check `agent_core.yml` first, fall back to `.cursorrules` project_config, then defaults. Existing projects keep working without changes.
+**If added**: Make it optional. Skills check `agentic_guild.yml` first, fall back to `.cursorrules` project_config, then defaults. Existing projects keep working without changes.
 
 ---
 
-## 3. Options That Could Go in agent_core.yml
+## 3. Options That Could Go in agentic_guild.yml
 
 ### 3.1 Existing / Could Be Centralized
 
@@ -59,10 +59,10 @@ Configuration is scattered across several places:
 
 ---
 
-## 4. Example agent_core.yml Structure
+## 4. Example agentic_guild.yml Structure
 
 ```yaml
-# agent_core.yml (optional - projects can omit and use .cursorrules / defaults)
+# agentic_guild.yml (optional - projects can omit and use .cursorrules / defaults)
 
 schema_path: db/schema.rb
 roadmap_path: docs/ROADMAP.md
@@ -83,9 +83,9 @@ default_branch: main
 
 ## 5. Implementation Notes
 
-- **Location**: `agent_core.yml` or `docs/ai/agent_core.yml` at project root (or configurable).
-- **sync.sh / ai-tools**: Could create a template `agent_core.yml.example` on init; projects copy and customize.
-- **Skills**: Add a pre-flight or early step: "If `agent_core.yml` exists, read it for config; else check `.cursorrules` project_config."
+- **Location**: `agentic_guild.yml` or `docs/ai/agentic_guild.yml` at project root (or configurable).
+- **sync.sh / ai-tools**: Could create a template `agentic_guild.yml.example` on init; projects copy and customize.
+- **Skills**: Add a pre-flight or early step: "If `agentic_guild.yml` exists, read it for config; else check `.cursorrules` project_config."
 - **EXPECTED_PROJECT_STRUCTURE**: Document the config file and all options when implemented.
 
 ---

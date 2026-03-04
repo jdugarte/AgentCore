@@ -1,7 +1,7 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
-    <name>update-agentcore</name>
-    <description>Intelligently synchronizes and updates AgentCore OS components (skills, rules, templates) from the global repository, using AI to merge changes gracefully. For projects that already have AgentCore installed, this skill replaces running sync.sh manually.</description>
+    <name>update-agentic-guild</name>
+    <description>Intelligently synchronizes and updates agentic:guild OS components (skills, rules, templates) from the global repository, using AI to merge changes gracefully. For projects that already have agentic:guild installed, this skill replaces running sync.sh manually.</description>
   </skill_definition>
 
   <state_machine_directives>
@@ -24,16 +24,16 @@
   <pre_flight>
     <directive>Ensure you have a clean workspace before attempting to pull upstream changes.</directive>
     <check>Verify no uncommitted changes exist in the directories you are about to update (.cursor/skills/, docs/ai/, docs/core/, .cursorrules).</check>
-    <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved. Also check whether `.agentcore/tmp_update` already exists from an interrupted previous run; if so, mention it — it will be cleaned up in Step 0.1.</action>
+    <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved. Also check whether `.agenticguild/tmp_update` already exists from an interrupted previous run; if so, mention it — it will be cleaned up in Step 0.1.</action>
   </pre_flight>
 
   <workflow>
     <phase id="0" name="Fetch Upstream">
       <step id="0.1">
         <action>
-          Clone the AgentCore repository into a temporary directory to get the latest files.
-          First, remove any leftover temp directory from a previously interrupted run: `rm -rf .agentcore/tmp_update`
-          Then run: `git clone --depth 1 https://github.com/jdugarte/AgentCore.git .agentcore/tmp_update`
+          Clone the agentic:guild repository into a temporary directory to get the latest files.
+          First, remove any leftover temp directory from a previously interrupted run: `rm -rf .agenticguild/tmp_update`
+          Then run: `git clone --depth 1 https://github.com/jdugarte/agentic-guild.git .agenticguild/tmp_update`
           This temporary directory will be the source of truth for all subsequent steps.
           Initialize the Conflict Queue as empty.
         </action>
@@ -45,46 +45,46 @@
       <step id="1.1">
         <action>
           Ensure required directories exist, creating them if absent:
-          - `.cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult,update-agentcore,explore-task}`
-          - `.agentcore/active_sessions`
+          - `.cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult,update-agentic-guild,explore-task}`
+          - `.agenticguild/active_sessions`
           - `docs/{ai,core,features,audit,guides}` and `docs/core/ADRs`
           - `.github`
 
-          Read the **Sync Registry** from `.agentcore/tmp_update/playbooks/SYNC_REGISTRY.md` (already available from Phase 0). Parse the `OBSOLETE_SKILLS [START]` / `OBSOLETE_SKILLS [END]` section to get the list of paths to remove. For each path in that list, if the directory exists locally, delete it and notify the user conversationally (e.g., "Cleaned up the old `sync-schema-docs` skill, which has been renamed.").
+          Read the **Sync Registry** from `.agenticguild/tmp_update/playbooks/SYNC_REGISTRY.md` (already available from Phase 0). Parse the `OBSOLETE_SKILLS [START]` / `OBSOLETE_SKILLS [END]` section to get the list of paths to remove. For each path in that list, if the directory exists locally, delete it and notify the user conversationally (e.g., "Cleaned up the old `sync-schema-docs` skill, which has been renamed.").
         </action>
         <yield>[AUTO-TRANSITION TO 1.2]</yield>
       </step>
       <step id="1.2">
         <action>
-          Guard `.gitignore`: Check if `.gitignore` exists and whether it already contains `.agentcore/*`.
+          Guard `.gitignore`: Check if `.gitignore` exists and whether it already contains `.agenticguild/*`.
           - If the entry is missing: Append the following block to `.gitignore` using `replace_file_content` or `write_to_file`:
             ```
-            # AgentCore Transient Memory
-            .agentcore/*
-            !.agentcore/.gitkeep
+            # agentic:guild Transient Memory
+            .agenticguild/*
+            !.agenticguild/.gitkeep
             ```
-          Ensure `.agentcore/.gitkeep` and `.agentcore/active_sessions/.gitkeep` exist as empty files (create if missing).
+          Ensure `.agenticguild/.gitkeep` and `.agenticguild/active_sessions/.gitkeep` exist as empty files (create if missing).
         </action>
         <yield>[AUTO-TRANSITION TO 1.3]</yield>
       </step>
       <step id="1.3">
         <action>
-          Guard `.cursorrules` using the latest `templates/core/AGENT_CORE_RULES.md` from `.agentcore/tmp_update`:
-          - If `.cursorrules` does not exist: Create it with the contents of `AGENT_CORE_RULES.md`.
-          - If `.cursorrules` exists but does NOT contain `&lt;agentcore_operating_system&gt;`: Prepend `AGENT_CORE_RULES.md` to the existing `.cursorrules` content, preserving all existing project-specific rules.
-          - If `.cursorrules` already contains `&lt;agentcore_operating_system&gt;` AND the block is identical to the upstream version: Skip silently.
-          - If `.cursorrules` already contains `&lt;agentcore_operating_system&gt;` AND the block differs from upstream: Add `{ file: ".cursorrules", reason: "AgentCore OS block has drifted from upstream" }` to the Conflict Queue. Do NOT attempt to resolve it here.
+          Guard `.cursorrules` using the latest `templates/core/AGENTIC_GUILD_RULES.md` from `.agenticguild/tmp_update`:
+          - If `.cursorrules` does not exist: Create it with the contents of `AGENTIC_GUILD_RULES.md`.
+          - If `.cursorrules` exists but does NOT contain `&lt;agenticguild_operating_system&gt;lt;agentic_guild_os&lt;agenticguild_operating_system&gt;gt;`: Prepend `AGENTIC_GUILD_RULES.md` to the existing `.cursorrules` content, preserving all existing project-specific rules.
+          - If `.cursorrules` already contains `&lt;agenticguild_operating_system&gt;lt;agentic_guild_os&lt;agenticguild_operating_system&gt;gt;` AND the block is identical to the upstream version: Skip silently.
+          - If `.cursorrules` already contains `&lt;agenticguild_operating_system&gt;lt;agentic_guild_os&lt;agenticguild_operating_system&gt;gt;` AND the block differs from upstream: Add `{ file: ".cursorrules", reason: "agentic:guild OS block has drifted from upstream" }` to the Conflict Queue. Do NOT attempt to resolve it here.
         </action>
         <yield>[AUTO-TRANSITION TO 1.4]</yield>
       </step>
       <step id="1.4">
         <action>
-          Install or update the Git pre-commit hook using `templates/git-hooks/pre-commit-logic.sh` from `.agentcore/tmp_update`:
+          Install or update the Git pre-commit hook using `templates/git-hooks/pre-commit-logic.sh` from `.agenticguild/tmp_update`:
           - If `.git/hooks` does not exist: Warn the user this doesn't appear to be a git repo root and skip this step.
           - If `.git/hooks/pre-commit` does not exist: Create it with `#!/bin/bash` as the first line, append the pre-commit logic, and run `chmod +x .git/hooks/pre-commit`.
-          - If `.git/hooks/pre-commit` exists but does NOT contain `# AGENTCORE PRE-COMMIT`: Append the pre-commit logic to the existing hook file, preserving any other hooks already present.
-          - If it already contains `# AGENTCORE PRE-COMMIT` AND the block is identical to upstream: Skip silently.
-          - If it already contains `# AGENTCORE PRE-COMMIT` AND the block differs from upstream: Replace only the AgentCore block with the upstream version, leaving any other pre-commit hooks untouched.
+          - If `.git/hooks/pre-commit` exists but does NOT contain `# AGENTIC-GUILD PRE-COMMIT`: Append the pre-commit logic to the existing hook file, preserving any other hooks already present.
+          - If it already contains `# AGENTIC-GUILD PRE-COMMIT` AND the block is identical to upstream: Skip silently.
+          - If it already contains `# AGENTIC-GUILD PRE-COMMIT` AND the block differs from upstream: Replace only the agentic:guild block with the upstream version, leaving any other pre-commit hooks untouched.
         </action>
         <yield>[AUTO-TRANSITION TO 2.1]</yield>
       </step>
@@ -93,9 +93,9 @@
     <phase id="2" name="Sync Files">
       <step id="2.1">
         <action>
-          Read the **Sync Registry** from `.agentcore/tmp_update/playbooks/SYNC_REGISTRY.md` using the `view_file` tool. This file is the single source of truth for all file mappings and strategies. Parse the `SYNC_REGISTRY [START]` / `SYNC_REGISTRY [END]` table to get the full list of `Upstream Source`, `Local Destination`, and `Strategy` values.
+          Read the **Sync Registry** from `.agenticguild/tmp_update/playbooks/SYNC_REGISTRY.md` using the `view_file` tool. This file is the single source of truth for all file mappings and strategies. Parse the `SYNC_REGISTRY [START]` / `SYNC_REGISTRY [END]` table to get the full list of `Upstream Source`, `Local Destination`, and `Strategy` values.
 
-          IMPORTANT: Skip any rows for `templates/core/AGENT_CORE_RULES.md` and `templates/git-hooks/pre-commit-logic.sh` — these were already handled with specialized logic in Phase 1.
+          IMPORTANT: Skip any rows for `templates/core/AGENTIC_GUILD_RULES.md` and `templates/git-hooks/pre-commit-logic.sh` — these were already handled with specialized logic in Phase 1.
 
           For each row in the registry with strategy `merge`:
           - If the file is missing locally: Copy it to its destination. Note it as "added."
@@ -144,11 +144,11 @@
     <phase id="4" name="Cleanup">
       <step id="4.1">
         <action>
-          Clean up the temporary workspace: Run `rm -rf .agentcore/tmp_update`.
+          Clean up the temporary workspace: Run `rm -rf .agenticguild/tmp_update`.
           Report a clear, conversational summary of everything that happened: files added, files merged, files with conflicts resolved, any housekeeping actions taken (e.g., ".gitignore updated, pre-commit hook installed"), and any init-only files that were skipped because they already existed.
         </action>
         <yield>[PAUSE - UPDATE COMPLETE. SKILL COMPLETE]</yield>
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

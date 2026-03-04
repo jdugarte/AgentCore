@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>roadmap-manage</name>
     <description>Add, prioritize, catalog, and update items in the project roadmap.</description>
@@ -37,4 +37,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

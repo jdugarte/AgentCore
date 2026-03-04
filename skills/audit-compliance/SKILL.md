@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>audit-compliance</name>
     <description>Performs an independent verification audit of code changes against the project's deterministic coding standards and requirement traceability.</description>
@@ -50,4 +50,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>sync-docs</name>
     <description>Keeps project docs in sync with branch changes. Analyzes the diff against the docs-to-sync list, then applies all necessary updates in one batch.</description>
@@ -75,4 +75,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

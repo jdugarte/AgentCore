@@ -1,13 +1,13 @@
-# AgentCore: High-Reliability Engineering (HRE) Extension 🚀
+# agentic:guild: High-Reliability Engineering (HRE) Extension 🚀
 
 **Version:** 1.0
-**Purpose:** To upgrade AgentCore from a standard AI-assistant workflow into a deterministic, enterprise-grade software engineering protocol. This extension ensures zero-defect tolerance, strict traceability, and mathematically provable architectural compliance.
+**Purpose:** To upgrade agentic:guild from a standard AI-assistant workflow into a deterministic, enterprise-grade software engineering protocol. This extension ensures zero-defect tolerance, strict traceability, and mathematically provable architectural compliance.
 
 ---
 
 ## 1. The Core Philosophy: Determinism Over Speed
 
-In high-reliability engineering, software is not "written"; it is specified, generated, and mathematically verified. For AgentCore, this means shifting the AI from a "helpful coding partner" to a "strict compliance engine."
+In high-reliability engineering, software is not "written"; it is specified, generated, and mathematically verified. For agentic:guild, this means shifting the AI from a "helpful coding partner" to a "strict compliance engine."
 
 The primary directive is **Maker/Checker Isolation**: The AI persona that writes the code must never be the same persona that audits the code.
 
@@ -43,9 +43,9 @@ To make the AI follow this, you cannot just tell it to "be careful." You must bi
 
 ## 3. Enterprise-Grade Artifact Mapping (IEEE/ISO)
 
-Industry standards require specific documentation. AgentCore maps to formal IEEE 730 / ISO 12207 standards so the AI understands the *weight* of each file.
+Industry standards require specific documentation. agentic:guild maps to formal IEEE 730 / ISO 12207 standards so the AI understands the *weight* of each file.
 
-| AgentCore Artifact | IEEE/ISO Equivalent | Description & AI Implementation |
+| agentic:guild Artifact | IEEE/ISO Equivalent | Description & AI Implementation |
 | --- | --- | --- |
 | `docs/core/SPEC.md` | **SRS** (Software Requirements Specification) | The absolute truth. **AI Action:** The AI is strictly forbidden from writing code for a feature that does not possess a unique ID in this document (e.g., `REQ-AUTH-001`). |
 | `docs/core/SCHEMA_REFERENCE.md` | **SADD** (Software Architecture Design Document) | Defines interfaces and state flow. **AI Action:** Used by the AI to validate database migrations before applying them. |

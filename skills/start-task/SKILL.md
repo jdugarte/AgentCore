@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>start-task</name>
     <description>Initiates the process of building a new feature, bugfix, refactor, or chore. Enforces strict QA discovery, implementation planning, and TDD.</description>
@@ -10,8 +10,8 @@
     3. Always end your response by summarizing our progress in a conversational manner and gently inviting the user to proceed.
     4. CYCLIC EXECUTION: You are permitted to loop backward (e.g. return to Step 3.1 from 3.3) when the workflow dictates it for TDD iteration.
     5. TDD STRICTNESS: If the user prompts you to write implementation code before a failing test has been confirmed, politely remind them of our strict TDD routine (write failing test first, then make it pass) and ask if they want to proceed with TDD or skip it for now.
-    6. ANTI-CONVERSATIONAL PLANNING: You are strictly FORBIDDEN from generating an implementation plan purely in chat text. You MUST write the `<implementation_plan>` directly to the `.agentcore/active_sessions/task_[name].md` file on disk.
-    7. ALWAYS use `view_file` to read `.agentcore/current_state.md` to confirm the active session before generating code.
+    6. ANTI-CONVERSATIONAL PLANNING: You are strictly FORBIDDEN from generating an implementation plan purely in chat text. You MUST write the `<implementation_plan>` directly to the `.agenticguild/active_sessions/task_[name].md` file on disk.
+    7. ALWAYS use `view_file` to read `.agenticguild/current_state.md` to confirm the active session before generating code.
   </state_machine_directives>
 
   <hard_constraints>
@@ -60,9 +60,9 @@
     <phase id="2" name="Memory Update & Planning">
       <step id="2.1">
         <action>
-          First, check if `.agentcore/current_state.md` points to an active session file (e.g., passed over from `explore-task`).
+          First, check if `.agenticguild/current_state.md` points to an active session file (e.g., passed over from `explore-task`).
           - If it points to an active session file: Verify the file actually exists before reading it using the `view_file` tool. If the file exists and already contains a populated `<implementation_plan>` block, acknowledge the spec is locked and [AUTO-TRANSITION TO 3.0]. If it exists but the plan is empty/missing, proceed with the drafting steps below.
-          - If no active session is pointed to, or the file is missing: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agentcore/active_sessions/` named `task_[name].md` using the `write_to_file` tool. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agentcore/current_state.md` to point to this new file. Write the task classification and description into the session file.
+          - If no active session is pointed to, or the file is missing: Derive `[name]` as a short, kebab-case slug from the task description and silently create a new session file in `.agenticguild/active_sessions/` named `task_[name].md` using the `write_to_file` tool. If the task came from the roadmap, include `<roadmap_item>` in the session metadata. Silently update `.agenticguild/current_state.md` to point to this new file. Write the task classification and description into the session file.
           Drafting the plan (only if no plan exists yet): You MUST use the `replace_file_content` tool to draft the step-by-step implementation plan directly inside the `<implementation_plan>` block of the `task_[name].md` file ON DISK. Use `<step id="N" status="pending">[Description]</step>` format.
           VERIFICATION LOCK: Before asking for user approval, you MUST verify the file `task_[name].md` was successfully updated on the filesystem. Before responding to the user, you MUST explicitly state in your response that the file was successfully updated on disk. Do not present the plan if the file does not exist.
           - If Bugfix: Step 1 MUST be "Write a failing test that reproduces the bug."
@@ -77,7 +77,7 @@
           Parse the user's response to determine intent.
           1. First, process the intent:
             - If they want to discard or completely rewrite the plan for the current task: Delete the existing `<implementation_plan>` block from the `task_[name].md` session file so it can be cleanly redrafted, and [AUTO-TRANSITION TO 2.1].
-            - If they want a completely different task: Delete `.agentcore/current_state.md` so the old task is no longer active, and [AUTO-TRANSITION TO 1.1].
+            - If they want a completely different task: Delete `.agenticguild/current_state.md` so the old task is no longer active, and [AUTO-TRANSITION TO 1.1].
             - If they rejected the plan without direction, said "start over" (which is ambiguous), or their response is otherwise ambiguous: Ask clarifying questions to determine if they want to rewrite the current plan or reconsider the task completely. (STOP processing further steps).
             - If they suggested tweaks: Update the `task_[name].md` session file `<implementation_plan>` with the requested modifications. If the tweak changes the task classification (e.g., to Bugfix), ensure you also update the classification metadata.
             - If they approved the plan as-is: Treat the current `<implementation_plan>` as ready for validation.
@@ -111,7 +111,7 @@
       </step>
       <step id="3.1">
         <action>
-          You MUST use the `view_file` tool to physically read the `.agentcore/active_sessions/task_[name].md` file from disk. Do NOT rely on memory. Find the next step with `status="pending"`.
+          You MUST use the `view_file` tool to physically read the `.agenticguild/active_sessions/task_[name].md` file from disk. Do NOT rely on memory. Find the next step with `status="pending"`.
           Write the failing test for this step only.
           Tag the test with the appropriate [REQ-ID] from `docs/core/SPEC.md` (format: `REQ-[DOMAIN]-[NNN]`, e.g. `REQ-AUTH-001`; projects may customize).
           If the test involves a domain concept, use the Value Objects / Branded Types approved in Step 3.0 — never raw primitives.
@@ -148,4 +148,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>

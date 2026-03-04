@@ -61,19 +61,19 @@
 
 ## Phase 6: AI Agent & Workflow Optimization
 
-**Goal:** Ensure AI assistants operate as strict state machines with persistent memory and adherence to the AgentCore architecture.
+**Goal:** Ensure AI assistants operate as strict state machines with persistent memory and adherence to the agentic:guild architecture.
 
 1.  **Agent OS Initialization:**
-    - Ensure `.agentcore/` directory exists with `current_state.md`, `blocker_log.md`, and `pending_refactors.md`.
-    - Ensure `docs/ROADMAP.md` exists (AgentCore sync initializes it) for project planning and task tracking.
-    - Consolidate AI rules into `.cursorrules` to act as an IF/THEN routing table, and ensure it contains the `<agentcore_operating_system>` header.
+    - Ensure `.agenticguild/` directory exists with `current_state.md`, `blocker_log.md`, and `pending_refactors.md`.
+    - Ensure `docs/ROADMAP.md` exists (agentic:guild sync initializes it) for project planning and task tracking.
+    - Consolidate AI rules into `.cursorrules` to act as an IF/THEN routing table, and ensure it contains the `<agentic_guild_os>` header.
     - **CRITICAL RULE:** All agents and instructions must explicitly forbid auto-committing or auto-pushing code. At most, suggest a commit message.
-    - Delete legacy directories (e.g. `.agent/`, `.cursor/rules/`) if they duplicate `.agentcore/` or `.cursorrules`; ensure all tools share a single source of truth.
+    - Delete legacy directories (e.g. `.agent/`, `.cursor/rules/`) if they duplicate `.agenticguild/` or `.cursorrules`; ensure all tools share a single source of truth.
 2.  **Skill Refinement (XML State Machines):**
-    - Update universal workflow skills (e.g., `start-task`, `finish-branch`, `status-check`) to ensure they use strict `<agentcore_skill>` XML formatting.
+    - Update universal workflow skills (e.g., `start-task`, `finish-branch`, `status-check`) to ensure they use strict `<agentic_guild_skill>` XML formatting.
     - **Start Task:** Ensure the AI forces a classification phase, drafts a hierarchical implementation plan inside the active session file (`active_sessions/task_*.md`), checks `SYSTEM_ARCHITECTURE.md`, and loops through strict TDD.
     - **Finish Branch:** Ensure the AI handles async loops (like waiting for remote bots) by pausing and yielding control.
-    - **Status Check:** Ensure the skill can rehydrate context by reading `.agentcore/current_state.md` and the implementation plan inside the active session file to pinpoint blockers.
+    - **Status Check:** Ensure the skill can rehydrate context by reading `.agenticguild/current_state.md` and the implementation plan inside the active session file to pinpoint blockers.
 3.  **Playbook Documentation:**
     - Ensure `docs/ai/AI_WORKFLOW_PLAYBOOK.md` exists to document the exact purpose and triggers for all Custom Skills and the Memory architecture.
 4.  **Prevent Future "Drift" via PR Templates:**

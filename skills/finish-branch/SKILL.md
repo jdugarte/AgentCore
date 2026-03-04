@@ -1,4 +1,4 @@
-<agentcore_skill>
+<agentic_guild_skill>
   <skill_definition>
     <name>finish-branch</name>
     <description>Handles the completion of a branch, PR creation, and continuous CI/Bot feedback loops.</description>
@@ -71,7 +71,7 @@
       <step id="3.1">
         <action>
           Instruct the user to commit their code, push to the remote branch, and wait for CI feedback.
-          Update `.agentcore/current_state.md` to indicate waiting status.
+          Update `.agenticguild/current_state.md` to indicate waiting status.
         </action>
         <yield>
           [PAUSE - AWAIT CI STATUS]
@@ -107,4 +107,4 @@
       </step>
     </phase>
   </workflow>
-</agentcore_skill>
+</agentic_guild_skill>
