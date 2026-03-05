@@ -22,8 +22,8 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `code-review/SKILL.md` | Runs project-specific static analysis. |
 | `audit-compliance/SKILL.md` | IV&V agent that mathematically checks code determinism. |
 | `status-check/SKILL.md` | Reads `.agenticguild/` to diagnose blockers and rehydrate context. |
-| `harvest-rules/SKILL.md` | Scans diffs to update architecture docs and `.cursorrules`. |
-| `sync-docs/SKILL.md` | Keeps project docs in sync with branch changes (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, etc.). |
+| `harvest-rules/SKILL.md` | Proposes new rules from git diff, review_ledger, and active task session; writes approved rules to `.cursorrules` and SYSTEM_ARCHITECTURE. |
+| `sync-docs/SKILL.md` | Keeps project docs in sync with branch diff and active task session (SPEC, SCHEMA_REFERENCE, DATA_FLOW_MAP, ADRs, .cursorrules, etc.); session is semantically analyzed and knowledge is placed by type. |
 | `pr-description/SKILL.md` | Outputs a Git-based PR description in a code block for the user to copy. |
 | `roadmap-manage/SKILL.md` | Add, prioritize, catalog items in the project roadmap. |
 | `roadmap-consult/SKILL.md` | Read-only view of roadmap: done, pending, priorities. |
@@ -41,11 +41,11 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `ADRs/` | Architectural Decision Records to bypass `SYSTEM_ARCHITECTURE.md`. |
 
 ## 4. Docs to Sync (sync-docs skill)
-The `sync-docs` skill checks these docs against the branch diff and updates any that need changes. Only existing files are considered.
+The `sync-docs` skill keeps docs in sync with both the branch diff and task memory. It checks these docs against the diff and, when an active task session exists, semantically analyzes the session and proposes updates by knowledge type (domain → SPEC, decisions → ADRs, data semantics → SCHEMA_REFERENCE enrichment, conventions/patterns → .cursorrules and SYSTEM_ARCHITECTURE). Only existing files are considered.
 | Doc | When to update |
 |-----|----------------|
 | `docs/core/SPEC.md` | Domain logic, entities, or requirements changed |
-| `docs/core/SCHEMA_REFERENCE.md` | Schema or migrations changed (generated from raw schema) |
+| `docs/core/SCHEMA_REFERENCE.md` | Schema or migrations changed (structure from raw schema; session can enrich with data semantics — why/when of tables and columns) |
 | `docs/core/DATA_FLOW_MAP.md` | Entity lifecycles or side-effects changed |
 | `docs/core/ADRs/` | New architectural decisions |
 | `docs/core/SYSTEM_ARCHITECTURE.md` | Stack, boundaries, or forbidden libs changed |
