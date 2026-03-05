@@ -61,7 +61,7 @@
             .agenticguild/*
             !.agenticguild/.gitkeep
             ```
-          Ensure `.agenticguild/.gitkeep` and `.agenticguild/active_sessions/.gitkeep` exist as empty files (create if missing).
+          Ensure `.agenticguild/.gitkeep`, `.agenticguild/active_sessions/.gitkeep`, and `.agenticguild/completed_sessions/.gitkeep` exist as empty files (create directories and files if missing).
         </action>
         <yield>[AUTO-TRANSITION TO 1.3]</yield>
       </step>

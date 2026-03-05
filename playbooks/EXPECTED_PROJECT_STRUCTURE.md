@@ -12,6 +12,7 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `blocker_log.md` | Logs CI/CD failures or missing user inputs. |
 | `pending_refactors.md` | Logs tech debt discovered outside the scope of a current task. |
 | `active_sessions/task_*.md` | The runtime memory for specific features/bugfixes. |
+| `completed_sessions/` | Archived task session files after branch finish (optional). Created when the user confirms clearing the active task; session is moved here with a date suffix (e.g. `task_foo_YYYY-MM-DD.md`). |
 
 ## 2. The Engine (XML Skills)
 *Located in `.cursor/skills/`*
