@@ -28,7 +28,7 @@
     <directive>Ensure you have a canvas to work on and the project's specific architectural decisions are available.</directive>
     <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` exists.</check>
     <action>If `docs/core/SYSTEM_ARCHITECTURE.md` is missing, pause and ask the user to configure it. Use the `view_file` tool to read `.agenticguild/current_state.md` to find the active session if one exists. Do not guess the `[name]` until the user provides a task description.</action>
-    <update_check>Silently fetch the upstream version from `https://raw.githubusercontent.com/jdugarte/agentic-guild/main/package.json` (using tools like `read_url_content` or `curl`). Compare its `version` field to the local `.agenticguild/source_package.json`. If the upstream version is higher, add a visible note to your first output: `🌟 A new version of agentic:guild is available! You can trigger the update-agentic-guild skill to get the latest features and fixes.` (Do NOT block the task exploration, just show the message).</update_check>
+    <update_check>Silently fetch the upstream version from `https://raw.githubusercontent.com/jdugarte/agentic-guild/main/package.json` (using tools like `read_url_content` or `curl`). Compare its `version` field to the local `.agenticguild/source_package.json` (if it exists). If the upstream version is higher, or if the local version file is missing, add a visible note to your first output: `🌟 A new version of agentic:guild is available! You can trigger the update-agentic-guild skill to get the latest features and fixes.` (Do NOT block the task exploration, just show the message).</update_check>
   </pre_flight>
 
   <workflow>
