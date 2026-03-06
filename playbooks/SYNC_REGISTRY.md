@@ -40,6 +40,7 @@ This file is the **single source of truth** for all file mappings between the ag
 | playbooks/AI_WORKFLOW_PLAYBOOK.md | docs/ai/AI_WORKFLOW_PLAYBOOK.md | merge |
 | playbooks/EXPECTED_PROJECT_STRUCTURE.md | docs/ai/EXPECTED_PROJECT_STRUCTURE.md | merge |
 | playbooks/SYNC_REGISTRY.md | docs/ai/SYNC_REGISTRY.md | merge |
+| package.json | .agenticguild/source_package.json | merge |
 | templates/adr/0000-ADR-TEMPLATE.md | docs/core/ADRs/0000-ADR-TEMPLATE.md | merge |
 | templates/pr/PULL_REQUEST_TEMPLATE.md | .github/PULL_REQUEST_TEMPLATE.md | merge |
 | templates/core/SPEC.md | docs/core/SPEC.md | init |
