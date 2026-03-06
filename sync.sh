@@ -41,10 +41,12 @@ if [ "$STEALTH_MODE" = true ]; then
   
   # Ensure the exclude file has the section header
   if ! grep -q "# agentic:guild (Stealth Mode)" "$EXCLUDE_FILE"; then
-    echo "" >> "$EXCLUDE_FILE"
-    echo "# agentic:guild (Stealth Mode)" >> "$EXCLUDE_FILE"
-    echo ".agenticguild/*" >> "$EXCLUDE_FILE"
-    echo "!.agenticguild/.gitkeep" >> "$EXCLUDE_FILE"
+    {
+      echo ""
+      echo "# agentic:guild (Stealth Mode)"
+      echo ".agenticguild/*"
+      echo "!.agenticguild/.gitkeep"
+    } >> "$EXCLUDE_FILE"
   fi
   
   # Write stealth config
@@ -95,26 +97,6 @@ ensure_dir docs/audit
 ensure_dir docs/guides
 ensure_dir docs/core/ADRs
 ensure_dir .github
-  GITIGNORE_FILE=".gitignore"
-  if [ -f "$GITIGNORE_FILE" ]; then
-    if ! grep -q ".agenticguild/\*" "$GITIGNORE_FILE"; then
-      echo "📝 Securing .agenticguild/ memory folder in .gitignore..."
-      {
-        echo ""
-        echo "# agentic:guild Transient Memory"
-        echo ".agenticguild/*"
-        echo "!.agenticguild/.gitkeep"
-      } >> "$GITIGNORE_FILE"
-    fi
-  else
-    echo "📝 Creating .gitignore to secure .agenticguild/ memory..."
-    {
-      echo "# agentic:guild Transient Memory"
-      echo ".agenticguild/*"
-      echo "!.agenticguild/.gitkeep"
-    } > "$GITIGNORE_FILE"
-  fi
-fi
 
 # Ensure .gitkeep exists so the folder structure survives git
 touch .agenticguild/.gitkeep
