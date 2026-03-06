@@ -160,11 +160,13 @@
       </step>
     </phase>
 
-    <phase id="4" name="Cleanup">
+    <phase id="4" name="Review & Cleanup">
       <step id="4.1">
         <action>
-          Clean up the temporary workspace: Run `rm -rf .agenticguild/tmp_update`.
-          Report a clear, conversational summary of everything that happened: files added, files merged, files with conflicts resolved, any housekeeping actions taken (e.g., ".gitignore updated, pre-commit hook installed"), and any init-only files that were skipped because they already existed.
+          Use the `view_file` tool to quietly read `.agenticguild/tmp_update/CHANGELOG.md` to discover what is out in the latest version.
+          Clean up the temporary workspace: Instruct the user to run `rm -rf .agenticguild/tmp_update`.
+          Report a clear, conversational summary of everything that happened to the local project: files added, files merged, conflicts resolved, and housekeeping actions taken.
+          Finally, present a "🎉 What's New in agentic:guild" section where you summarize the most exciting new features, improvements, or fixes extracted from the upstream changelog.
         </action>
         <yield>[PAUSE - UPDATE COMPLETE. SKILL COMPLETE]</yield>
       </step>
