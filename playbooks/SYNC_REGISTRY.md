@@ -23,6 +23,7 @@ This file is the **single source of truth** for all file mappings between the ag
 <!-- SYNC_REGISTRY [START] -->
 | Upstream Source | Local Destination | Strategy |
 |:---|:---|:---|
+| skills/hello/SKILL.md | .cursor/skills/hello/SKILL.md | merge |
 | skills/start-task/SKILL.md | .cursor/skills/start-task/SKILL.md | merge |
 | skills/finish-branch/SKILL.md | .cursor/skills/finish-branch/SKILL.md | merge |
 | skills/status-check/SKILL.md | .cursor/skills/status-check/SKILL.md | merge |
@@ -39,6 +40,7 @@ This file is the **single source of truth** for all file mappings between the ag
 | playbooks/AI_WORKFLOW_PLAYBOOK.md | docs/ai/AI_WORKFLOW_PLAYBOOK.md | merge |
 | playbooks/EXPECTED_PROJECT_STRUCTURE.md | docs/ai/EXPECTED_PROJECT_STRUCTURE.md | merge |
 | playbooks/SYNC_REGISTRY.md | docs/ai/SYNC_REGISTRY.md | merge |
+| package.json | .agenticguild/source_package.json | merge |
 | templates/adr/0000-ADR-TEMPLATE.md | docs/core/ADRs/0000-ADR-TEMPLATE.md | merge |
 | templates/pr/PULL_REQUEST_TEMPLATE.md | .github/PULL_REQUEST_TEMPLATE.md | merge |
 | templates/core/SPEC.md | docs/core/SPEC.md | init |

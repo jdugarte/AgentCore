@@ -28,6 +28,7 @@
     <directive>Before executing the workflow, verify the necessary context exists.</directive>
     <check>Verify `docs/core/SYSTEM_ARCHITECTURE.md` and `docs/core/SPEC.md` exist.</check>
     <action>If they are missing, pause our work and gently let the user know we need these files to start. Offer to initialize the project templates for them. If the user says yes, run sync.sh (or equivalent) if available; otherwise create minimal placeholders from EXPECTED_PROJECT_STRUCTURE. Do NOT hallucinate contents without user confirmation.</action>
+    <update_check>Silently fetch the upstream version from `https://raw.githubusercontent.com/jdugarte/agentic-guild/main/package.json` (using tools like `read_url_content` or `curl`). Compare its `version` field to the local `.agenticguild/source_package.json` (if it exists). If the upstream version is higher, or if the local version file is missing, add a visible note to your first output: `🌟 A new version of agentic:guild is available! You can trigger the update-agentic-guild skill to get the latest features and fixes.` (Do NOT block the task execution, just show the message).</update_check>
   </pre_flight>
 
   <workflow>
