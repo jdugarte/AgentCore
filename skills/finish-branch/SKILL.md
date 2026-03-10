@@ -39,7 +39,7 @@
 
     <phase id="1" name="Interactive Local Review">
       <step id="1.1">
-        <action>Use the `view_file` tool to read and follow `.cursor/skills/code-review/SKILL.md` until it yields. Execute the full skill with its own PAUSEs; then return to finish-branch.</action>
+        <action>Use the `view_file` tool to read and follow `docs/ai/skills/code-review/SKILL.md` until it yields. Execute the full skill with its own PAUSEs; then return to finish-branch.</action>
         <yield>[PAUSE - AWAIT CODE REVIEW COMPLETION]</yield>
       </step>
     </phase>
@@ -106,14 +106,14 @@
     <phase id="4" name="Final Spackle & PR">
       <step id="4.1">
         <action>
-          If NOT in Stealth Mode: Use the `view_file` tool to read and follow `.cursor/skills/sync-docs/SKILL.md` until it yields. The skill analyzes the branch diff and updates any docs that need changes.
+          If NOT in Stealth Mode: Use the `view_file` tool to read and follow `docs/ai/skills/sync-docs/SKILL.md` until it yields. The skill analyzes the branch diff and updates any docs that need changes.
           If in Stealth Mode: Skip `sync-docs` entirely, as automatically modifying architectural documents violates stealth mode constraints.
         </action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
       </step>
       <step id="4.2">
         <action>
-          If NOT in Stealth Mode: Use the `view_file` tool to read and follow `.cursor/skills/harvest-rules/SKILL.md` until it yields. Then return to finish-branch.
+          If NOT in Stealth Mode: Use the `view_file` tool to read and follow `docs/ai/skills/harvest-rules/SKILL.md` until it yields. Then return to finish-branch.
           If in Stealth Mode: Skip `harvest-rules` entirely, as writing tracking rules inferred from Git diffs into tracked files violates stealth mode constraints.
         </action>
         <yield>[PAUSE - AWAIT CONFIRMATION TO PROCEED]</yield>
@@ -123,7 +123,7 @@
           If NOT in Stealth Mode: Check if user-facing changes exist; if so, ensure `CHANGELOG.md` is updated. Use the `view_file` tool to read the active session file (if any) for `<roadmap_item>`. If this branch corresponds to a roadmap item, update `docs/ROADMAP.md`: move the item to Done, add today's date. If unclear, ask the user which roadmap item (if any) this branch completes. Remind the user to commit `docs/ROADMAP.md` and `CHANGELOG.md` if they were updated.
           If in Stealth Mode: Do NOT modify or remind the user about `CHANGELOG.md` or `docs/ROADMAP.md` to avoid altering the external team's tracked documentation.
           
-          Then (in all modes): use the `view_file` tool to read and follow `.cursor/skills/pr-description/SKILL.md` until it yields.
+          Then (in all modes): use the `view_file` tool to read and follow `docs/ai/skills/pr-description/SKILL.md` until it yields.
         </action>
         <yield>[PAUSE - AWAIT CONFIRMATION]</yield>
       </step>

@@ -13,7 +13,9 @@ This file is the **single source of truth** for all file mappings between the ag
 | `init`   | Only write if the file does **not** already exist locally. These files contain project-specific content that must be protected from upstream overwrites. |
 
 > **Special files not in this registry** (they require custom logic beyond a simple copy):
-> - `templates/core/AGENTIC_GUILD_RULES.md` → `.cursorrules` (prepend/merge logic — handled by dedicated step in both `sync.sh` and the skill)
+> - **IDE adapters:** List of adapter paths and thin content is in **`playbooks/ADAPTER_REGISTRY.md`**. sync.sh fetches it and injects `templates/core/AGENTIC_GUILD_ADAPTER.md` (thin pointer to `docs/ai/AGENTIC_GUILD_RULES.md`) into each path. Update ADAPTER_REGISTRY when new IDEs/tools add a rules file convention.
+> - **Stack-specific rules:** Optional `--stack=rails|django|react-native` uses **`playbooks/STACK_REGISTRY.md`** to copy the right `templates/stacks/<id>/STACK_RULES.md` to `docs/ai/STACK_RULES.md`. Stack templates use the generic name `STACK_RULES.md` (not `.cursorrules`).
+> - `templates/core/AGENTIC_GUILD_RULES.md` → synced to `docs/ai/AGENTIC_GUILD_RULES.md` via registry (canonical rules); adapters point agents at this file.
 > - `templates/git-hooks/pre-commit-logic.sh` → `.git/hooks/pre-commit` (install/append logic — handled by dedicated step in both)
 
 ---
@@ -23,20 +25,21 @@ This file is the **single source of truth** for all file mappings between the ag
 <!-- SYNC_REGISTRY [START] -->
 | Upstream Source | Local Destination | Strategy |
 |:---|:---|:---|
-| skills/hello/SKILL.md | .cursor/skills/hello/SKILL.md | merge |
-| skills/start-task/SKILL.md | .cursor/skills/start-task/SKILL.md | merge |
-| skills/finish-branch/SKILL.md | .cursor/skills/finish-branch/SKILL.md | merge |
-| skills/status-check/SKILL.md | .cursor/skills/status-check/SKILL.md | merge |
-| skills/harvest-rules/SKILL.md | .cursor/skills/harvest-rules/SKILL.md | merge |
-| skills/code-review/SKILL.md | .cursor/skills/code-review/SKILL.md | merge |
-| skills/audit-compliance/SKILL.md | .cursor/skills/audit-compliance/SKILL.md | merge |
-| skills/sync-docs/SKILL.md | .cursor/skills/sync-docs/SKILL.md | merge |
-| skills/pr-description/SKILL.md | .cursor/skills/pr-description/SKILL.md | merge |
-| skills/roadmap-manage/SKILL.md | .cursor/skills/roadmap-manage/SKILL.md | merge |
-| skills/roadmap-consult/SKILL.md | .cursor/skills/roadmap-consult/SKILL.md | merge |
-| skills/update-agentic-guild/SKILL.md | .cursor/skills/update-agentic-guild/SKILL.md | merge |
-| skills/explore-task/SKILL.md | .cursor/skills/explore-task/SKILL.md | merge |
-| skills/process-feedback/SKILL.md | .cursor/skills/process-feedback/SKILL.md | merge |
+| skills/hello/SKILL.md | docs/ai/skills/hello/SKILL.md | merge |
+| skills/start-task/SKILL.md | docs/ai/skills/start-task/SKILL.md | merge |
+| skills/finish-branch/SKILL.md | docs/ai/skills/finish-branch/SKILL.md | merge |
+| skills/status-check/SKILL.md | docs/ai/skills/status-check/SKILL.md | merge |
+| skills/harvest-rules/SKILL.md | docs/ai/skills/harvest-rules/SKILL.md | merge |
+| skills/code-review/SKILL.md | docs/ai/skills/code-review/SKILL.md | merge |
+| skills/audit-compliance/SKILL.md | docs/ai/skills/audit-compliance/SKILL.md | merge |
+| skills/sync-docs/SKILL.md | docs/ai/skills/sync-docs/SKILL.md | merge |
+| skills/pr-description/SKILL.md | docs/ai/skills/pr-description/SKILL.md | merge |
+| skills/roadmap-manage/SKILL.md | docs/ai/skills/roadmap-manage/SKILL.md | merge |
+| skills/roadmap-consult/SKILL.md | docs/ai/skills/roadmap-consult/SKILL.md | merge |
+| skills/update-agentic-guild/SKILL.md | docs/ai/skills/update-agentic-guild/SKILL.md | merge |
+| skills/explore-task/SKILL.md | docs/ai/skills/explore-task/SKILL.md | merge |
+| skills/process-feedback/SKILL.md | docs/ai/skills/process-feedback/SKILL.md | merge |
+| templates/core/AGENTIC_GUILD_RULES.md | docs/ai/AGENTIC_GUILD_RULES.md | merge |
 | playbooks/AI_WORKFLOW_PLAYBOOK.md | docs/ai/AI_WORKFLOW_PLAYBOOK.md | merge |
 | playbooks/EXPECTED_PROJECT_STRUCTURE.md | docs/ai/EXPECTED_PROJECT_STRUCTURE.md | merge |
 | playbooks/SYNC_REGISTRY.md | docs/ai/SYNC_REGISTRY.md | merge |
@@ -54,6 +57,7 @@ This file is the **single source of truth** for all file mappings between the ag
 | templates/core/memory_scaffold/pending_refactors.md | .agenticguild/pending_refactors.md | init |
 | templates/core/memory_scaffold/task_template.md | .agenticguild/active_sessions/task_template.md | init |
 | templates/CbC_GENERATION_PROMPT.md | .cursor/templates/CbC_GENERATION_PROMPT.md | merge |
+| templates/core/SKILLS.md | SKILLS.md | merge |
 <!-- SYNC_REGISTRY [END] -->
 
 

@@ -121,9 +121,10 @@ curl -s https://raw.githubusercontent.com/jdugarte/agentic-guild/main/sync.sh | 
 
 The script will:
 - Create a git-ignored `.agenticguild/` memory directory for AI task state
-- Install all skills into `.cursor/skills/`
+- Install all skills into `docs/ai/skills/`
 - Initialize governance templates in `docs/core/` if they don't exist
-- Inject the agentic:guild rules router into your `.cursorrules`
+- Sync the canonical rules to `docs/ai/AGENTIC_GUILD_RULES.md` and inject a **thin adapter** (pointer to that file) into each IDE adapter path listed in **`playbooks/ADAPTER_REGISTRY.md`** (e.g. `.cursorrules`, AGENTS.md, CLAUDE.md). In **stealth mode** (`--stealth`), no adapter files are created; rules and a one-line pointer go under `.agenticguild/` only (see [Stealth Mode](#stealth-mode-for-workexternal-repos)).
+- Optionally, pass **`--stack=rails`**, **`--stack=django`**, or **`--stack=react-native`** to copy stack-specific rules to `docs/ai/STACK_RULES.md` (from `playbooks/STACK_REGISTRY.md`). The stack id is **validated**; if invalid, sync aborts with the list of valid ids. You can instead install stack rules **separately** with **`./sync-stack.sh <stack_id>`** (see `docs/ai/STACK_AND_STEALTH_ADVICE.md`).
 
 ### 2. Initialize your project's constitution
 
@@ -166,13 +167,13 @@ curl -s https://raw.githubusercontent.com/jdugarte/agentic-guild/main/sync.sh | 
 
 ### What Stealth Mode does:
 
-- **Local Git Ignores:** Instead of modifying `.gitignore` (which your team would see), it silently maps all agentic:guild files into your local `.git/info/exclude`. It dynamically contours itself to any folder structures (like `docs/` or `.cursor/skills/`) that might already exist in the repo.
-- **Relaxes Internal Traceability:** The AI drops requirements for `[REQ-ID]` tags in tests or code comments, preventing your codebase from being cluttered with internal metadata.
-- **Suppresses Internal Reminders:** Workflow skills like `finish-branch` will skip reminding you to commit internal state files like `docs/ROADMAP.md` or `CHANGELOG.md`.
-- **Clean PR Drafts:** The `pr-description` skill will formulate standard Open Source-style PRs (using your team's template if one exists) instead of referencing internal agentic documentation.
+- **No adapter files:** The script does **not** create or modify any IDE adapter files (e.g. `.cursorrules`, AGENTS.md). Everything stays under `.agenticguild/`, which is excluded. No extra files appear in the project root or in IDE config paths.
+- **Canonical rules in .agenticguild/:** The full rules are written to `.agenticguild/AGENTIC_GUILD_RULES.md`. A one-line pointer is saved in `.agenticguild/PASTE_INTO_IDE.txt` — paste that line into your IDE's rules or custom instructions once to enable agentic:guild.
+- **Local Git Ignores:** Instead of modifying `.gitignore`, stealth maps agentic:guild paths into your local `.git/info/exclude`, so the repo stays clean.
+- **Relaxes Internal Traceability:** The AI drops requirements for `[REQ-ID]` tags in tests or code comments.
+- **Suppresses Internal Reminders:** Workflow skills skip reminding you to commit internal state files like `docs/ROADMAP.md` or `CHANGELOG.md`.
+- **Clean PR Drafts:** The `pr-description` skill formulates standard Open Source-style PRs instead of referencing internal agentic documentation.
 - **Skips Git Hooks:** It skips the installation of pre-commit git hooks, ensuring it never interferes with company pipeline tools.
-
-*(Note: If you already have a `.cursorrules` file, the script will append the agentic:guild routing block to it. Be sure to manually omit this block from your commits).*
 
 ---
 
@@ -197,7 +198,7 @@ agentic:guild is **tech-stack-agnostic** at its core and ships with ready-to-use
 - **Django**
 - **React Native**
 
-Each template provides stack-specific `.cursorrules` and code-review prompts so the AI understands your conventions from day one.
+Stack-specific rules live in **`templates/stacks/<id>/STACK_RULES.md`** (generic naming, not IDE-specific). Either run **`sync.sh --stack=rails`** (or `django`, `react-native`) to copy the matching template to `docs/ai/STACK_RULES.md`, or install stack rules **separately** with **`./sync-stack.sh rails`** after (or without) a full sync. Invalid stack ids cause sync to abort with the list of valid ids. Each stack also has code-review prompts in `templates/<stack>/code_review_prompt.md`. See **`docs/ai/STACK_AND_STEALTH_ADVICE.md`** for validation, separation, and stealth behavior.
 
 ---
 
@@ -208,7 +209,7 @@ agentic:guild is actively evolving. Upcoming work:
 - [ ] **`ai-tools` Go CLI** — replace `sync.sh` with a compiled, zero-dependency binary distributed via Homebrew, with versioning and multi-project sync
 - [ ] **Localization Bridge** — English rules, local-language output. Configure AI to generate specs in your team's native language while maintaining English code
 - [ ] **Deep CI Integration** — move async quality gate loops directly into GitHub Actions
-- [ ] **Skill Versioning** — pin your project's `.cursor/skills/` to a specific agentic:guild release
+- [ ] **Skill Versioning** — pin your project's `docs/ai/skills/` to a specific agentic:guild release
 - [ ] **Visual Workflow Builder** — a GUI to generate skill state-machine files without writing XML by hand
 - [ ] **Central Config (`agentic_guild.yml`)** — per-project configuration for schema paths, default branches, and more (see [`specs/proposals/AGENTIC_GUILD_CONFIG_SPEC.md`](specs/proposals/AGENTIC_GUILD_CONFIG_SPEC.md))
 

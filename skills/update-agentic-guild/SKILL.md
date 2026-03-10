@@ -23,7 +23,7 @@
 
   <pre_flight>
     <directive>Ensure you have a clean workspace before attempting to pull upstream changes.</directive>
-    <check>Verify no uncommitted changes exist in the directories you are about to update (.cursor/skills/, docs/ai/, docs/core/, .cursorrules).</check>
+    <check>Verify no uncommitted changes exist in the directories you are about to update (docs/ai/skills/, docs/ai/, docs/core/, .cursorrules and other adapter files).</check>
     <action>If there are uncommitted changes that might be lost, pause and suggest the user stash or commit them before proceeding. Do NOT continue until this is resolved. Also check whether `.agenticguild/tmp_update` already exists from an interrupted previous run; if so, mention it — it will be cleaned up in Step 0.2.</action>
   </pre_flight>
 
@@ -51,7 +51,7 @@
       <step id="1.1">
         <action>
           Ensure required directories exist, creating them if absent:
-          - `.cursor/skills/{start-task,finish-branch,harvest-rules,status-check,code-review,audit-compliance,sync-docs,pr-description,roadmap-manage,roadmap-consult,update-agentic-guild,explore-task,process-feedback}`
+          - `docs/ai/skills/` (registry defines which skill dirs exist)
           - `.agenticguild/active_sessions`
           - `.agenticguild/completed_sessions`
           
@@ -86,11 +86,10 @@
       </step>
       <step id="1.3">
         <action>
-          Guard `.cursorrules` using the latest `templates/core/AGENTIC_GUILD_RULES.md` from `.agenticguild/tmp_update`:
-          - If `.cursorrules` does not exist: Create it with the contents of `AGENTIC_GUILD_RULES.md`. If in Stealth Mode, append `.cursorrules` to `.git/info/exclude` using `echo ".cursorrules" >> .git/info/exclude` (if not already present).
-          - If `.cursorrules` exists but does NOT contain `&lt;agentic_guild_os&gt;`: Prepend `AGENTIC_GUILD_RULES.md` to the existing `.cursorrules` content, preserving all existing project-specific rules. If in Stealth Mode, add a warning to your final summary that `.cursorrules` blocks were added and should be stripped before committing if the team does not want the agentic:guild config.
-          - If `.cursorrules` already contains `&lt;agentic_guild_os&gt;` AND the block is identical to the upstream version: Skip silently.
-          - If `.cursorrules` already contains `&lt;agentic_guild_os&gt;` AND the block differs from upstream: Add `{ file: ".cursorrules", reason: "agentic:guild OS block has drifted from upstream" }` to the Conflict Queue. Do NOT attempt to resolve it here.
+          Guard the **canonical rules file** and **adapter files** using the latest templates from `.agenticguild/tmp_update`:
+          - **Canonical rules:** Sync `templates/core/AGENTIC_GUILD_RULES.md` to `docs/ai/AGENTIC_GUILD_RULES.md`. If in Stealth Mode, sync instead to `.agenticguild/AGENTIC_GUILD_RULES.md` (do not create or modify docs/ai/). If the file exists and differs from upstream, add it to the Conflict Queue.
+          - **Adapter files (skip entirely in Stealth Mode):** If NOT in Stealth Mode, read `playbooks/ADAPTER_REGISTRY.md` from tmp_update and ensure each adapter path (e.g. `.cursorrules`, AGENTS.md) contains the thin block from `templates/core/AGENTIC_GUILD_ADAPTER.md`. If an adapter file does not exist, create it with the thin content. If it exists but lacks the `agentic:guild [START]` marker, prepend the thin block. If the block exists but differs from upstream, add that file to the Conflict Queue.
+          - If in Stealth Mode: Do not create or modify any adapter files; only update `.agenticguild/AGENTIC_GUILD_RULES.md` as above.
         </action>
         <yield>[AUTO-TRANSITION TO 1.4]</yield>
       </step>
@@ -143,7 +142,7 @@
         <action>
           Check the Conflict Queue (accumulated from all previous phases, including .cursorrules from Phase 1).
           If the queue is empty: [AUTO-TRANSITION TO 4.1].
-          If conflicts remain: Present the full list of conflicts to the user conversationally (e.g., "I found 2 files that need your input before I can finish: .cursorrules and .cursor/skills/start-task/SKILL.md"). Then work through them one at a time:
+          If conflicts remain: Present the full list of conflicts to the user conversationally (e.g., "I found 2 files that need your input before I can finish: .cursorrules and docs/ai/skills/start-task/SKILL.md"). Then work through them one at a time:
           1. **Explain the Conflict Contextually:** Clearly describe what changed in the upstream file and how it has drifted from their local version.
           2. **Highlight the Specific Differences:** Provide a concise summary of key additions or changes. Show a brief snippet of the divergent sections if helpful.
           3. **Ask for Plain English Instructions:** Ask the user how they'd like to resolve it. Encourage natural input like "keep the new upstream section but preserve my custom rule" or "just append whatever is new."

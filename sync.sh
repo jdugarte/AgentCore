@@ -6,12 +6,18 @@
 
 REPO_URL="https://raw.githubusercontent.com/jdugarte/agentic-guild/main"
 REGISTRY_URL="$REPO_URL/playbooks/SYNC_REGISTRY.md"
+ADAPTER_REGISTRY_URL="$REPO_URL/playbooks/ADAPTER_REGISTRY.md"
+STACK_REGISTRY_URL="$REPO_URL/playbooks/STACK_REGISTRY.md"
 TMP_REGISTRY="/tmp/agenticguild_sync_registry.md"
+TMP_ADAPTER_REGISTRY="/tmp/agenticguild_adapter_registry.md"
+TMP_STACK_REGISTRY="/tmp/agenticguild_stack_registry.md"
 
 STEALTH_MODE=false
+STACK=""
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         --stealth) STEALTH_MODE=true; shift ;;
+        --stack=*) STACK="${1#--stack=}"; shift ;;
         *) shift ;;
     esac
 done
@@ -85,12 +91,12 @@ function ensure_dir() {
   fi
 }
 
-ensure_dir .cursor/skills
 ensure_dir .agenticguild/active_sessions
 ensure_dir .agenticguild/completed_sessions
 
 if [ "$STEALTH_MODE" = false ]; then
   ensure_dir docs/ai
+  ensure_dir docs/ai/skills
   ensure_dir docs/core
   ensure_dir docs/features
   ensure_dir docs/audit
@@ -125,6 +131,11 @@ while IFS= read -r line; do
   strategy=$(echo "$strategy" | xargs)
   [ -z "$source" ] && continue
 
+  # In stealth, do not create docs/ai/AGENTIC_GUILD_RULES.md; we write it under .agenticguild/ instead
+  if [ "$STEALTH_MODE" = true ] && [ "$dest" = "docs/ai/AGENTIC_GUILD_RULES.md" ]; then
+    continue
+  fi
+
   # Ensure parent directory exists
   ensure_dir "$(dirname "$dest")"
 
@@ -151,24 +162,97 @@ while IFS= read -r line; do
   fi
 done < "$TMP_REGISTRY"
 
-# 5. Inject agentic:guild OS Rules into .cursorrules
-echo "⚙️  Configuring .cursorrules..."
-AGENTIC_GUILD_RULES=$(curl -s "$REPO_URL/templates/core/AGENTIC_GUILD_RULES.md")
-if [ -n "$AGENTIC_GUILD_RULES" ]; then
-  if [ ! -f ".cursorrules" ]; then
-    echo "   ⚙️  Creating .cursorrules with agentic:guild OS..."
-    echo "$AGENTIC_GUILD_RULES" > .cursorrules
-    if [ "$STEALTH_MODE" = true ]; then
-      if ! grep -q "^.cursorrules$" "$EXCLUDE_FILE"; then echo ".cursorrules" >> "$EXCLUDE_FILE"; fi
-    fi
-  elif ! grep -q "<agentic_guild_os>" ".cursorrules"; then
-    echo "   ⚙️  Prepending agentic:guild OS to existing .cursorrules..."
-    { echo "$AGENTIC_GUILD_RULES"; cat .cursorrules; } > .cursorrules.tmp && mv .cursorrules.tmp .cursorrules
-    if [ "$STEALTH_MODE" = true ]; then
-      echo "   ⚠️  In stealth mode, .cursorrules blocks were added. Make sure to strip them out before committing changes if team does not want agentic:guild config."
-    fi
+# 5. IDE adapters (skip entirely in stealth — see 5a for stealth alternative)
+if [ "$STEALTH_MODE" = true ]; then
+  echo "🥷 Stealth: skipping IDE adapter creation (no files outside .agenticguild/)."
+  # Write canonical rules and paste-in pointer under .agenticguild/ only
+  echo "   📥 Writing .agenticguild/AGENTIC_GUILD_RULES.md..."
+  curl -s "$REPO_URL/templates/core/AGENTIC_GUILD_RULES.md" > .agenticguild/AGENTIC_GUILD_RULES.md
+  if [ -s .agenticguild/AGENTIC_GUILD_RULES.md ]; then
+    {
+      echo "Paste this line into your IDE's rules / custom instructions (once) to enable agentic:guild:"
+      echo ""
+      echo "Read and follow the instructions in .agenticguild/AGENTIC_GUILD_RULES.md before answering or generating code. Skills at docs/ai/skills/<skill-name>/SKILL.md (or see SKILLS.md in project root)."
+      echo ""
+    } > .agenticguild/PASTE_INTO_IDE.txt
+    echo "   📄 See .agenticguild/PASTE_INTO_IDE.txt for the one-line pointer to paste into your IDE."
+  fi
+else
+  echo "⚙️  Configuring IDE adapters (from Adapter Registry)..."
+  THIN_ADAPTER=$(curl -s "$REPO_URL/templates/core/AGENTIC_GUILD_ADAPTER.md")
+  if [ -n "$THIN_ADAPTER" ]; then
+    curl -s "$ADAPTER_REGISTRY_URL" > "$TMP_ADAPTER_REGISTRY"
+    in_block=false
+    while IFS= read -r line; do
+      if [[ "$line" == *"ADAPTER_REGISTRY [START]"* ]]; then in_block=true; continue; fi
+      if [[ "$line" == *"ADAPTER_REGISTRY [END]"* ]]; then in_block=false; continue; fi
+      if ! $in_block; then continue; fi
+      [[ "$line" != \|* ]] && continue
+      [[ "$line" == *"Adapter path"* ]] && continue
+      [[ "$line" == *"---"* ]] && continue
+      IFS='|' read -r _ adapter_path _ <<< "$line"
+      adapter_path=$(echo "$adapter_path" | xargs)
+      [ -z "$adapter_path" ] && continue
+      parent_dir=$(dirname "$adapter_path")
+      [ -n "$parent_dir" ] && [ "$parent_dir" != "." ] && ensure_dir "$parent_dir"
+      if [ ! -f "$adapter_path" ]; then
+        echo "   📄 Creating $adapter_path with thin adapter..."
+        echo "$THIN_ADAPTER" > "$adapter_path"
+      elif ! grep -q "agentic:guild \[START\]" "$adapter_path" 2>/dev/null; then
+        echo "   ⚙️  Prepending thin adapter to $adapter_path..."
+        { echo "$THIN_ADAPTER"; cat "$adapter_path"; } > "${adapter_path}.tmp" && mv "${adapter_path}.tmp" "$adapter_path"
+      else
+        echo "   ✅ Thin adapter already present in $adapter_path."
+      fi
+    done < "$TMP_ADAPTER_REGISTRY"
+    rm -f "$TMP_ADAPTER_REGISTRY"
   else
-    echo "   ✅ agentic:guild OS rules already present in .cursorrules."
+    echo "   ⚠️  Failed to fetch thin adapter template. Skipping IDE adapter injection."
+  fi
+fi
+
+# 5b. Optional: copy stack-specific rules (--stack=rails|django|react-native)
+if [ -n "$STACK" ]; then
+  echo "📚 Applying stack rules for: $STACK..."
+  curl -s "$STACK_REGISTRY_URL" > "$TMP_STACK_REGISTRY"
+  if [ ! -s "$TMP_STACK_REGISTRY" ]; then
+    echo "   ❌ Failed to fetch STACK_REGISTRY. Cannot validate stack id."
+    rm -f "$TMP_STACK_REGISTRY"
+    exit 1
+  fi
+  valid_ids=""
+  stack_template=""
+  in_block=false
+  while IFS= read -r line; do
+    if [[ "$line" == *"STACK_REGISTRY [START]"* ]]; then in_block=true; continue; fi
+    if [[ "$line" == *"STACK_REGISTRY [END]"* ]]; then in_block=false; continue; fi
+    if ! $in_block; then continue; fi
+    [[ "$line" != \|* ]] && continue
+    [[ "$line" == *"Stack id"* ]] && continue
+    [[ "$line" == *"---"* ]] && continue
+    IFS='|' read -r stack_id _ template_path <<< "$line"
+    stack_id=$(echo "$stack_id" | xargs)
+    template_path=$(echo "$template_path" | xargs)
+    [ -z "$stack_id" ] && continue
+    valid_ids="${valid_ids:+$valid_ids, }$stack_id"
+    if [ "$stack_id" = "$STACK" ] && [ -n "$template_path" ]; then
+      stack_template="$template_path"
+    fi
+  done < "$TMP_STACK_REGISTRY"
+  if [ -z "$stack_template" ]; then
+    echo "   ❌ Invalid --stack=$STACK. Valid stack ids: $valid_ids (see playbooks/STACK_REGISTRY.md)."
+    rm -f "$TMP_STACK_REGISTRY"
+    exit 1
+  fi
+  rm -f "$TMP_STACK_REGISTRY"
+  ensure_dir docs/ai
+  STACK_RULES=$(curl -s "$REPO_URL/$stack_template")
+  if [ -n "$STACK_RULES" ]; then
+    echo "   📥 Writing docs/ai/STACK_RULES.md from $stack_template..."
+    echo "$STACK_RULES" > docs/ai/STACK_RULES.md
+  else
+    echo "   ⚠️  Failed to fetch stack template: $stack_template"
+    exit 1
   fi
 fi
 
@@ -207,5 +291,14 @@ rm -f "$TMP_REGISTRY"
 echo "🚀 Sync complete. agentic:guild Operating System is online."
 echo ""
 echo "✅ agentic:guild installed."
-echo "To see your new engineer in action, type this into your AI assistant right now:"
-echo "  \"Who are you?\" or \"What is agentic:guild?\""
+if [ "$STEALTH_MODE" = true ]; then
+  echo "🥷 Stealth: no adapter files were created. Add the line from .agenticguild/PASTE_INTO_IDE.txt to your IDE's rules (once) to enable agentic:guild."
+  echo "Then ask: \"Who are you?\" or \"What is agentic:guild?\""
+else
+  echo "To see your new engineer in action, type this into your AI assistant right now:"
+  echo "  \"Who are you?\" or \"What is agentic:guild?\""
+  if [ -z "$STACK" ]; then
+    echo ""
+    echo "Optional: run with --stack=rails, --stack=django, or --stack=react-native to add stack-specific rules to docs/ai/STACK_RULES.md."
+  fi
+fi

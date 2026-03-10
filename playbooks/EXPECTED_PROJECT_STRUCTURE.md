@@ -15,7 +15,7 @@ This document lists every referenced path, its purpose, and how it fits into the
 | `completed_sessions/` | Archived task session files after branch finish (optional). Created when the user confirms clearing the active task; session is moved here with a date suffix (e.g. `task_foo_YYYY-MM-DD.md`). |
 
 ## 2. The Engine (XML Skills)
-*Located in `.cursor/skills/`*
+*Located in `docs/ai/skills/`*
 | Path | Purpose |
 |------|---------|
 | `start-task/SKILL.md` | Initializes planning, memory tracking, and strict TDD. |

@@ -80,7 +80,7 @@ The `docs/` folder is authoritative. You must consult these files before impleme
 # DOCUMENTATION & CHANGELOG
 - **CHANGELOG.md:** When a PR adds a user-facing change, fix, or notable dependency/config change, update **CHANGELOG.md** (add an entry under `[Unreleased]`). See CHANGELOG.md section "When to update this file."
 - **Living docs:** When implementing features, update the relevant `docs/` file. When shipping a release, move `[Unreleased]` entries in CHANGELOG into a new version section.
-- **Agent rules:** When you change this file (`.cursorrules`), ensure any new patterns or workflows are extracted to the Global Brain via the `harvest-rules` skill.
+- **Agent rules:** When you change this file (stack rules), ensure any new patterns or workflows are extracted to the Global Brain via the `harvest-rules` skill.
 
 # UNIVERSAL BEHAVIOR
 - **No Yapping:** Output code immediately.

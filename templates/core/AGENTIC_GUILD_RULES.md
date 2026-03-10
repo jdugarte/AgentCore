@@ -41,27 +41,36 @@
     <directive>If the user provides a raw, unstructured prompt (e.g., "build a login page", "fix this error"), you must proactively guide them to the process. This is the Anti-Vibe Coding safeguard.</directive>
     <rules>
       1. Just-in-Time Setup: Unstructured prompts should be met with: "I can help with that. However, because agentic:guild is active, I need to follow our engineering process. Should I trigger the \`start-task\` skill to draft the implementation plan first, or do you want to use \`explore-task\` to map out the requirements?"
-      2. Introduction: If the user asks "Who are you?", "What is agentic guild", or "How do I start?", immediately execute `.cursor/skills/hello/SKILL.md`.
+      2. Introduction: If the user asks "Who are you?", "What is agentic guild", or "How do I start?", immediately execute `docs/ai/skills/hello/SKILL.md`.
     </rules>
   </onboarding>
 
+  <skills_discovery>
+    <directive>All skills for this project are located under `docs/ai/skills/`. Each skill is a folder containing a `SKILL.md` file. A full index of available skills and their trigger phrases is at `SKILLS.md` in the project root. If you cannot find a skill by name, search for `SKILLS.md` first, then use the paths listed there.</directive>
+    <rules>
+      1. Path: Skills always live at `docs/ai/skills/<skill-name>/SKILL.md`. Do NOT search `{.agents,.agent,_agents,_agent}/workflows/` for skills — those are a different, unrelated system.
+      2. Discovery fallback: If the skill path is unclear, read `SKILLS.md` at the project root. It lists all skills with their exact paths.
+      3. Never assume a skill doesn't exist without checking `SKILLS.md` first.
+    </rules>
+  </skills_discovery>
+
   <intent_routing>
-    <directive>You must map the user's semantic intent to the strict XML skills located in `.cursor/skills/`. Do not rely solely on exact keyword matching; evaluate what the user is actually trying to accomplish. If their intent matches a route below, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
+    <directive>You must map the user's semantic intent to the strict XML skills located in `docs/ai/skills/`. Do not rely solely on exact keyword matching; evaluate what the user is actually trying to accomplish. If their intent matches a route below, you MUST silently read the associated SKILL.md file and execute its state machine.</directive>
     <routes>
-      <route intent="Explore, brainstorm, or figure out requirements for a new feature or task BEFORE implementation" trigger="explore task, explore feature, brainstorm">Read `.cursor/skills/explore-task/SKILL.md`</route>
-      <route intent="Begin the actual implementation or coding of an agreed-upon plan, feature, or bugfix" trigger="start task, begin task, implement feature">Read `.cursor/skills/start-task/SKILL.md`</route>
-      <route intent="Wrap up a task, audit compliance, and open a PR" trigger="finish branch, open a PR, complete task">Read `.cursor/skills/finish-branch/SKILL.md`</route>
-      <route intent="Perform a code review or check code quality" trigger="code review, run code review, review my changes">Read `.cursor/skills/code-review/SKILL.md`</route>
-      <route intent="Check current progress or see what is blocking the task" trigger="status check, where are we, blocked">Read `.cursor/skills/status-check/SKILL.md`</route>
-      <route intent="Process feedback from CI, linters, or human reviewers and fix the code" trigger="process feedback, fix errors, lint errors">Read `.cursor/skills/process-feedback/SKILL.md`</route>
-      <route intent="Extract new codebase rules or update AI docs based on recent learnings" trigger="harvest rules, update docs">Read `.cursor/skills/harvest-rules/SKILL.md`</route>
-      <route intent="Audit compliance against architecture and coding standards" trigger="audit compliance, run audit">Read `.cursor/skills/audit-compliance/SKILL.md`</route>
-      <route intent="Synchronize project documentation or initialize agentic:guild" trigger="sync docs, sync project docs">Read `.cursor/skills/sync-docs/SKILL.md`</route>
-      <route intent="Draft or format a Pull Request description" trigger="PR description, draft PR">Read `.cursor/skills/pr-description/SKILL.md`</route>
-      <route intent="Manage, add to, or update the project roadmap" trigger="roadmap, manage roadmap, add to roadmap">Read `.cursor/skills/roadmap-manage/SKILL.md`</route>
-      <route intent="Consult the roadmap to see what is pending or next" trigger="roadmap status, what's pending, roadmap consult">Read `.cursor/skills/roadmap-consult/SKILL.md`</route>
-      <route intent="Update agentic:guild skills, rules, and templates from the upstream repository" trigger="update agentic guild, update agentic:guild, sync agentic guild">Read `.cursor/skills/update-agentic-guild/SKILL.md`</route>
-      <route intent="Get an introduction to the agentic:guild OS, understand what it is, who the agent is, or what the user can do." trigger="who are you, what is agentic guild, hello, what can I do, how do I start">Read `.cursor/skills/hello/SKILL.md`</route>
+      <route intent="Explore, brainstorm, or figure out requirements for a new feature or task BEFORE implementation" trigger="explore task, explore feature, brainstorm">Read `docs/ai/skills/explore-task/SKILL.md`</route>
+      <route intent="Begin the actual implementation or coding of an agreed-upon plan, feature, or bugfix" trigger="start task, begin task, implement feature">Read `docs/ai/skills/start-task/SKILL.md`</route>
+      <route intent="Wrap up a task, audit compliance, and open a PR" trigger="finish branch, open a PR, complete task">Read `docs/ai/skills/finish-branch/SKILL.md`</route>
+      <route intent="Perform a code review or check code quality" trigger="code review, run code review, review my changes">Read `docs/ai/skills/code-review/SKILL.md`</route>
+      <route intent="Check current progress or see what is blocking the task" trigger="status check, where are we, blocked">Read `docs/ai/skills/status-check/SKILL.md`</route>
+      <route intent="Process feedback from CI, linters, or human reviewers and fix the code" trigger="process feedback, fix errors, lint errors">Read `docs/ai/skills/process-feedback/SKILL.md`</route>
+      <route intent="Extract new codebase rules or update AI docs based on recent learnings" trigger="harvest rules, update docs">Read `docs/ai/skills/harvest-rules/SKILL.md`</route>
+      <route intent="Audit compliance against architecture and coding standards" trigger="audit compliance, run audit">Read `docs/ai/skills/audit-compliance/SKILL.md`</route>
+      <route intent="Synchronize project documentation or initialize agentic:guild" trigger="sync docs, sync project docs">Read `docs/ai/skills/sync-docs/SKILL.md`</route>
+      <route intent="Draft or format a Pull Request description" trigger="PR description, draft PR">Read `docs/ai/skills/pr-description/SKILL.md`</route>
+      <route intent="Manage, add to, or update the project roadmap" trigger="roadmap, manage roadmap, add to roadmap">Read `docs/ai/skills/roadmap-manage/SKILL.md`</route>
+      <route intent="Consult the roadmap to see what is pending or next" trigger="roadmap status, what's pending, roadmap consult">Read `docs/ai/skills/roadmap-consult/SKILL.md`</route>
+      <route intent="Update agentic:guild skills, rules, and templates from the upstream repository" trigger="update agentic guild, update agentic:guild, sync agentic guild">Read `docs/ai/skills/update-agentic-guild/SKILL.md`</route>
+      <route intent="Get an introduction to the agentic:guild OS, understand what it is, who the agent is, or what the user can do." trigger="who are you, what is agentic guild, hello, what can I do, how do I start">Read `docs/ai/skills/hello/SKILL.md`</route>
     </routes>
   </intent_routing>
 </agentic_guild_os>
